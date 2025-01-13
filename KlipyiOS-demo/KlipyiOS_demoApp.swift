@@ -14,8 +14,10 @@ struct KlipyiOS_demoApp: App {
             ContentView()
             .onAppear {
               let useCase = HealthCheckServiceUseCase()
+              let gifsUseCase = GifServiceUseCase()
               Task {
                 try await useCase.fetchUpdateInfo()
+                try await gifsUseCase.fetchTrending(page: 1, perPage: 10)
               }
             }
         }
