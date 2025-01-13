@@ -12,6 +12,12 @@ struct KlipyiOS_demoApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+            .onAppear {
+              let useCase = HealthCheckServiceUseCase()
+              Task {
+                try await useCase.fetchUpdateInfo()
+              }
+            }
         }
     }
 }
