@@ -1,22 +1,27 @@
+//
+//  FileMeta.swift
+//  KlipyiOS-demo
+//
+//  Created by Tornike Gomareli on 13.01.25.
+//
+
+
 struct FileMeta: Codable {
-    let width: Int
-    let height: Int
+  let url: String
+  let width: Int
+  let height: Int
+  let size: Int
 }
 
 struct FileFormats: Codable {
-    let mp4: String
-    let gif: String
-    let webp: String
+  let mp4: FileMeta?
+  let gif: FileMeta
+  let webp: FileMeta
 }
 
-struct FileMetaFormats: Codable {
-    let mp4: FileMeta
-    let gif: FileMeta
-    let webp: FileMeta
-    
-    enum CodingKeys: String, CodingKey {
-        case mp4
-        case gif
-        case webp
-    }
+struct SizeVariants: Codable {
+  let hd: FileFormats
+  let md: FileFormats
+  let sm: FileFormats
+  let xs: FileFormats
 }
