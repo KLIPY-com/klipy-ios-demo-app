@@ -24,8 +24,7 @@ public class NetworkingProvider<Target>: NetworkingProviderProtocol where Target
     requestClosure: @escaping MoyaProvider<Target>.RequestClosure = MoyaProvider<Target>.defaultRequestMapping,
     stubClosure: @escaping MoyaProvider<Target>.StubClosure = MoyaProvider.neverStub,
     callbackQueue: DispatchQueue? = nil,
-    trackInflights: Bool = false,
-    bearerTokenClosure: @escaping () -> String?
+    trackInflights: Bool = false
   ) {
     self.provider = MoyaProvider(
       endpointClosure: endpointClosure,

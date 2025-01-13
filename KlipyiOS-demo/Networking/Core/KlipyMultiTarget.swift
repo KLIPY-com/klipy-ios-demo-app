@@ -10,6 +10,7 @@ import Foundation
 import Moya
 
 struct KlipyMultiTarget: KlipyTargetType {
+
   private let _baseURL: URL
 
   /// The baseURL of the embedded target.
