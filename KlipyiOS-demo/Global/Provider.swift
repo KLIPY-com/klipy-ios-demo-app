@@ -15,6 +15,8 @@ extension NetworkingProvider {
 
 extension RestApi {
   public static var liveValue: RestApi {
-    return RestApi(baseURL: URL(string: "https://api.klipy.co/api/v1/sandbox-mJokm7E2jH")!, provider: NetworkingProvider.liveValue)
+    // TODO: We need to crypt it
+    let api_key = "685pfsUU3EODe5rjG3li8rLUdfyydxxfh8fPym7wM5dvr0jklulSi6g5BSWlL3zG"
+    return RestApi(baseURL: URL(string: "https://api.klipy.co/api/v1/\(api_key)")!, provider: NetworkingProvider.liveValue)
   }
 }
