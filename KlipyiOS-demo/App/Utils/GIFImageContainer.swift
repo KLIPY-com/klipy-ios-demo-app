@@ -5,11 +5,12 @@
 //  Created by Tornike Gomareli on 16.01.25.
 //
 
+import GIFImage
 
 final class GIFImageContainer {
-    let image: GIFImage
-    
-    init(image: GIFImage) {
-        self.image = image
-    }
+  let image: GIFImage
+  
+  init(image: GIFImage) {
+    self.image = image
+  }
 }
