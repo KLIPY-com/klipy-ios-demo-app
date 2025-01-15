@@ -1,0 +1,147 @@
+<style>
+  .mobile {
+    border: 1px solid black;
+    padding: 10px;
+    width: 402px;
+  }
+
+  #masonry-container {
+    position: relative;
+    width: 400px; /* Fixed container width */
+    overflow-y: auto; /* Allow vertical scroll */
+    border: 1px solid red;
+    height: 500px;
+  }
+
+  .gif {
+    display: inline-block;
+    margin-bottom: 10px; /* Gap between rows */
+  }
+
+  img {
+    display: block;
+  }
+</style>
+<div class="mobile">
+  <div id="masonry-container">
+  </div>
+</div>
+
+<script type="text/javascript">
+const containerWidth = 400; // Container width in px
+const gap = 3; // Gap between items in px
+const minGifWidth = 60; // Minimum GIF width in px
+const minHeight = 50;
+const maxHeight = 180;
+const maxGifsPerRow = 4;
+
+// Process the GIFs and create rows
+function createRows(items) {
+  let rows = [];
+  let nextItem = 0;
+  while (nextItem < items.length) {
+    let possibleItemsInRow = [];
+    for (let i = nextItem; i < items.length && possibleItemsInRow.length < maxGifsPerRow; i++) {
+      possibleItemsInRow.push(items[i])
+    }
+
+    let minimumChange = Number.MAX_SAFE_INTEGER
+    let currentRow = [];
+    let itemHeight = 0;
+
+    let currentMinHeight = minHeight
+    let currentMaxHeight = maxHeight
+
+    let adInRow = possibleItemsInRow.filter(item => item.type === 'ad')
+    if (adInRow.length > 0) {
+      currentMinHeight = adInRow[0].height
+      currentMaxHeight = adInRow[0].height
+    }
+    for (let height = currentMinHeight; height <= currentMaxHeight; height += 1) {
+      let itemsInRow = [];
+      for (let i = 0; i < possibleItemsInRow.length; i++) {
+        let item = {...possibleItemsInRow[i]}
+        itemsInRow.push(item)
+        const gifWidth = item.type === 'ad' ? item.width : item.file.md.webp.width;
+        const gifHeight = item.type === 'ad' ? item.height : item.file.md.webp.height;
+        const newWidth = item.type === 'ad' ? item.width : Math.round((gifWidth * height) / gifHeight)
+        itemsInRow[itemsInRow.length - 1].newWidth = newWidth
+
+        let totalWidth = itemsInRow.reduce((sum, item) => sum + item.newWidth, 0) + (itemsInRow.length - 1) * gap
+        let change = containerWidth - totalWidth
+
+        // if (Math.abs(change) < Math.abs(minimumChange)) {
+        if (Math.abs(change) < Math.abs(minimumChange) || (currentRow.length === 1 && itemsInRow.length !== 1)) {
+          if (itemsInRow.length !== 1 || currentRow.length === 0) {
+            minimumChange = change
+            currentRow = [...itemsInRow]
+            itemHeight = height
+          }
+        }
+      }
+    }
+
+    currentRow.forEach(item => {
+      item.url = item.type === 'ad' ? 'https://api.klipy.co/assets/images/ads/320x100.png' : item.file.md.webp.url
+      item.width = item.newWidth + (item.type === 'ad' ? 0 : (minimumChange / (currentRow.length - (adInRow.length > 0 ? 1 : 0))))
+      item.height = itemHeight
+    })
+
+    rows.push(currentRow)
+    nextItem += currentRow.length
+  }
+  return rows;
+}
+
+// Render the rows dynamically
+function renderRows(rows) {
+  const container = document.getElementById('masonry-container');
+  container.innerHTML = ''; // Clear any existing items
+
+  let currentY = 0; // Track the vertical position (Y coordinate)
+
+  rows.forEach(row => {
+    let currentX = 0; // Start from the beginning of the row
+
+    // Render each item in the row
+    row.forEach(item => {
+      const gifDiv = document.createElement('div');
+      gifDiv.style.position = 'absolute';
+      gifDiv.style.width = `${item.width}px`;
+      gifDiv.style.height = `${item.height}px`;
+      gifDiv.style.top = `${currentY}px`;
+      gifDiv.style.left = `${currentX}px`;
+
+      // Create the image element for the GIF
+      const img = document.createElement('img');
+      img.src = item.url;
+      img.style.width = '100%';
+      img.style.height = '100%';
+      img.style.objectFit = 'fill'; // Ensures the GIF fits within the div
+
+      gifDiv.appendChild(img);
+      container.appendChild(gifDiv);
+
+      // Update the X position for the next GIF in this row
+      currentX += item.width + gap;
+    });
+
+    // Update the Y position for the next row
+    currentY += row[0].height + gap; // Add the height of the row plus the gap
+  });
+}
+
+// Fetch GIF data
+async function fetchItems() {
+  const response = await fetch('https://api.klipy.co/api/v1/sandbox-mJokm7E2jH/gifs/search?per_page=30&q=hello&page=1&customer_id=xxx&ad-width=50&ad-height=&ad-position=2&ad-iframe=1');
+  const data = await response.json();
+  
+  return data.data.data; // Return the array of GIFs
+}
+
+// Fetch and process GIFs
+fetchItems().then(items => {
+  const rows = createRows(items); // Create the rows dynamically
+  renderRows(rows); // Render the rows in the container
+});
+</script>
