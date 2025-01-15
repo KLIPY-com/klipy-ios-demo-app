@@ -1,5 +1,5 @@
 {
-  "originHash" : "8f916f5d4326b71e39effcaaa3b5d19d894467a03c60c9c5033a4bfc3cfd2d9c",
+  "originHash" : "a794a34c3591a597a2fc8e8f981701bf2f8c4502501ba21dfdf95cd87e998e7c",
   "pins" : [
     {
       "identity" : "alamofire",
@@ -8,6 +8,15 @@
       "state" : {
         "revision" : "513364f870f6bfc468f9d2ff0a95caccc10044c5",
         "version" : "5.10.2"
+      }
+    },
+    {
+      "identity" : "gifimage",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/igorcferreira/GIFImage",
+      "state" : {
+        "revision" : "a49be72485fa4cf6ddf9da3a8b6b4efd3f8e97f8",
+        "version" : "1.1.2"
       }
     },
     {
@@ -35,6 +44,15 @@
       "state" : {
         "revision" : "c7c7d2cf50a3211fe2843f76869c698e4e417930",
         "version" : "6.8.0"
+      }
+    },
+    {
+      "identity" : "ssswiftuigifview",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/SimformSolutionsPvtLtd/SSSwiftUIGIFView",
+      "state" : {
+        "revision" : "bd16555ae068ec4c01f9bdb913526caa08eb30b1",
+        "version" : "2.0.0"
       }
     }
   ],
