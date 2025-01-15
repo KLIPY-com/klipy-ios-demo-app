@@ -21,7 +21,7 @@ class DynamicMediaViewModel {
   private var currentPage = 1
   private let perPage = 24
   private let gifService = GifServiceUseCase()
-
+  
   func loadTrendingGifs() async {
     guard !isLoading && hasMorePages else { return }
     
@@ -125,8 +125,7 @@ class DynamicMediaViewModel {
       await searchGifs(query: query)
     }
   }
-  
-  // Retry after error
+
   func retry() async {
     if searchQuery.isEmpty {
       await loadTrendingGifs()
@@ -136,7 +135,6 @@ class DynamicMediaViewModel {
   }
 }
 
-// MARK: - Pagination Helper
 extension DynamicMediaViewModel {
   func shouldLoadMore(currentItem: GifItem) -> Bool {
     guard let itemIndex = gifs.firstIndex(where: { $0.id == currentItem.id }) else {
