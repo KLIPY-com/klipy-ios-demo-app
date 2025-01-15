@@ -8,6 +8,9 @@
 import SwiftUI
 
 struct ContentView: View {
+  @State var isPresented: Bool = true
+  
+  
   var body: some View {
     NavigationStack {
       VStack(spacing: 0) {
@@ -18,13 +21,16 @@ struct ContentView: View {
 //            time: "19.02.14",
 //            unreadCount: 2
 //          )
-          DynamicMediaView()
+          
         }
         .buttonStyle(PlainButtonStyle())
         .padding(.top, 1)
         
         Spacer()
       }
+      .sheet(isPresented: $isPresented, content: {
+        DynamicMediaView()
+      })
       .navigationBarTitleDisplayMode(.inline)
       .toolbar {
         // Left Menu Button
