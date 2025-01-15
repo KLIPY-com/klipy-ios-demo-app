@@ -7,8 +7,12 @@
 
 import Foundation
 
-struct GifItem: Codable {
-  let id: String
+struct GifItem: Codable, Equatable {
+  static func == (lhs: GifItem, rhs: GifItem) -> Bool {
+    return lhs.id == rhs.id
+  }
+  
+  let id: Int
   let title: String
   let slug: String
   let blurPreview: String
