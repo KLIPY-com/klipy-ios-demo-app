@@ -12,12 +12,13 @@ struct ContentView: View {
     NavigationStack {
       VStack(spacing: 0) {
         NavigationLink(destination: ChatView()) {
-          ChatPreview(
-            name: "John",
-            lastMessage: "Seen",
-            time: "19.02.14",
-            unreadCount: 2
-          )
+//          ChatPreview(
+//            name: "John",
+//            lastMessage: "Seen",
+//            time: "19.02.14",
+//            unreadCount: 2
+//          )
+          DynamicMediaView()
         }
         .buttonStyle(PlainButtonStyle())
         .padding(.top, 1)
