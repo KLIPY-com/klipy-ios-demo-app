@@ -1,3 +1,13 @@
+//
+//  RowView.swift
+//  KlipyiOS-demo
+//
+//  Created by Tornike Gomareli on 16.01.25.
+//
+
+import SwiftUI
+import Foundation
+
 struct RowView: View {
   let row: RowLayout
   let isLastRow: Bool
