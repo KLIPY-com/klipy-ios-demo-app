@@ -20,10 +20,8 @@ struct MasonryGridView: View {
   var body: some View {
     ScrollView {
       ZStack(alignment: .topLeading) {
-        
         Color.clear
           .frame(height: totalHeight)
-        
         ForEach(rows.indices, id: \.self) { rowIndex in
           ForEach(rows[rowIndex].items) { item in
             GIFImage(source: .remoteURL(URL(string: item.url)!), frameRate: .dynamic)
