@@ -84,6 +84,40 @@ public class NetworkingProvider<Target>: NetworkingProviderProtocol where Target
 
     print(failure.response?.description)
     print(failure.errorDescription)
+    
+    switch failure {
+    case .objectMapping(let error, let response):
+      print("🔍 Decoding Error Details:")
+      print("Error: \(error)")
+
+        print("Response Status Code: \(response.statusCode)")
+        if let responseString = String(data: response.data, encoding: .utf8) {
+          print("Raw Response Data:")
+          print(responseString)
+        }
+        
+        /// If it's a DecodingError, get more specific information
+        if let decodingError = error as? DecodingError {
+          switch decodingError {
+          case .keyNotFound(let key, let context):
+            print("Key '\(key.stringValue)' not found:", context.debugDescription)
+            print("Coding path:", context.codingPath)
+          case .valueNotFound(let type, let context):
+            print("Value of type '\(type)' not found:", context.debugDescription)
+            print("Coding path:", context.codingPath)
+          case .typeMismatch(let type, let context):
+            print("Type '\(type)' mismatch:", context.debugDescription)
+            print("Coding path:", context.codingPath)
+          case .dataCorrupted(let context):
+            print("Data corrupted:", context.debugDescription)
+            print("Coding path:", context.codingPath)
+          @unknown default:
+            print("Unknown decoding error:", decodingError.localizedDescription)
+          }
+        }
+    default:
+      print("UNknown decoding problem")
+    }
 
     switch failure.asApiErrorReason {
     case .objectMapping:
