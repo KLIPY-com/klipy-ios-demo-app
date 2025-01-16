@@ -32,31 +32,50 @@ class MasonryLayoutCalculator {
     self.maxGifsPerRow = maxGifsPerRow
   }
   
-  func createRows(from items: [GifItem]) -> [RowLayout] {
+  private func getDimensions(from item: any MediaItem) -> (width: CGFloat, height: CGFloat, url: String) {
+    switch item {
+    case let gif as GifItem:
+      let dimensions = gif.file.xs.webp
+      return (CGFloat(dimensions.width), CGFloat(dimensions.height), dimensions.url)
+      
+    case let sticker as StickerItem:
+      let dimensions = sticker.file.xs.webp
+      return (CGFloat(dimensions.width), CGFloat(dimensions.height), dimensions.url)
+      
+    case let clip as ClipItem:
+      let dimensions = clip.fileMeta.gif
+      return (CGFloat(dimensions.width), CGFloat(dimensions.height), clip.file.gif)
+      
+    default:
+      fatalError("Unsupported media type")
+    }
+  }
+  
+  func createRows(from items: [any MediaItem]) -> [RowLayout] {
     var rows: [RowLayout] = []
     var nextItem = 0
     
     while nextItem < items.count {
       let possibleItems = Array(items[nextItem..<min(nextItem + maxGifsPerRow, items.count)])
       
-      let possibleLayoutItems = possibleItems.map { gif -> GridItemLayout in
-        let dimensions = gif.file.xs.webp
+      let possibleLayoutItems = possibleItems.map { item -> GridItemLayout in
+        let dimensions = getDimensions(from: item)
         return GridItemLayout(
-          id: Int64(gif.id),
+          id: Int64(item.id),
           url: dimensions.url,
-          width: CGFloat(dimensions.width),
-          height: CGFloat(dimensions.height),
-          originalWidth: CGFloat(dimensions.width),
-          originalHeight: CGFloat(dimensions.height),
-          type: gif.type.rawValue
+          width: dimensions.width,
+          height: dimensions.height,
+          originalWidth: dimensions.width,
+          originalHeight: dimensions.height,
+          type: item.type.rawValue
         )
       }
-
+      
       let (rowItems, rowHeight) = calculateOptimalRow(possibleLayoutItems)
       rows.append(RowLayout(items: rowItems, height: rowHeight))
       nextItem += rowItems.count
     }
-
+    
     var currentY: CGFloat = 0
     for rowIndex in 0..<rows.count {
       var currentX: CGFloat = 0
@@ -78,7 +97,7 @@ class MasonryLayoutCalculator {
     
     for height in Int(minHeight)...Int(maxHeight) {
       var itemsInRow: [GridItemLayout] = []
-  
+      
       for item in possibleItems {
         var newItem = item
         let newWidth = round((item.originalWidth * CGFloat(height)) / item.originalHeight)
