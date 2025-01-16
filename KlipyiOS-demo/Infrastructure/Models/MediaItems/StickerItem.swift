@@ -7,13 +7,16 @@
 
 import Foundation
 
-struct StickerItem: Codable {
-  let id: String
+struct StickerItem: MediaItem {
+  static func == (lhs: StickerItem, rhs: StickerItem) -> Bool {
+    return lhs.id == rhs.id
+  }
+  
+  let id: Int
   let title: String
   let slug: String
   let blurPreview: String
   let file: SizeVariants
-  let fileMeta: FileMeta
   let type: MediaType
   
   enum CodingKeys: String, CodingKey {
@@ -22,7 +25,6 @@ struct StickerItem: Codable {
     case slug
     case blurPreview = "blur_preview"
     case file
-    case fileMeta = "file_meta"
     case type
   }
 }
