@@ -9,20 +9,28 @@ import Foundation
 import SwiftUI
 
 @Observable
-class DynamicMediaViewModel {
-  private(set) var gifs: [GifItem] = []
-
+class DynamicMediaViewModel<Service: MediaServiceUseCase> where Service.Item: MediaItem {
+  private(set) var items: [Service.Item] = []
   private(set) var isLoading = false
   private(set) var hasError = false
   private(set) var errorMessage: String?
   private(set) var hasMorePages = true
   private(set) var searchQuery = ""
   
+  @ObservationIgnored
   private var currentPage = 1
-  private let perPage = 24
-  private let gifService = GifServiceUseCase()
   
-  func loadTrendingGifs() async {
+  @ObservationIgnored
+  private let perPage = 24
+  
+  @ObservationIgnored
+  private let service: Service
+  
+  init(service: Service) {
+    self.service = service
+  }
+  
+  func loadTrendingItems() async {
     guard !isLoading && hasMorePages else { return }
     
     isLoading = true
@@ -30,16 +38,16 @@ class DynamicMediaViewModel {
     errorMessage = nil
     
     do {
-      let response = try await gifService.fetchTrending(
+      let response = try await service.fetchTrendingItems(
         page: currentPage,
         perPage: perPage
       )
       
       await MainActor.run {
         if currentPage == 1 {
-          gifs = response.data.data
+          items = response.data.data
         } else {
-          gifs.append(contentsOf: response.data.data)
+          items.append(contentsOf: response.data.data)
         }
         
         hasMorePages = response.data.hasNext
@@ -54,12 +62,11 @@ class DynamicMediaViewModel {
       }
     }
   }
-
-  func searchGifs(query: String) async {
+  
+  func searchItems(query: String) async {
     guard !query.isEmpty else {
-      /// Reset to trending if search is cleared
       currentPage = 1
-      await loadTrendingGifs()
+      await loadTrendingItems()
       return
     }
     
@@ -68,7 +75,7 @@ class DynamicMediaViewModel {
     errorMessage = nil
     
     do {
-      let response = try await gifService.searchGifs(
+      let response = try await service.searchItems(
         query: query,
         page: currentPage,
         perPage: perPage
@@ -76,9 +83,9 @@ class DynamicMediaViewModel {
       
       await MainActor.run {
         if currentPage == 1 {
-          gifs = response.data.data
+          items = response.data.data
         } else {
-          gifs.append(contentsOf: response.data.data)
+          items.append(contentsOf: response.data.data)
         }
         
         hasMorePages = response.data.hasNext
@@ -94,60 +101,21 @@ class DynamicMediaViewModel {
     }
   }
   
-  /// Load next page (used for infinite scrolling)
+  // Rest of the methods remain the same but use 'items' instead of 'gifs'
   func loadNextPageIfNeeded() async {
     guard !isLoading && hasMorePages else { return }
     
     if searchQuery.isEmpty {
-      await loadTrendingGifs()
+      await loadTrendingItems()
     } else {
-      await searchGifs(query: searchQuery)
+      await searchItems(query: searchQuery)
     }
   }
   
-
-  func refresh() async {
-    currentPage = 1
-    hasMorePages = true
-    
-    if searchQuery.isEmpty {
-      await loadTrendingGifs()
-    } else {
-      await searchGifs(query: searchQuery)
-    }
-  }
-
-  func updateSearchQuery(_ query: String) {
-    searchQuery = query
-    currentPage = 1
-    hasMorePages = true
-    Task {
-      await searchGifs(query: query)
-    }
-  }
-
-  func retry() async {
-    if searchQuery.isEmpty {
-      await loadTrendingGifs()
-    } else {
-      await searchGifs(query: searchQuery)
-    }
-  }
-}
-
-extension DynamicMediaViewModel {
-  func shouldLoadMore(currentItem: GifItem) -> Bool {
-    guard let itemIndex = gifs.firstIndex(where: { $0.id == currentItem.id }) else {
+  func shouldLoadMore(currentItem: Service.Item) -> Bool {
+    guard let itemIndex = items.firstIndex(where: { $0.id == currentItem.id }) else {
       return false
     }
-    
-    return itemIndex >= gifs.count - 5
-  }
-}
-
-// MARK: - Error Handling Helper
-extension DynamicMediaViewModel {
-  var errorDisplayMessage: String {
-    errorMessage ?? "An unknown error occurred. Please try again."
+    return itemIndex >= items.count - 5
   }
 }
