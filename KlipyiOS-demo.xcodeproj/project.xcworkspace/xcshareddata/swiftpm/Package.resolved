@@ -1,5 +1,5 @@
 {
-  "originHash" : "a794a34c3591a597a2fc8e8f981701bf2f8c4502501ba21dfdf95cd87e998e7c",
+  "originHash" : "be3c5df872c9373fbf3b8afa5c7612a881f0af6b88dccb1f1e546cc9f6b4131f",
   "pins" : [
     {
       "identity" : "alamofire",
@@ -44,15 +44,6 @@
       "state" : {
         "revision" : "c7c7d2cf50a3211fe2843f76869c698e4e417930",
         "version" : "6.8.0"
-      }
-    },
-    {
-      "identity" : "ssswiftuigifview",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/SimformSolutionsPvtLtd/SSSwiftUIGIFView",
-      "state" : {
-        "revision" : "bd16555ae068ec4c01f9bdb913526caa08eb30b1",
-        "version" : "2.0.0"
       }
     }
   ],
