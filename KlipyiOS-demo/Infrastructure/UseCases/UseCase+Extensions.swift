@@ -14,8 +14,8 @@ extension GifServiceUseCase: MediaServiceUseCase {
     try await searchGifs(query: query, page: page, perPage: perPage)
   }
   
-  func fetchTrending(page: Int, perPage: Int) async throws -> <<error type>> {
-    try await t
+  func fetchTrendingItems(page: Int, perPage: Int) async throws -> AnyResponse<GifItem> {
+    try await fetchTrending(page: page, perPage: perPage)
   }
 }
 
@@ -24,11 +24,19 @@ extension StickersServiceUseCase: MediaServiceUseCase {
   func searchItems(query: String, page: Int, perPage: Int) async throws -> AnyResponse<StickerItem> {
     try await searchStickers(query: query, page: page, perPage: perPage)
   }
+  
+  func fetchTrendingItems(page: Int, perPage: Int) async throws -> AnyResponse<StickerItem> {
+    try await fetchTrending(page: page)
+  }
 }
 
 extension ClipsServiceUseCase: MediaServiceUseCase {
   typealias Item = ClipItem
   func searchItems(query: String, page: Int, perPage: Int) async throws -> AnyResponse<ClipItem> {
     try await searchClips(query: query, page: page, perPage: perPage)
+  }
+  
+  func fetchTrendingItems(page: Int, perPage: Int) async throws -> AnyResponse<ClipItem> {
+    try await fetchTrending(page: page)
   }
 }
