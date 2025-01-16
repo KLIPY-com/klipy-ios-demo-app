@@ -8,6 +8,8 @@ import SwiftUI
 import Foundation
 import GIFImage
 
+// TODO: Caching Mechanism
+
 struct LazyGIFView: View {
   let item: GridItemLayout
 
