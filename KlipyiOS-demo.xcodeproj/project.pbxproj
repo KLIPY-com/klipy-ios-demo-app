@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		E6F6AFD92D343C65008CB511 /* Moya in Frameworks */ = {isa = PBXBuildFile; productRef = E6F6AFD82D343C65008CB511 /* Moya */; };
-		E6F6B06E2D371C65008CB511 /* SSSwiftUIGIFView in Frameworks */ = {isa = PBXBuildFile; productRef = E6F6B06D2D371C65008CB511 /* SSSwiftUIGIFView */; };
 		E6F6B0712D372115008CB511 /* GIFImage in Frameworks */ = {isa = PBXBuildFile; productRef = E6F6B0702D372115008CB511 /* GIFImage */; };
 /* End PBXBuildFile section */
 
@@ -29,7 +28,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E6F6B06E2D371C65008CB511 /* SSSwiftUIGIFView in Frameworks */,
 				E6F6B0712D372115008CB511 /* GIFImage in Frameworks */,
 				E6F6AFD92D343C65008CB511 /* Moya in Frameworks */,
 			);
@@ -75,7 +73,6 @@
 			name = "KlipyiOS-demo";
 			packageProductDependencies = (
 				E6F6AFD82D343C65008CB511 /* Moya */,
-				E6F6B06D2D371C65008CB511 /* SSSwiftUIGIFView */,
 				E6F6B0702D372115008CB511 /* GIFImage */,
 			);
 			productName = "KlipyiOS-demo";
@@ -108,7 +105,6 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				E6F6AFD72D343C65008CB511 /* XCRemoteSwiftPackageReference "Moya" */,
-				E6F6B06C2D371C65008CB511 /* XCRemoteSwiftPackageReference "SSSwiftUIGIFView" */,
 				E6F6B06F2D372115008CB511 /* XCRemoteSwiftPackageReference "GIFImage" */,
 			);
 			preferredProjectObjectVersion = 77;
@@ -351,14 +347,6 @@
 				minimumVersion = 15.0.3;
 			};
 		};
-		E6F6B06C2D371C65008CB511 /* XCRemoteSwiftPackageReference "SSSwiftUIGIFView" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/SimformSolutionsPvtLtd/SSSwiftUIGIFView";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.0.0;
-			};
-		};
 		E6F6B06F2D372115008CB511 /* XCRemoteSwiftPackageReference "GIFImage" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/igorcferreira/GIFImage";
@@ -374,11 +362,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = E6F6AFD72D343C65008CB511 /* XCRemoteSwiftPackageReference "Moya" */;
 			productName = Moya;
-		};
-		E6F6B06D2D371C65008CB511 /* SSSwiftUIGIFView */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = E6F6B06C2D371C65008CB511 /* XCRemoteSwiftPackageReference "SSSwiftUIGIFView" */;
-			productName = SSSwiftUIGIFView;
 		};
 		E6F6B0702D372115008CB511 /* GIFImage */ = {
 			isa = XCSwiftPackageProductDependency;
