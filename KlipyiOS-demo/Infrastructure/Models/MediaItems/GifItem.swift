@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct GifItem: Codable, Equatable {
+struct GifItem: MediaItem {
   static func == (lhs: GifItem, rhs: GifItem) -> Bool {
     return lhs.id == rhs.id
   }
