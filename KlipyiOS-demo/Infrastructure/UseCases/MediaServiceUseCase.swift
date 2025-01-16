@@ -8,7 +8,8 @@
 import Foundation
 
 protocol MediaServiceUseCase {
-  associatedtype Item
-  func fetchTrending(page: Int, perPage: Int) async throws -> AnyResponse<Item>
+  associatedtype Item: Codable
+
+  func fetchTrendingItems(page: Int, perPage: Int) async throws -> AnyResponse<Item>
   func searchItems(query: String, page: Int, perPage: Int) async throws -> AnyResponse<Item>
 }
