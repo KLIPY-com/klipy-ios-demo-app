@@ -6,17 +6,31 @@
 //
 
 import SwiftUI
-import GIFImage
+import Pow
 
 struct MasonryGridView: View {
   let rows: [RowLayout]
   let onLoadMore: () -> Void
+  @StateObject private var previewModel = PreviewViewModel()
+  
   
   var body: some View {
     ScrollView {
       LazyVStack(spacing: 0) {
         ForEach(rows.indices, id: \.self) { rowIndex in
-          RowView(row: rows[rowIndex], isLastRow: rowIndex == rows.count - 1, onLoadMore: onLoadMore)
+          RowView(row: rows[rowIndex], isLastRow: rowIndex == rows.count - 1, onLoadMore: onLoadMore, previewModel: previewModel)
+        }
+      }
+    }
+    .allowsHitTesting(previewModel.selectedItem == nil)
+    
+    if previewModel.selectedItem != nil {
+      TelegramPreviewOverlay(viewModel: previewModel) {
+        withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
+          previewModel.selectedItem = nil
+          previewModel.isDragging = false
+          previewModel.dragOffset = .zero
+          previewModel.dragScale = 1
         }
       }
     }
