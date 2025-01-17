@@ -25,3 +25,27 @@ struct SizeVariants: Codable {
   let sm: FileFormats
   let xs: FileFormats
 }
+
+extension FileFormats {
+  func toDomain() -> MediaFile {
+    MediaFile(
+      mp4: mp4.map { meta in
+        MediaFileVariant(
+          url: meta.url,
+          width: meta.width,
+          height: meta.height
+        )
+      },
+      gif: MediaFileVariant(
+        url: gif.url,
+        width: gif.width,
+        height: gif.height
+      ),
+      webp: MediaFileVariant(
+        url: webp.url,
+        width: webp.width,
+        height: webp.height
+      )
+    )
+  }
+}
