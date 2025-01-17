@@ -12,11 +12,12 @@ struct RowView: View {
   let row: RowLayout
   let isLastRow: Bool
   let onLoadMore: () -> Void
+  let previewModel: PreviewViewModel
   
   var body: some View {
     ZStack(alignment: .topLeading) {
       ForEach(row.items) { item in
-        LazyGIFView(item: item)
+        LazyGIFView(item: item, previewModel: previewModel)
           .frame(width: item.width, height: item.height)
           .offset(x: item.xPosition, y: 0)
           .onAppear {
