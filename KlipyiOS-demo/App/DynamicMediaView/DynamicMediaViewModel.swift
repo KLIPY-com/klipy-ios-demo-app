@@ -9,13 +9,14 @@ import Foundation
 import SwiftUI
 
 @Observable
-class DynamicMediaViewModel<Service: MediaServiceUseCase> where Service.Item: MediaItem {
-  private(set) var items: [Service.Item] = []
+class DynamicMediaViewModel {
+  private(set) var items: [MediaDomainModel] = []
   private(set) var isLoading = false
   private(set) var hasError = false
   private(set) var errorMessage: String?
   private(set) var hasMorePages = true
   private(set) var searchQuery = ""
+  private(set) var currentType: MediaType
   
   @ObservationIgnored
   private var currentPage = 1
@@ -24,10 +25,28 @@ class DynamicMediaViewModel<Service: MediaServiceUseCase> where Service.Item: Me
   private let perPage = 24
   
   @ObservationIgnored
-  private let service: Service
+  private var service: MediaService
   
-  init(service: Service) {
-    self.service = service
+  init(initialType: MediaType = .gifs) {
+    self.currentType = initialType
+    self.service = .create(for: initialType)
+  }
+  
+  func switchToType(_ type: MediaType) {
+    guard type != currentType else { return }
+    
+    // Reset state
+    items = []
+    currentPage = 1
+    hasMorePages = true
+    searchQuery = ""
+    isLoading = false
+    hasError = false
+    errorMessage = nil
+    
+    // Switch service
+    currentType = type
+    service = .create(for: type)
   }
   
   func loadTrendingItems() async {
@@ -38,19 +57,18 @@ class DynamicMediaViewModel<Service: MediaServiceUseCase> where Service.Item: Me
     errorMessage = nil
     
     do {
-      let response = try await service.fetchTrendingItems(
+      let domainItems = try await service.fetchTrending(
         page: currentPage,
         perPage: perPage
       )
       
       await MainActor.run {
         if currentPage == 1 {
-          items = response.data.data
+          items = domainItems
         } else {
-          items.append(contentsOf: response.data.data)
+          items.append(contentsOf: domainItems)
         }
-        
-        hasMorePages = response.data.hasNext
+        hasMorePages = !domainItems.isEmpty
         currentPage += 1
         isLoading = false
       }
@@ -64,18 +82,26 @@ class DynamicMediaViewModel<Service: MediaServiceUseCase> where Service.Item: Me
   }
   
   func searchItems(query: String) async {
-    guard !query.isEmpty else {
+    if searchQuery != query {
+      searchQuery = query
+      items = []
       currentPage = 1
+      hasMorePages = true
+    }
+    
+    guard !query.isEmpty else {
       await loadTrendingItems()
       return
     }
+    
+    guard !isLoading && hasMorePages else { return }
     
     isLoading = true
     hasError = false
     errorMessage = nil
     
     do {
-      let response = try await service.searchItems(
+      let domainItems = try await service.search(
         query: query,
         page: currentPage,
         perPage: perPage
@@ -83,12 +109,11 @@ class DynamicMediaViewModel<Service: MediaServiceUseCase> where Service.Item: Me
       
       await MainActor.run {
         if currentPage == 1 {
-          items = response.data.data
+          items = domainItems
         } else {
-          items.append(contentsOf: response.data.data)
+          items.append(contentsOf: domainItems)
         }
-        
-        hasMorePages = response.data.hasNext
+        hasMorePages = !domainItems.isEmpty
         currentPage += 1
         isLoading = false
       }
@@ -101,7 +126,6 @@ class DynamicMediaViewModel<Service: MediaServiceUseCase> where Service.Item: Me
     }
   }
   
-  // Rest of the methods remain the same but use 'items' instead of 'gifs'
   func loadNextPageIfNeeded() async {
     guard !isLoading && hasMorePages else { return }
     
@@ -112,10 +136,27 @@ class DynamicMediaViewModel<Service: MediaServiceUseCase> where Service.Item: Me
     }
   }
   
-  func shouldLoadMore(currentItem: Service.Item) -> Bool {
-    guard let itemIndex = items.firstIndex(where: { $0.id == currentItem.id }) else {
-      return false
+  // Analytics and actions become much simpler
+  func trackView(for item: MediaDomainModel) async {
+    try? await service.trackView(slug: item.slug)
+  }
+  
+  func trackShare(for item: MediaDomainModel) async {
+    try? await service.trackShare(slug: item.slug)
+  }
+  
+  func hideFromRecent(item: MediaDomainModel) async {
+    do {
+      try await service.hideFromRecent(slug: item.slug)
+      await MainActor.run {
+        items.removeAll { $0.id == item.id }
+      }
+    } catch {
+      print("Failed to hide item: \(error)")
     }
-    return itemIndex >= items.count - 5
+  }
+  
+  func reportItem(item: MediaDomainModel, reason: String) async {
+    try? await service.report(slug: item.slug, reason: reason)
   }
 }
