@@ -63,3 +63,38 @@ struct ClipMeta: Codable {
   var width: Int
   var height: Int
 }
+
+extension ClipItem {
+  func toDomain() -> MediaDomainModel {
+    let file = MediaFile(
+      mp4: MediaFileVariant(
+        url: file.mp4,
+        width: fileMeta.mp4.width,
+        height: fileMeta.mp4.height
+      ),
+      gif: MediaFileVariant(
+        url: file.gif,
+        width: fileMeta.gif.width,
+        height: fileMeta.gif.height
+      ),
+      webp: MediaFileVariant(
+        url: file.webp,
+        width: fileMeta.webp.width,
+        height: fileMeta.webp.height
+      )
+    )
+    
+    return MediaDomainModel(
+      id: id,
+      title: title,
+      slug: slug,
+      blurPreview: blurPreview,
+      type: type,
+      hd: nil,
+      md: nil,
+      sm: nil,
+      xs: nil,
+      singleFile: file
+    )
+  }
+}

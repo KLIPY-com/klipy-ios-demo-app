@@ -28,3 +28,20 @@ struct GifItem: MediaItem {
     case type
   }
 }
+
+extension GifItem {
+  func toDomain() -> MediaDomainModel {
+    MediaDomainModel(
+      id: id,
+      title: title,
+      slug: slug,
+      blurPreview: blurPreview,
+      type: type,
+      hd: file.hd.toDomain(),
+      md: file.md.toDomain(),
+      sm: file.sm.toDomain(),
+      xs: file.xs.toDomain(),
+      singleFile: nil
+    )
+  }
+}

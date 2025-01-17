@@ -7,7 +7,7 @@
 
 import Foundation
 
-protocol MediaItem: Codable, Equatable {
+protocol MediaItem: Codable, Equatable, Identifiable {
   var id: Int { get }
   var title: String { get }
   var slug: String { get }
