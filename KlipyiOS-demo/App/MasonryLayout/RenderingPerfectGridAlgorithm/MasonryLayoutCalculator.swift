@@ -60,6 +60,7 @@ class MasonryLayoutCalculator {
         return GridItemLayout(
           id: Int64(item.id),
           url: dimensions.url,
+          previewUrl: item.blurPreview,
           width: dimensions.width,
           height: dimensions.height,
           originalWidth: dimensions.width,

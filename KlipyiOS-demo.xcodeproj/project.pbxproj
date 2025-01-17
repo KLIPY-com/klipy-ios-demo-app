@@ -7,8 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E669D20B2D3AAFE300FCA1BD /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = E669D20A2D3AAFE300FCA1BD /* Kingfisher */; };
+		E669D20E2D3AB1C800FCA1BD /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = E669D20D2D3AB1C800FCA1BD /* SDWebImageSwiftUI */; };
 		E6F6AFD92D343C65008CB511 /* Moya in Frameworks */ = {isa = PBXBuildFile; productRef = E6F6AFD82D343C65008CB511 /* Moya */; };
-		E6F6B0712D372115008CB511 /* GIFImage in Frameworks */ = {isa = PBXBuildFile; productRef = E6F6B0702D372115008CB511 /* GIFImage */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -28,7 +29,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E6F6B0712D372115008CB511 /* GIFImage in Frameworks */,
+				E669D20E2D3AB1C800FCA1BD /* SDWebImageSwiftUI in Frameworks */,
+				E669D20B2D3AAFE300FCA1BD /* Kingfisher in Frameworks */,
 				E6F6AFD92D343C65008CB511 /* Moya in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -73,7 +75,8 @@
 			name = "KlipyiOS-demo";
 			packageProductDependencies = (
 				E6F6AFD82D343C65008CB511 /* Moya */,
-				E6F6B0702D372115008CB511 /* GIFImage */,
+				E669D20A2D3AAFE300FCA1BD /* Kingfisher */,
+				E669D20D2D3AB1C800FCA1BD /* SDWebImageSwiftUI */,
 			);
 			productName = "KlipyiOS-demo";
 			productReference = E6D992712D31681A003CAF83 /* KlipyiOS-demo.app */;
@@ -105,7 +108,8 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				E6F6AFD72D343C65008CB511 /* XCRemoteSwiftPackageReference "Moya" */,
-				E6F6B06F2D372115008CB511 /* XCRemoteSwiftPackageReference "GIFImage" */,
+				E669D2092D3AAFE300FCA1BD /* XCRemoteSwiftPackageReference "Kingfisher" */,
+				E669D20C2D3AB1C800FCA1BD /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = E6D992722D31681A003CAF83 /* Products */;
@@ -339,6 +343,22 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		E669D2092D3AAFE300FCA1BD /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/onevcat/Kingfisher.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 8.1.3;
+			};
+		};
+		E669D20C2D3AB1C800FCA1BD /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SDWebImage/SDWebImageSwiftUI.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.1.3;
+			};
+		};
 		E6F6AFD72D343C65008CB511 /* XCRemoteSwiftPackageReference "Moya" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Moya/Moya";
@@ -347,26 +367,23 @@
 				minimumVersion = 15.0.3;
 			};
 		};
-		E6F6B06F2D372115008CB511 /* XCRemoteSwiftPackageReference "GIFImage" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/igorcferreira/GIFImage";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 1.1.2;
-			};
-		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		E669D20A2D3AAFE300FCA1BD /* Kingfisher */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E669D2092D3AAFE300FCA1BD /* XCRemoteSwiftPackageReference "Kingfisher" */;
+			productName = Kingfisher;
+		};
+		E669D20D2D3AB1C800FCA1BD /* SDWebImageSwiftUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E669D20C2D3AB1C800FCA1BD /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */;
+			productName = SDWebImageSwiftUI;
+		};
 		E6F6AFD82D343C65008CB511 /* Moya */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = E6F6AFD72D343C65008CB511 /* XCRemoteSwiftPackageReference "Moya" */;
 			productName = Moya;
-		};
-		E6F6B0702D372115008CB511 /* GIFImage */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = E6F6B06F2D372115008CB511 /* XCRemoteSwiftPackageReference "GIFImage" */;
-			productName = GIFImage;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
