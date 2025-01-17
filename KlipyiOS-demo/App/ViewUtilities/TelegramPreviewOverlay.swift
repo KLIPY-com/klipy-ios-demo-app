@@ -19,7 +19,6 @@ struct TelegramPreviewOverlay: View {
       ZStack {
         // Background overlay
         if let selectedItem = viewModel.selectedItem {
-          let startBounds = selectedItem.frame
           let screenSize = geometry.size
           
           // Calculate final frame
@@ -31,18 +30,11 @@ struct TelegramPreviewOverlay: View {
             screenSize: screenSize
           )
           
-          let targetFrame = CGRect(
-            x: (screenSize.width - targetSize.width) / 2,
-            y: (screenSize.height - targetSize.height) / 2,
-            width: targetSize.width,
-            height: targetSize.height
-          )
-          
           ZStack {
             VisualEffectView(effect: UIBlurEffect(style: .dark))
               .opacity({
                 if viewModel.isDragging {
-                  let dragPercentage = abs(viewModel.dragOffset.height) / 400
+                  let dragPercentage = abs(viewModel.dragOffset.height) / 300
                   return 0.8 * (1.0 - dragPercentage)
                 }
                 return 0.8
@@ -52,46 +44,45 @@ struct TelegramPreviewOverlay: View {
                 onDismiss()
               }
             
-            // Animated preview
-            AnimatedImage(url: URL(string: selectedItem.item.url))
-              .resizable()
-              .aspectRatio(contentMode: .fit)
-              .frame(width: targetSize.width, height: targetSize.height)
-              .offset(
-                x: viewModel.isDragging ? viewModel.dragOffset.width : 0,
-                y: viewModel.isDragging ? viewModel.dragOffset.height : 0
-              )
-              .scaleEffect(viewModel.dragScale)
-              .gesture(
-                DragGesture()
-                  .onChanged { value in
-                    viewModel.isDragging = true
-                    viewModel.dragOffset = value.translation
-                    
-                    // Calculate scale based on drag distance
-                    let dragDistance = abs(value.translation.height)
-                    viewModel.dragScale = max(0.7, min(1, 1 - (dragDistance / 1000)))
-                  }
-                  .onEnded { value in
-                    let dragDistance = abs(value.translation.height)
-                    if dragDistance > 100 {
-                      onDismiss()
-                    } else {
-                      withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
-                        viewModel.isDragging = false
-                        viewModel.dragOffset = .zero
-                        viewModel.dragScale = 1
+            VStack(alignment: .leading, spacing: 8) {
+              // Animated preview
+              AnimatedImage(url: URL(string: selectedItem.item.url))
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(width: targetSize.width, height: targetSize.height)
+                .offset(
+                  x: viewModel.isDragging ? viewModel.dragOffset.width : 0,
+                  y: viewModel.isDragging ? viewModel.dragOffset.height : 0
+                )
+                .scaleEffect(viewModel.dragScale)
+                .gesture(
+                  DragGesture()
+                    .onChanged { value in
+                      viewModel.isDragging = true
+                      viewModel.dragOffset = value.translation
+                      
+                      // Calculate scale based on drag distance
+                      let dragDistance = abs(value.translation.height)
+                      viewModel.dragScale = max(0.7, min(1, 1 - (dragDistance / 1000)))
+                    }
+                    .onEnded { value in
+                      let dragDistance = abs(value.translation.height)
+                      if dragDistance > 100 {
+                        onDismiss()
+                      } else {
+                        withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
+                          viewModel.isDragging = false
+                          viewModel.dragOffset = .zero
+                          viewModel.dragScale = 1
+                        }
                       }
                     }
-                  }
-              )
-              .onAppear {
-                playHapticFeedback()
-              }
-              .contextMenu(menuItems: {
-                Text("Hello")
-              })
-              .clipShape(.rect(cornerRadius: 12, style: .continuous))
+                )
+                .onAppear {
+                  playHapticFeedback()
+                }
+                .clipShape(.rect(cornerRadius: 12, style: .continuous))
+            }
           }
         }
       }
