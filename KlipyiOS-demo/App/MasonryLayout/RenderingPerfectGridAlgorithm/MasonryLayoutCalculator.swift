@@ -32,26 +32,23 @@ class MasonryLayoutCalculator {
     self.maxGifsPerRow = maxGifsPerRow
   }
   
-  private func getDimensions(from item: any MediaItem) -> (width: CGFloat, height: CGFloat, url: String) {
-    switch item {
-    case let gif as GifItem:
-      let dimensions = gif.file.xs.webp
-      return (CGFloat(dimensions.width), CGFloat(dimensions.height), dimensions.url)
+  private func getDimensions(from item: MediaDomainModel) -> (width: CGFloat, height: CGFloat, url: String) {
+    switch item.type {
+    case .clips:
+      guard let file = item.singleFile?.gif else {
+        return (0, 0, "")
+      }
+      return (CGFloat(file.width), CGFloat(file.height), file.url)
       
-    case let sticker as StickerItem:
-      let dimensions = sticker.file.xs.webp
-      return (CGFloat(dimensions.width), CGFloat(dimensions.height), dimensions.url)
-      
-    case let clip as ClipItem:
-      let dimensions = clip.fileMeta.gif
-      return (CGFloat(dimensions.width), CGFloat(dimensions.height), clip.file.gif)
-      
-    default:
-      fatalError("Unsupported media type")
+    case .gifs, .stickers:
+      guard let file = item.xs?.gif else {
+        return (0, 0, "")
+      }
+      return (CGFloat(file.width), CGFloat(file.height), file.url)
     }
   }
   
-  func createRows(from items: [any MediaItem]) -> [RowLayout] {
+  func createRows(from items: [MediaDomainModel]) -> [RowLayout] {
     var rows: [RowLayout] = []
     var nextItem = 0
     
