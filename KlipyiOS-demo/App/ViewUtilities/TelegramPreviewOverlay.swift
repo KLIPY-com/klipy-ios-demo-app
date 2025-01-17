@@ -17,11 +17,9 @@ struct TelegramPreviewOverlay: View {
   var body: some View {
     GeometryReader { geometry in
       ZStack {
-        // Background overlay
         if let selectedItem = viewModel.selectedItem {
           let screenSize = geometry.size
-          
-          // Calculate final frame
+  
           let targetSize = calculateTargetSize(
             originalSize: CGSize(
               width: selectedItem.item.width,
@@ -45,7 +43,6 @@ struct TelegramPreviewOverlay: View {
               }
             
             VStack(alignment: .leading, spacing: 8) {
-              // Animated preview
               AnimatedImage(url: URL(string: selectedItem.item.url))
                 .resizable()
                 .aspectRatio(contentMode: .fit)
@@ -61,7 +58,6 @@ struct TelegramPreviewOverlay: View {
                       viewModel.isDragging = true
                       viewModel.dragOffset = value.translation
                       
-                      // Calculate scale based on drag distance
                       let dragDistance = abs(value.translation.height)
                       viewModel.dragScale = max(0.7, min(1, 1 - (dragDistance / 1000)))
                     }
