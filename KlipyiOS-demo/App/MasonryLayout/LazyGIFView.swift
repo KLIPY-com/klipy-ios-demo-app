@@ -11,8 +11,19 @@ import SDWebImageSwiftUI
 
 struct LazyGIFView: View {
   let item: GridItemLayout
-  @State var isAnimating: Bool = true
+  
+  @StateObject private var previewModel: PreviewViewModel
 
+  @State var isAnimating: Bool = true
+  @State var impactFeedback = UIImpactFeedbackGenerator(style: .medium)
+  @State var longPressInProgress: Bool = false
+  @State private var itemFrame: CGRect = .zero
+  
+  init(item: GridItemLayout, previewModel: PreviewViewModel) {
+    self.item = item
+    _previewModel = StateObject(wrappedValue: previewModel)
+  }
+  
   var body: some View {
     Group {
       AnimatedImage(url: URL(string: item.url), isAnimating: .constant(true)) {
@@ -21,11 +32,20 @@ struct LazyGIFView: View {
           .transition(.fade)
           .aspectRatio(contentMode: .fill)
       }
-        .resizable()
-        .transition(.fade)
-        .playbackRate(2.0)
-        .playbackMode(.bounce)
-        .aspectRatio(contentMode: .fill)
+      .resizable()
+      .transition(.fade)
+      .playbackRate(2.0)
+      .playbackMode(.bounce)
+      .aspectRatio(contentMode: .fill)
+      .overlay(GeometryReader { geo -> Color in
+        DispatchQueue.main.async {
+          itemFrame = geo.frame(in: .global)
+        }
+        return Color.clear
+      })
+      .onLongPressGesture(minimumDuration: 0.3) {
+        previewModel.selectedItem = (item, itemFrame)
+      }
     }
   }
 }
