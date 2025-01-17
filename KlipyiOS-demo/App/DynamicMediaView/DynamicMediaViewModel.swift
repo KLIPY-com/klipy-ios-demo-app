@@ -35,7 +35,7 @@ class DynamicMediaViewModel {
   func switchToType(_ type: MediaType) {
     guard type != currentType else { return }
     
-    // Reset state
+    /// Reset state
     items = []
     currentPage = 1
     hasMorePages = true
@@ -44,7 +44,7 @@ class DynamicMediaViewModel {
     hasError = false
     errorMessage = nil
     
-    // Switch service
+    /// Switch Service Type
     currentType = type
     service = .create(for: type)
   }
@@ -137,26 +137,23 @@ class DynamicMediaViewModel {
   }
   
   // Analytics and actions become much simpler
-  func trackView(for item: MediaDomainModel) async {
-    try? await service.trackView(slug: item.slug)
+  func trackView(for item: MediaDomainModel) async throws -> FireAndForgetResponse {
+    return try await service.trackView(slug: item.slug)
   }
   
-  func trackShare(for item: MediaDomainModel) async {
-    try? await service.trackShare(slug: item.slug)
+  func trackShare(for item: MediaDomainModel) async throws -> FireAndForgetResponse {
+    return try await service.trackShare(slug: item.slug)
   }
   
-  func hideFromRecent(item: MediaDomainModel) async {
-    do {
-      try await service.hideFromRecent(slug: item.slug)
-      await MainActor.run {
-        items.removeAll { $0.id == item.id }
-      }
-    } catch {
-      print("Failed to hide item: \(error)")
+  func hideFromRecent(item: MediaDomainModel) async throws -> FireAndForgetResponse {
+    await MainActor.run {
+      items.removeAll { $0.id == item.id }
     }
+    
+    return try await service.hideFromRecent(slug: item.slug)
   }
   
-  func reportItem(item: MediaDomainModel, reason: String) async {
-    try? await service.report(slug: item.slug, reason: reason)
+  func reportItem(item: MediaDomainModel, reason: String) async throws -> FireAndForgetResponse {
+    return try await service.report(slug: item.slug, reason: reason)
   }
 }
