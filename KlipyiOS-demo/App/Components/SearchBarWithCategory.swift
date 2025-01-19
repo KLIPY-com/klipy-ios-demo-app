@@ -92,10 +92,10 @@ struct ContentSearchBar: View {
         }
       }
     }
-    .padding(10)
+    .padding(.bottom, 10)
+    .padding(.horizontal, 8)
     .background(Color(red: 24/255, green: 28/255, blue: 31/255))
     .cornerRadius(20)
-    .padding(.horizontal)
   }
 }
 
