@@ -11,6 +11,8 @@ struct DynamicMediaView: View {
   @Bindable private var viewModel = DynamicMediaViewModel()
   
   @State private var searchText = ""
+  @State private var categorySearchText = ""
+  @State private var selectedCategory: Category?
   @State private var rows: [RowLayout] = []
   
   @Environment(\.dismiss) private var dismiss
@@ -19,7 +21,18 @@ struct DynamicMediaView: View {
   var body: some View {
     NavigationView {
       VStack(spacing: 0) {
-        searchBar
+        ContentSearchBar(
+          searchText: $searchText,
+          selectedCategory: $selectedCategory
+        )
+        .onChange(of: selectedCategory) {_, newCategory in
+          if let categoryName = newCategory?.name {
+            categorySearchText = categoryName
+          } else {
+            searchText = ""
+            categorySearchText = ""
+          }
+        }
         
         mediaContent
         
@@ -32,6 +45,11 @@ struct DynamicMediaView: View {
       await viewModel.loadTrendingItems()
     }
     .onChange(of: searchText) { _, newValue in
+      Task {
+        await viewModel.searchItems(query: newValue)
+      }
+    }
+    .onChange(of: categorySearchText) { _, newValue in
       Task {
         await viewModel.searchItems(query: newValue)
       }

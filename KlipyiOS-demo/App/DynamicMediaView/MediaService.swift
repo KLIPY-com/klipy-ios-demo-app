@@ -27,6 +27,17 @@ enum MediaService {
     }
   }
   
+  func categories() async throws -> Categories {
+    switch self {
+    case .gif(let service):
+      return try await service.fetchCategories()
+    case .clip(let service):
+      return try await service.fetchCategories()
+    case .sticker(let service):
+      return try await service.fetchCategories()
+    }
+  }
+  
   func search(query: String, page: Int, perPage: Int) async throws -> [MediaDomainModel] {
     switch self {
     case .gif(let service):
