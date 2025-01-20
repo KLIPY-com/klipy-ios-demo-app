@@ -23,7 +23,8 @@ struct DynamicMediaView: View {
       VStack(spacing: 0) {
         ContentSearchBar(
           searchText: $searchText,
-          selectedCategory: $selectedCategory
+          selectedCategory: $selectedCategory,
+          categories: viewModel.categories
         )
         .onChange(of: selectedCategory) {_, newCategory in
           if let categoryName = newCategory?.name {
@@ -33,6 +34,8 @@ struct DynamicMediaView: View {
             categorySearchText = ""
           }
         }
+        .padding(.bottom, 12)
+        .padding(.horizontal, 12)
         
         mediaContent
         
@@ -40,9 +43,11 @@ struct DynamicMediaView: View {
       }
       .navigationTitle(viewModel.currentType.displayName)
       .navigationBarTitleDisplayMode(.inline)
+      .background(Color(red: 41/255, green: 46/255, blue: 50/255))
     }
     .task {
       await viewModel.loadTrendingItems()
+      await viewModel.fetchCategories()
     }
     .onChange(of: searchText) { _, newValue in
       Task {
@@ -58,11 +63,22 @@ struct DynamicMediaView: View {
   
   private var mediaContent: some View {
     ZStack {
-      MasonryGridView(rows: rows) {
-        Task {
-          await viewModel.loadNextPageIfNeeded()
+      Color(red: 41/255, green: 46/255, blue: 50/255)
+      MasonryGridView(
+        rows: rows,
+        onLoadMore: {
+          Task {
+            await viewModel.loadNextPageIfNeeded()
+          }
+        },
+        onSend: { url in
+          print("Send!!!!!!!!!!!")
+        },
+        onReport: { url, reason in
+          print("REPORT!!!!!!!!!!!")
         }
-      }
+      )
+      .padding(.horizontal, 10)
       .frame(maxWidth: .infinity)
     }
     .onChange(of: viewModel.items) { _, _ in
@@ -101,7 +117,7 @@ struct DynamicMediaView: View {
   
   private var mediaTypeSelector: some View {
     ZStack {
-      Color(red: 24/255, green: 28/255, blue: 31/255)
+      Color(red: 41/255, green: 46/255, blue: 50/255)
         .ignoresSafeArea()
       
       HStack(spacing: 20) {
@@ -109,6 +125,7 @@ struct DynamicMediaView: View {
         mediaTypeButton("Clips", type: .clips)
         mediaTypeButton("Stickers", type: .stickers)
       }
+      .padding(.top, 10)
     }
     .frame(maxWidth: .infinity)
     .frame(height: 44)
