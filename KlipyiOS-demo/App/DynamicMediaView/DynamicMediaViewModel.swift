@@ -18,6 +18,8 @@ class DynamicMediaViewModel {
   private(set) var searchQuery = ""
   private(set) var currentType: MediaType
   
+  var categories: [Category] = []
+  
   @ObservationIgnored
   private var currentPage = 1
   
@@ -155,5 +157,18 @@ class DynamicMediaViewModel {
   
   func reportItem(item: MediaDomainModel, reason: String) async throws -> FireAndForgetResponse {
     return try await service.report(slug: item.slug, reason: reason)
+  }
+}
+
+extension DynamicMediaViewModel {
+  @MainActor
+  func fetchCategories() async {
+    do {
+      let categoriesResponse = try await service.categories()
+      let mappedCategories = categoriesResponse.data.map { Category(name: $0) }
+      self.categories = mappedCategories
+    } catch {
+      print("Error fetching categories: \(error)")
+    }
   }
 }
