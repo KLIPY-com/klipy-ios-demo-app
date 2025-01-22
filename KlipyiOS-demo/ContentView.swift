@@ -10,27 +10,26 @@ import SwiftUI
 struct ContentView: View {
   @State var isPresented: Bool = true
   
-  
   var body: some View {
     NavigationStack {
       VStack(spacing: 0) {
         NavigationLink(destination: ChatView()) {
-//          ChatPreview(
-//            name: "John",
-//            lastMessage: "Seen",
-//            time: "19.02.14",
-//            unreadCount: 2
-//          )
-          
+          ChatPreview(
+            name: "John Brown",
+            lastMessage: "Hi, how's it going?",
+            time: "19.02.14",
+            unreadCount: 2
+          )
         }
         .buttonStyle(PlainButtonStyle())
         .padding(.top, 1)
         
         Spacer()
       }
-      .sheet(isPresented: $isPresented, content: {
-        DynamicMediaView()
-      })
+      .background(Color(red: 41/255, green: 46/255, blue: 50/255))
+//      .sheet(isPresented: $isPresented, content: {
+//        DynamicMediaView()
+//      })
       .navigationBarTitleDisplayMode(.inline)
       .toolbar {
         // Left Menu Button
