@@ -12,7 +12,7 @@ struct MasonryGridView: View {
   let rows: [RowLayout]
   let onLoadMore: () -> Void
 
-  let onSend: (String) -> Void
+  let onSend: (GridItemLayout) -> Void
   let onReport: (String, ReportReason) -> Void
   
   @StateObject private var previewModel = PreviewViewModel()
