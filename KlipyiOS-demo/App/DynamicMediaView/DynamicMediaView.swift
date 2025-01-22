@@ -15,6 +15,8 @@ struct DynamicMediaView: View {
   @State private var selectedCategory: Category?
   @State private var rows: [RowLayout] = []
   
+  let onSend: (GridItemLayout) -> Void
+  
   @Environment(\.dismiss) private var dismiss
   private let calculator = MasonryLayoutCalculator()
   
@@ -71,8 +73,11 @@ struct DynamicMediaView: View {
             await viewModel.loadNextPageIfNeeded()
           }
         },
-        onSend: { url in
-          print("Send!!!!!!!!!!!")
+        onSend: { mediaItem in
+          onSend(mediaItem)
+          print("Message is sending...")
+          print(mediaItem.url)
+          print(mediaItem.originalWidth)
         },
         onReport: { url, reason in
           print("REPORT!!!!!!!!!!!")
@@ -157,5 +162,5 @@ struct DynamicMediaView: View {
 }
 
 #Preview {
-  DynamicMediaView()
+  DynamicMediaView(onSend: { item in })
 }
