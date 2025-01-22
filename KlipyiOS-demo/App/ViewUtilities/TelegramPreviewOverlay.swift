@@ -33,7 +33,7 @@ struct TelegramPreviewOverlay: View {
   @ObservedObject var viewModel: PreviewViewModel
   @State private var showingMenu = false
   
-  let onSend: (String) -> Void
+  let onSend: (GridItemLayout) -> Void
   let onReport: (String, ReportReason) -> Void
   
   let onDismiss: () -> Void
@@ -121,7 +121,7 @@ struct TelegramPreviewOverlay: View {
     
     switch action {
     case .send:
-      onSend(selectedItem.item.url)
+      onSend(selectedItem.item)
     case .report(let reason):
       onReport(selectedItem.item.url, reason)
     }
