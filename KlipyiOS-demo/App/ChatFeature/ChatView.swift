@@ -34,7 +34,7 @@ struct ChatView: View {
           scrollProxy = proxy
           scrollToBottom()
         }
-        .onChange(of: messages.count) { _ in
+        .onChange(of: messages.count) { _, _ in
           scrollToBottom()
         }
       }
@@ -49,11 +49,43 @@ struct ChatView: View {
     .navigationTitle("John")
     .navigationBarTitleDisplayMode(.inline)
     .sheet(isPresented: $isMediaPickerPresented) {
-      DynamicMediaView()
-        .presentationDetents([.medium, .large])
-        .presentationDragIndicator(.visible)
+      DynamicMediaView(onSend: { message in
+        print(message)
+        isMediaPickerPresented = false
+        sendMediaMessage(item: message)
+      })
+      .presentationDetents([.large])
+      .presentationDragIndicator(.visible)
     }
     .background(Color(red: 41/255, green: 46/255, blue: 50/255))
+  }
+  
+  private func sendMediaMessage(item: GridItemLayout) {
+    SoundManager.shared.playMessageSound()
+    
+    withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+      let newMessage = Message(
+        content: "",
+        mediaItem: item,
+        isFromCurrentUser: true,
+        timestamp: Date()
+      )
+      messages.append(newMessage)
+    }
+    
+    // Simulate reply
+    DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+      withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+        let reply = Message(
+          content: "Haha Nice GIF!",
+          mediaItem: nil,
+          isFromCurrentUser: false,
+          timestamp: Date()
+        )
+        messages.append(reply)
+        SoundManager.shared.gotMessageSound()
+      }
+    }
   }
   
   private func scrollToBottom() {
@@ -71,22 +103,24 @@ struct ChatView: View {
     withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
       let newMessage = Message(
         content: trimmedText,
+        mediaItem: nil,
         isFromCurrentUser: true,
         timestamp: Date()
       )
       messages.append(newMessage)
       messageText = ""
     }
-
+    
     DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
       withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
         let reply = Message(
           content: "Thanks for your message!",
+          mediaItem: nil,
           isFromCurrentUser: false,
           timestamp: Date()
         )
         messages.append(reply)
-        SoundManager.shared.playMessageSound()
+        SoundManager.shared.gotMessageSound()
       }
     }
   }
