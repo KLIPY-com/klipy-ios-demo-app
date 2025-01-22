@@ -14,7 +14,21 @@ class SoundManager {
   private var audioPlayer: AVAudioPlayer?
   
   func playMessageSound() {
-    guard let soundURL = Bundle.main.url(forResource: "message_sent", withExtension: "wav") else {
+    guard let soundURL = Bundle.main.url(forResource: "send_message", withExtension: "wav") else {
+      return
+    }
+    
+    do {
+      audioPlayer = try AVAudioPlayer(contentsOf: soundURL)
+      audioPlayer?.prepareToPlay()
+      audioPlayer?.play()
+    } catch {
+      print("Error playing sound: \(error)")
+    }
+  }
+  
+  func gotMessageSound() {
+    guard let soundURL = Bundle.main.url(forResource: "get_message", withExtension: "mp3") else {
       return
     }
     
