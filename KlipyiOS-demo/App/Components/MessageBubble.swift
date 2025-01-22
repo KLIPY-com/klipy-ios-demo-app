@@ -6,6 +6,8 @@
 //
 
 import SwiftUI
+import SDWebImage
+import SDWebImageSwiftUI
 
 struct MessageBubble: View {
   let message: Message
@@ -16,13 +18,32 @@ struct MessageBubble: View {
         Spacer()
       }
       
-      Text(message.content)
-        .padding(12)
-        .background(message.isFromCurrentUser ? Color(hex: "1E68D7") : Color(.systemGray6))
-        .foregroundColor(message.isFromCurrentUser ? .white : .white)
-        .cornerRadius(16)
-        .padding(.horizontal, 16)
-        .padding(.vertical, 4)
+      VStack(alignment: message.isFromCurrentUser ? .trailing : .leading) {
+        if let mediaItem = message.mediaItem {
+          AnimatedImage(url: URL(string: mediaItem.url), isAnimating: .constant(true)) {
+            WebImage(url: URL(string: mediaItem.previewUrl))
+              .resizable()
+              .transition(.fade)
+              .aspectRatio(contentMode: .fill)
+          }
+          .resizable()
+          .frame(width: mediaItem.width, height: mediaItem.height)
+          .aspectRatio(contentMode: .fill)
+          .cornerRadius(16)
+        }
+        
+        if !message.content.isEmpty {
+          Text(message.content)
+            .padding(12)
+            .background(message.isFromCurrentUser ? Color(hex: "1E68D7") : Color(.systemGray6))
+            .foregroundColor(message.isFromCurrentUser ? .white : .white)
+            .cornerRadius(16)
+            .padding(.horizontal, 16)
+            .padding(.vertical, 4)
+        }
+      }
+      .padding(.horizontal, 16)
+      .padding(.vertical, 4)
       
       if !message.isFromCurrentUser {
         Spacer()
@@ -30,3 +51,4 @@ struct MessageBubble: View {
     }
   }
 }
+  
