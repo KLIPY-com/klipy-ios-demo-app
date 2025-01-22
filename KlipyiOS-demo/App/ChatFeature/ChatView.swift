@@ -10,9 +10,8 @@ import SwiftUI
 struct ChatView: View {
   @State private var messageText = ""
   @State private var messages = Message.examples
-  
+  @State private var isMediaPickerPresented = false
   @State private var scrollProxy: ScrollViewProxy?
-  
   @FocusState private var isFocused: Bool
   
   var body: some View {
@@ -44,13 +43,17 @@ struct ChatView: View {
         messageText: $messageText,
         isFocused: _isFocused,
         onSendMessage: sendMessage,
-        onMediaPickerTap: {
-          // GIF picker action
-        }
+        onMediaPickerTap: { isMediaPickerPresented = true }
       )
     }
     .navigationTitle("John")
     .navigationBarTitleDisplayMode(.inline)
+    .sheet(isPresented: $isMediaPickerPresented) {
+      DynamicMediaView()
+        .presentationDetents([.medium, .large])
+        .presentationDragIndicator(.visible)
+    }
+    .background(Color(red: 41/255, green: 46/255, blue: 50/255))
   }
   
   private func scrollToBottom() {
