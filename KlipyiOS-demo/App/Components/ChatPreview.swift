@@ -83,7 +83,7 @@ struct ChatPreview: View {
     }
     .padding(.horizontal)
     .padding(.vertical, 8)
-    .background(Color.white)
+    .background(Color(red: 41/255, green: 46/255, blue: 50/255))
   }
 }
 

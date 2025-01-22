@@ -19,7 +19,7 @@ struct MessageBubble: View {
       Text(message.content)
         .padding(12)
         .background(message.isFromCurrentUser ? Color(hex: "1E68D7") : Color(.systemGray6))
-        .foregroundColor(message.isFromCurrentUser ? .white : .black)
+        .foregroundColor(message.isFromCurrentUser ? .white : .white)
         .cornerRadius(16)
         .padding(.horizontal, 16)
         .padding(.vertical, 4)
