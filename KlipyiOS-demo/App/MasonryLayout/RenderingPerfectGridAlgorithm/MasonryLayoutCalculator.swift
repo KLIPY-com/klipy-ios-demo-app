@@ -38,8 +38,8 @@ class MasonryLayoutCalculator {
       guard let file = item.singleFile?.gif else {
         return (0, 0, "")
       }
-      return (CGFloat(file.width), CGFloat(file.height), file.url)
       
+      return (CGFloat(file.width), CGFloat(file.height), file.url)
     case .gifs, .stickers:
       guard let file = item.xs?.gif else {
         return (0, 0, "")
@@ -60,6 +60,7 @@ class MasonryLayoutCalculator {
         return GridItemLayout(
           id: Int64(item.id),
           url: dimensions.url,
+          mp4Media: item.singleFile,
           previewUrl: item.blurPreview,
           width: dimensions.width,
           height: dimensions.height,

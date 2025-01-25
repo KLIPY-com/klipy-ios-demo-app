@@ -11,6 +11,7 @@ import Foundation
 struct GridItemLayout: Identifiable {
   let id: Int64
   let url: String
+  let mp4Media: MediaFile?
   let previewUrl: String
   var width: CGFloat
   var height: CGFloat
