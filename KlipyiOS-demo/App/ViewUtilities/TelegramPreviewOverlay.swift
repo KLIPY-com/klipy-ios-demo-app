@@ -73,11 +73,8 @@ struct TelegramPreviewOverlay: View {
             Group {
               if let mp4Url = selectedItem.item.mp4Media?.mp4?.url {
                 LoopingVideoPlayer(url: URL(string: mp4Url)!, isPlaying: $isMp4Playing)
-                  .aspectRatio(contentMode: .fit)
+                  .aspectRatio(contentMode: .fill)
                   .frame(width: targetSize.width, height: targetSize.height)
-                  .onAppear {
-                    isMp4Playing = true
-                  }
                   .onDisappear {
                     isMp4Playing = false
                   }
