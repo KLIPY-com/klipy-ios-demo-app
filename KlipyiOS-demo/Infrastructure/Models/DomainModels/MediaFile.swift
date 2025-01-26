@@ -21,7 +21,7 @@ struct MediaDomainModel: Identifiable, Equatable {
   let id: Int
   let title: String
   let slug: String
-  let blurPreview: String
+  let blurPreview: String?
   let type: MediaType
   
   let hd: MediaFile?
