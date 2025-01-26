@@ -16,7 +16,7 @@ struct ClipItem: MediaItem {
   let url: String
   let title: String
   let slug: String
-  let blurPreview: String
+  let blurPreview: String?
   let file: ClipFile
   let fileMeta: ClipFileMeta
   let type: MediaType
@@ -40,7 +40,7 @@ struct ClipItem: MediaItem {
     self.url = try container.decode(String.self, forKey: .url)
     self.title = try container.decode(String.self, forKey: .title)
     self.slug = try container.decode(String.self, forKey: .slug)
-    self.blurPreview = try container.decode(String.self, forKey: .blurPreview)
+    self.blurPreview = try container.decodeIfPresent(String.self, forKey: .blurPreview)
     self.file = try container.decode(ClipFile.self, forKey: .file)
     self.fileMeta = try container.decode(ClipFileMeta.self, forKey: .fileMeta)
     self.type = try container.decode(MediaType.self, forKey: .type)

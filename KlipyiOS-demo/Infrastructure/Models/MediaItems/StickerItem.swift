@@ -15,7 +15,7 @@ struct StickerItem: MediaItem {
   let id: Int
   let title: String
   let slug: String
-  let blurPreview: String
+  let blurPreview: String?
   let file: SizeVariants
   let type: MediaType
   
