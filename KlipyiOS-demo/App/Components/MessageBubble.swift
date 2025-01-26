@@ -12,6 +12,8 @@ import SDWebImageSwiftUI
 struct MessageBubble: View {
   let message: Message
   
+  @State private var isPlaying = false
+  
   var body: some View {
     HStack {
       if message.isFromCurrentUser {
@@ -20,16 +22,26 @@ struct MessageBubble: View {
       
       VStack(alignment: message.isFromCurrentUser ? .trailing : .leading) {
         if let mediaItem = message.mediaItem {
-          AnimatedImage(url: URL(string: mediaItem.url), isAnimating: .constant(true)) {
-            WebImage(url: URL(string: mediaItem.previewUrl))
-              .resizable()
-              .transition(.fade)
-              .aspectRatio(contentMode: .fill)
+          if message.isMessageContaintsMp4,
+             let mp4Url = mediaItem.mp4Media?.mp4?.url {
+            LoopingVideoPlayer(url: URL(string: mp4Url)!, isPlaying: $isPlaying)
+              .frame(width: mediaItem.width * 1.5, height: mediaItem.height * 1.5)
+              .cornerRadius(16)
+              .onTapGesture {
+                isPlaying.toggle()
+              }
+          } else {
+            AnimatedImage(url: URL(string: mediaItem.url), isAnimating: .constant(true)) {
+              WebImage(url: URL(string: mediaItem.previewUrl))
+                .resizable()
+                .transition(.fade)
+                .aspectRatio(contentMode: .fill)
+            }
+            .resizable()
+            .frame(width: mediaItem.width, height: mediaItem.height)
+            .aspectRatio(contentMode: .fill)
+            .cornerRadius(16)
           }
-          .resizable()
-          .frame(width: mediaItem.width, height: mediaItem.height)
-          .aspectRatio(contentMode: .fill)
-          .cornerRadius(16)
         }
         
         if !message.content.isEmpty {
