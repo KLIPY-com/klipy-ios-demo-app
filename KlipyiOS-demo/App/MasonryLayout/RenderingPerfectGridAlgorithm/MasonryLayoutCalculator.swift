@@ -61,7 +61,7 @@ class MasonryLayoutCalculator {
           id: Int64(item.id),
           url: dimensions.url,
           mp4Media: item.singleFile,
-          previewUrl: item.blurPreview,
+          previewUrl: item.blurPreview ?? "",
           width: dimensions.width,
           height: dimensions.height,
           originalWidth: dimensions.width,
