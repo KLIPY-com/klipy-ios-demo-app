@@ -16,7 +16,6 @@ struct CasualVideoPlayer: UIViewControllerRepresentable {
   func makeUIViewController(context: Context) -> AVPlayerViewController {
     let controller = AVPlayerViewController()
     controller.player = AVPlayer(url: url)
-    controller.showsPlaybackControls = false
     controller.player?.play()
     return controller
   }
