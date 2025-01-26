@@ -31,8 +31,11 @@ extension View {
 
 struct TelegramPreviewOverlay: View {
   @ObservedObject var viewModel: PreviewViewModel
+
   @State private var showingMenu = false
-  
+  @State private var isMp4Playing: Bool = false
+  @State private var videoPlayer: LoopingVideoPlayer?
+
   let onSend: (GridItemLayout) -> Void
   let onReport: (String, ReportReason) -> Void
   
@@ -66,20 +69,35 @@ struct TelegramPreviewOverlay: View {
           
           VStack {
             Spacer()
-            AnimatedImage(url: URL(string: selectedItem.item.url))
-              .resizable()
-              .aspectRatio(contentMode: .fit)
-              .frame(width: targetSize.width, height: targetSize.height)
-              .offset(
-                x: viewModel.isDragging ? viewModel.dragOffset.width : 0,
-                y: viewModel.isDragging ? viewModel.dragOffset.height : 0
-              )
-              .scaleEffect(viewModel.dragScale)
-              .gesture(
-                DragGesture()
-                  .onChanged { value in
-                    viewModel.isDragging = true
-                    viewModel.dragOffset = value.translation
+            
+            Group {
+              if let mp4Url = selectedItem.item.mp4Media?.mp4?.url {
+                LoopingVideoPlayer(url: URL(string: mp4Url)!, isPlaying: $isMp4Playing)
+                  .aspectRatio(contentMode: .fit)
+                  .frame(width: targetSize.width, height: targetSize.height)
+                  .onAppear {
+                    isMp4Playing = true
+                  }
+                  .onDisappear {
+                    isMp4Playing = false
+                  }
+              } else {
+                AnimatedImage(url: URL(string: selectedItem.item.url))
+                  .resizable()
+                  .aspectRatio(contentMode: .fit)
+                  .frame(width: targetSize.width, height: targetSize.height)
+              }
+            }
+            .offset(
+              x: viewModel.isDragging ? viewModel.dragOffset.width : 0,
+              y: viewModel.isDragging ? viewModel.dragOffset.height : 0
+            )
+            .scaleEffect(viewModel.dragScale)
+            .gesture(
+              DragGesture()
+                .onChanged { value in
+                  viewModel.isDragging = true
+                  viewModel.dragOffset = value.translation
                     
                     let dragDistance = abs(value.translation.height)
                     viewModel.dragScale = max(0.7, min(1, 1 - (dragDistance / 1000)))
