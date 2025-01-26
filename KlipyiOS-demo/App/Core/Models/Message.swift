@@ -14,6 +14,10 @@ struct Message: Identifiable {
   let isFromCurrentUser: Bool
   let timestamp: Date
   
+  var isMessageContaintsMp4: Bool {
+   mediaItem?.mp4Media != nil
+  }
+  
   // Example messages for preview
   static let examples = [
     Message(
