@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		E669D20B2D3AAFE300FCA1BD /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = E669D20A2D3AAFE300FCA1BD /* Kingfisher */; };
+		E6517A9B2D4834D900C2B5FB /* AlertToast in Frameworks */ = {isa = PBXBuildFile; productRef = E6517A9A2D4834D900C2B5FB /* AlertToast */; };
 		E669D20E2D3AB1C800FCA1BD /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = E669D20D2D3AB1C800FCA1BD /* SDWebImageSwiftUI */; };
 		E6F6AFD92D343C65008CB511 /* Moya in Frameworks */ = {isa = PBXBuildFile; productRef = E6F6AFD82D343C65008CB511 /* Moya */; };
 /* End PBXBuildFile section */
@@ -16,9 +16,22 @@
 		E6D992712D31681A003CAF83 /* KlipyiOS-demo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "KlipyiOS-demo.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		E6517A982D47C13800C2B5FB /* Exceptions for "KlipyiOS-demo" folder in "KlipyiOS-demo" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = E6D992702D31681A003CAF83 /* KlipyiOS-demo */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		E6D992732D31681A003CAF83 /* KlipyiOS-demo */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				E6517A982D47C13800C2B5FB /* Exceptions for "KlipyiOS-demo" folder in "KlipyiOS-demo" target */,
+			);
 			path = "KlipyiOS-demo";
 			sourceTree = "<group>";
 		};
@@ -30,7 +43,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E669D20E2D3AB1C800FCA1BD /* SDWebImageSwiftUI in Frameworks */,
-				E669D20B2D3AAFE300FCA1BD /* Kingfisher in Frameworks */,
+				E6517A9B2D4834D900C2B5FB /* AlertToast in Frameworks */,
 				E6F6AFD92D343C65008CB511 /* Moya in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -75,8 +88,8 @@
 			name = "KlipyiOS-demo";
 			packageProductDependencies = (
 				E6F6AFD82D343C65008CB511 /* Moya */,
-				E669D20A2D3AAFE300FCA1BD /* Kingfisher */,
 				E669D20D2D3AB1C800FCA1BD /* SDWebImageSwiftUI */,
+				E6517A9A2D4834D900C2B5FB /* AlertToast */,
 			);
 			productName = "KlipyiOS-demo";
 			productReference = E6D992712D31681A003CAF83 /* KlipyiOS-demo.app */;
@@ -108,8 +121,8 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				E6F6AFD72D343C65008CB511 /* XCRemoteSwiftPackageReference "Moya" */,
-				E669D2092D3AAFE300FCA1BD /* XCRemoteSwiftPackageReference "Kingfisher" */,
 				E669D20C2D3AB1C800FCA1BD /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */,
+				E6517A992D4834D900C2B5FB /* XCRemoteSwiftPackageReference "AlertToast" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = E6D992722D31681A003CAF83 /* Products */;
@@ -269,9 +282,10 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"KlipyiOS-demo/Preview Content\"";
-				DEVELOPMENT_TEAM = 6SR4JWJD54;
+				DEVELOPMENT_TEAM = 22H6S3D7DG;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "KlipyiOS-demo/Info.plist";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -282,7 +296,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.tornike.KlipyiOS-demo";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.klipy.KlipyiOS-demo";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -298,9 +312,10 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"KlipyiOS-demo/Preview Content\"";
-				DEVELOPMENT_TEAM = 6SR4JWJD54;
+				DEVELOPMENT_TEAM = 22H6S3D7DG;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "KlipyiOS-demo/Info.plist";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -311,7 +326,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.tornike.KlipyiOS-demo";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.klipy.KlipyiOS-demo";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -343,12 +358,12 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		E669D2092D3AAFE300FCA1BD /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
+		E6517A992D4834D900C2B5FB /* XCRemoteSwiftPackageReference "AlertToast" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/onevcat/Kingfisher.git";
+			repositoryURL = "https://github.com/elai950/AlertToast.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 8.1.3;
+				minimumVersion = 1.3.9;
 			};
 		};
 		E669D20C2D3AB1C800FCA1BD /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */ = {
@@ -370,10 +385,10 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		E669D20A2D3AAFE300FCA1BD /* Kingfisher */ = {
+		E6517A9A2D4834D900C2B5FB /* AlertToast */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = E669D2092D3AAFE300FCA1BD /* XCRemoteSwiftPackageReference "Kingfisher" */;
-			productName = Kingfisher;
+			package = E6517A992D4834D900C2B5FB /* XCRemoteSwiftPackageReference "AlertToast" */;
+			productName = AlertToast;
 		};
 		E669D20D2D3AB1C800FCA1BD /* SDWebImageSwiftUI */ = {
 			isa = XCSwiftPackageProductDependency;
