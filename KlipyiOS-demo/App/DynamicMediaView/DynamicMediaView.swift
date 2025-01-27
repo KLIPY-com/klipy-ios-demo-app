@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import AlertToast
 
 struct DynamicMediaView: View {
   @Bindable private var viewModel = DynamicMediaViewModel()
@@ -16,6 +17,8 @@ struct DynamicMediaView: View {
   @State private var rows: [RowLayout] = []
   
   let onSend: (GridItemLayout) -> Void
+  
+  @State private var showToast = false
   
   @Environment(\.dismiss) private var dismiss
   private let calculator = MasonryLayoutCalculator()
@@ -42,6 +45,13 @@ struct DynamicMediaView: View {
         mediaContent
         
         mediaTypeSelector
+      }
+      .toast(isPresenting: $showToast) {
+        return AlertToast(
+          displayMode: .banner(.pop),
+          type: .regular,
+          title: "🚓 Klipy moderators will review your report. \nThank you!"
+        )
       }
       .navigationTitle(viewModel.currentType.displayName)
       .navigationBarTitleDisplayMode(.inline)
@@ -75,12 +85,17 @@ struct DynamicMediaView: View {
         },
         onSend: { mediaItem in
           onSend(mediaItem)
-          print("Message is sending...")
-          print(mediaItem.url)
-          print(mediaItem.originalWidth)
+          
+          guard let mediaItem = viewModel.getMediaItem(by: mediaItem.id) else {
+            return
+          }
+          
+          Task {
+            try await viewModel.trackShare(for: mediaItem)
+          }
         },
         onReport: { url, reason in
-          print("REPORT!!!!!!!!!!!")
+          showToast = true
         }
       )
       .padding(.horizontal, 10)

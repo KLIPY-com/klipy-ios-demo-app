@@ -161,14 +161,29 @@ class DynamicMediaViewModel {
 }
 
 extension DynamicMediaViewModel {
+  func getMediaItem(by id: Int64) -> MediaDomainModel? {
+    return items.first { $0.id == Int(id) }
+  }
+  
   @MainActor
   func fetchCategories() async {
     do {
       let categoriesResponse = try await service.categories()
-      let mappedCategories = categoriesResponse.data.map { Category(name: $0) }
+      
+      let predefinedCategories = [
+        Category(name: "trending"),
+        Category(name: "recent")
+      ]
+      
+      let mappedCategories = predefinedCategories + categoriesResponse.data.map {
+        Category(name: $0)
+      }
+
       self.categories = mappedCategories
     } catch {
       print("Error fetching categories: \(error)")
     }
   }
 }
+
+
