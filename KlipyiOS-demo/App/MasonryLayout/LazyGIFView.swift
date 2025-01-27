@@ -19,8 +19,11 @@ struct LazyGIFView: View {
   @State var longPressInProgress: Bool = false
   @State private var itemFrame: CGRect = .zero
   
-  init(item: GridItemLayout, previewModel: PreviewViewModel) {
+  var onClick: (() -> Void)
+  
+  init(item: GridItemLayout, previewModel: PreviewViewModel, onClick: @escaping () -> Void) {
     self.item = item
+    self.onClick = onClick
     _previewModel = StateObject(wrappedValue: previewModel)
   }
   
@@ -43,6 +46,9 @@ struct LazyGIFView: View {
         }
         return Color.clear
       })
+      .onTapGesture {
+        onClick()
+      }
       .onLongPressGesture(minimumDuration: 0.3) {
         previewModel.selectedItem = (item, itemFrame)
       }
