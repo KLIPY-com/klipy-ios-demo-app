@@ -46,7 +46,7 @@ struct DynamicMediaView: View {
         
         mediaTypeSelector
       }
-      .toast(isPresenting: $showToast) {
+      .toast(isPresenting: $showToast, duration: 5.0) {
         return AlertToast(
           displayMode: .banner(.pop),
           type: .regular,
@@ -85,7 +85,6 @@ struct DynamicMediaView: View {
         },
         onSend: { mediaItem in
           onSend(mediaItem)
-          
           guard let mediaItem = viewModel.getMediaItem(by: mediaItem.id) else {
             return
           }

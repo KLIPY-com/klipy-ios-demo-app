@@ -24,9 +24,9 @@ struct MessageBubble: View {
         if let mediaItem = message.mediaItem {
           if message.isMessageContaintsMp4,
              let mp4Url = mediaItem.mp4Media?.mp4?.url {
-            LoopingVideoPlayer(url: URL(string: mp4Url)!, isPlaying: $isPlaying)
+            LoopingVideoPlayer(videoID: mp4Url + UUID().uuidString, url: URL(string: mp4Url)!, isPlaying: $isPlaying)
               .aspectRatio(contentMode: .fill)
-              .frame(width: mediaItem.width * 1.5, height: mediaItem.height * 1.5)
+              .frame(width: mediaItem.width, height: mediaItem.height * 1.5)
               .cornerRadius(16)
               .onTapGesture {
                 isPlaying.toggle()
@@ -64,4 +64,4 @@ struct MessageBubble: View {
     }
   }
 }
-  
+

@@ -16,6 +16,7 @@ struct LazyGIFView: View {
 
   @State var isAnimating: Bool = true
   @State var impactFeedback = UIImpactFeedbackGenerator(style: .medium)
+  @State var clickFeedback = UIImpactFeedbackGenerator(style: .heavy)
   @State var longPressInProgress: Bool = false
   @State private var itemFrame: CGRect = .zero
   
@@ -47,11 +48,18 @@ struct LazyGIFView: View {
         return Color.clear
       })
       .onTapGesture {
-        onClick()
+        if item.mp4Media != nil {
+          impactFeedback.impactOccurred()
+          previewModel.selectedItem = (item, itemFrame)
+        } else {
+          clickFeedback.impactOccurred()
+          onClick()
+        }
       }
-      .onLongPressGesture(minimumDuration: 0.3) {
+      .onLongPressGesture(minimumDuration: 0.05, perform: {
+        impactFeedback.impactOccurred()
         previewModel.selectedItem = (item, itemFrame)
-      }
+      })
     }
   }
 }

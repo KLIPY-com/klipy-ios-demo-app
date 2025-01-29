@@ -20,6 +20,7 @@ struct KlipyiOS_demoApp: App {
             try await gifsUseCase.fetchTrending(page: 1, perPage: 10)
           }
         }
+        .preferredColorScheme(.dark)
     }
   }
 }

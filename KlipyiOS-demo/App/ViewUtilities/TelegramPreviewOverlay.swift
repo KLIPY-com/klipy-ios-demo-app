@@ -64,7 +64,8 @@ struct TelegramPreviewOverlay: View {
               width: selectedItem.item.width,
               height: selectedItem.item.height
             ),
-            screenSize: screenSize
+            screenSize: screenSize,
+            isMenuShown: showingMenu
           )
           
           VStack {
@@ -72,7 +73,7 @@ struct TelegramPreviewOverlay: View {
             
             Group {
               if let mp4Url = selectedItem.item.mp4Media?.mp4?.url {
-                LoopingVideoPlayer(url: URL(string: mp4Url)!, isPlaying: $isMp4Playing)
+                LoopingVideoPlayer(videoID: selectedItem.item.url, url: URL(string: mp4Url)!, isPlaying: $isMp4Playing)
                   .aspectRatio(contentMode: .fill)
                   .frame(width: targetSize.width, height: targetSize.height)
                   .onDisappear {
@@ -128,7 +129,6 @@ struct TelegramPreviewOverlay: View {
   private func handleMenuAction(_ action: MenuAction) {
     guard let selectedItem = viewModel.selectedItem else { return }
     
-    // Dismiss both menu and preview after action
     withAnimation(.spring(response: 0.3)) {
       showingMenu = false
       onDismiss()
@@ -142,9 +142,20 @@ struct TelegramPreviewOverlay: View {
     }
   }
   
-  private func calculateTargetSize(originalSize: CGSize, screenSize: CGSize) -> CGSize {
+  private func calculateScale() -> CGFloat {
+    if viewModel.isDragging {
+      return viewModel.dragScale
+    }
+    return showingMenu ? 0.85 : 1.0
+  }
+  
+  private func calculateTargetSize(
+    originalSize: CGSize,
+    screenSize: CGSize,
+    isMenuShown: Bool
+  ) -> CGSize {
     let maxWidth = screenSize.width * 0.9
-    let maxHeight = screenSize.height * 0.7
+    let maxHeight = screenSize.height * (isMenuShown ? 0.6 : 0.7)
     
     let widthRatio = maxWidth / originalSize.width
     let heightRatio = maxHeight / originalSize.height

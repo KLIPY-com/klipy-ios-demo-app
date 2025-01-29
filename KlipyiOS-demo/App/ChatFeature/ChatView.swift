@@ -13,6 +13,8 @@ struct ChatView: View {
   @State private var isMediaPickerPresented = false
   @State private var scrollProxy: ScrollViewProxy?
   @FocusState private var isFocused: Bool
+  @State private var dragOffset: CGFloat = 0
+
   
   var body: some View {
     VStack(spacing: 0) {
@@ -37,6 +39,34 @@ struct ChatView: View {
         .onChange(of: messages.count) { _, _ in
           scrollToBottom()
         }
+        .simultaneousGesture(
+          DragGesture()
+            .onChanged { value in
+              if value.translation.height > 0 && isFocused {
+                dragOffset = value.translation.height
+                if dragOffset > 50 {
+                  isFocused = false
+                }
+              }
+            }
+            .onEnded { _ in
+              dragOffset = 0
+            }
+        )
+        .overlay(
+          Group {
+            if dragOffset > 0 && isFocused {
+              VStack {
+                Image(systemName: "keyboard.chevron.compact.down")
+                  .foregroundColor(.gray)
+                  .font(.system(size: 24))
+                  .opacity(min(1, dragOffset / 50))
+                Spacer()
+              }
+              .padding(.top)
+            }
+          }
+        )
       }
       
       MessageInputView(

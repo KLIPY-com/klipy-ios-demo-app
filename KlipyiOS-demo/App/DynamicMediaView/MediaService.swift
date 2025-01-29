@@ -27,6 +27,21 @@ enum MediaService {
     }
   }
   
+  func fetchRecents(page: Int, perPage: Int) async throws -> [MediaDomainModel] {
+    switch self {
+    case .gif(let service):
+      let response = try await service.fetchRecentItems(page: page, perPage: perPage)
+      return response.data.data.map { $0.toDomain() }
+    case .clip(let service):
+      let response = try await service.fetchRecentItems(page: page, perPage: perPage)
+      let domainClips = response.data.data.map { $0.toDomain() }
+      return domainClips
+    case .sticker(let service):
+      let response = try await service.fetchRecentItems(page: page, perPage: perPage)
+      return response.data.data.map { $0.toDomain() }
+    }
+  }
+  
   func categories() async throws -> Categories {
     switch self {
     case .gif(let service):
