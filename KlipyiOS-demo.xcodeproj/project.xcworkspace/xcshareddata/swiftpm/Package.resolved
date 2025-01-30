@@ -1,5 +1,5 @@
 {
-  "originHash" : "194bceb6676de3d39701d6295348350a886690872ed2dba12663b73abe32a97d",
+  "originHash" : "a84c6805ebc006dc25a9f0d62b82a08d309aca99f7711430c426553c5dfd3611",
   "pins" : [
     {
       "identity" : "alamofire",
@@ -17,6 +17,15 @@
       "state" : {
         "revision" : "b39252eacd159904afd7d718bba0afabb87f2f2f",
         "version" : "1.3.9"
+      }
+    },
+    {
+      "identity" : "gsplayer",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/wxxsw/GSPlayer.git",
+      "state" : {
+        "revision" : "bdd5da716d665a398ec09706df39252cf55ef492",
+        "version" : "0.2.28"
       }
     },
     {
