@@ -82,7 +82,7 @@ struct TelegramPreviewOverlay: View {
               } else {
                 AnimatedImage(url: URL(string: selectedItem.item.url))
                   .resizable()
-                  .aspectRatio(contentMode: .fit)
+                  .aspectRatio(contentMode: .fill)
                   .frame(width: targetSize.width, height: targetSize.height)
               }
             }
@@ -154,7 +154,7 @@ struct TelegramPreviewOverlay: View {
     screenSize: CGSize,
     isMenuShown: Bool
   ) -> CGSize {
-    let maxWidth = screenSize.width * 0.9
+    let maxWidth = screenSize.width * 0.9 * (isMenuShown ? 0.8 : 0.9)
     let maxHeight = screenSize.height * (isMenuShown ? 0.6 : 0.7)
     
     let widthRatio = maxWidth / originalSize.width
