@@ -13,7 +13,10 @@ struct LazyGIFView: View {
   let item: GridItemLayout
   
   @StateObject private var previewModel: PreviewViewModel
-
+  @State private var isPressed: Bool = false
+  @State private var timer: Timer?
+  @GestureState private var isPressing: Bool = false
+  
   @State var isAnimating: Bool = true
   @State var impactFeedback = UIImpactFeedbackGenerator(style: .medium)
   @State var clickFeedback = UIImpactFeedbackGenerator(style: .heavy)
@@ -41,6 +44,8 @@ struct LazyGIFView: View {
       .playbackRate(2.0)
       .playbackMode(.bounce)
       .aspectRatio(contentMode: .fill)
+      .scaleEffect(isPressing ? 0.8 : 1.0)
+      .animation(.spring(response: 0.9, dampingFraction: 0.9), value: isPressing)
       .overlay(GeometryReader { geo -> Color in
         DispatchQueue.main.async {
           itemFrame = geo.frame(in: .global)
@@ -56,10 +61,31 @@ struct LazyGIFView: View {
           onClick()
         }
       }
-      .onLongPressGesture(minimumDuration: 0.05, perform: {
-        impactFeedback.impactOccurred()
-        previewModel.selectedItem = (item, itemFrame)
-      })
+      .simultaneousGesture(
+        DragGesture(minimumDistance: 0)
+          .updating($isPressing) { _, state, _ in
+            state = true
+          }
+          .onChanged { _ in
+            if !isPressed {
+              isPressed = true
+              timer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { _ in
+                impactFeedback.impactOccurred()
+                previewModel.selectedItem = (item, itemFrame)
+                withAnimation {
+                  isPressed = false
+                }
+              }
+            }
+          }
+          .onEnded { _ in
+            timer?.invalidate()
+            timer = nil
+            withAnimation {
+              isPressed = false
+            }
+          }
+      )
     }
   }
 }
