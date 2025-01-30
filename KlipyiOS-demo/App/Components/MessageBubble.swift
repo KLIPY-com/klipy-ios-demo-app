@@ -10,9 +10,10 @@ import SDWebImage
 import SDWebImageSwiftUI
 
 struct MessageBubble: View {
+  @Binding var isPlaying: Bool
   let message: Message
   
-  @State private var isPlaying = false
+  @StateObject private var playbackManager = VideoPlayerManager.shared
   
   var body: some View {
     HStack {
@@ -24,9 +25,8 @@ struct MessageBubble: View {
         if let mediaItem = message.mediaItem {
           if message.isMessageContaintsMp4,
              let mp4Url = mediaItem.mp4Media?.mp4?.url {
-            LoopingVideoPlayer(videoID: mp4Url + UUID().uuidString, url: URL(string: mp4Url)!, isPlaying: $isPlaying)
-              .aspectRatio(contentMode: .fill)
-              .frame(width: mediaItem.width, height: mediaItem.height * 1.5)
+            VideoPlayer(url: URL(string: mp4Url)!, play: $isPlaying)
+              .frame(width: mediaItem.width * 1.5, height: mediaItem.height * 1.5)
               .cornerRadius(16)
               .onTapGesture {
                 isPlaying.toggle()
