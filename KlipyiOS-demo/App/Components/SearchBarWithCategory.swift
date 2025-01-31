@@ -96,8 +96,23 @@ struct ContentSearchBar: View {
                 .frame(width: 22, height: 22)
               }
             }
-            .padding(.trailing, 8)
           }
+          // Constrain scroll view width and add gradient
+          .frame(width: 165)  // Adjust this value based on your needs
+          .overlay(
+            HStack {
+              Spacer()
+              LinearGradient(
+                gradient: Gradient(colors: [
+                  Color(red: 24/255, green: 28/255, blue: 31/255).opacity(0),
+                  Color(red: 24/255, green: 28/255, blue: 31/255)
+                ]),
+                startPoint: .leading,
+                endPoint: .trailing
+              )
+              .frame(width: 20)
+            }
+          )
         }
       }
     }
