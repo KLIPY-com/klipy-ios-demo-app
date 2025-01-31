@@ -38,10 +38,11 @@ struct LazyGIFView: View {
           .resizable()
           .transition(.fade)
           .aspectRatio(contentMode: .fill)
+          .frame(width: itemFrame.width, height: itemFrame.height)
       }
       .resizable()
       .transition(.fade)
-      .playbackRate(2.0)
+      .playbackRate(1.0)
       .playbackMode(.bounce)
       .aspectRatio(contentMode: .fill)
       .scaleEffect(isPressing ? 0.8 : 1.0)
