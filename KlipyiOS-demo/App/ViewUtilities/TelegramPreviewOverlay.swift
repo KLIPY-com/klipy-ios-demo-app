@@ -80,7 +80,7 @@ struct TelegramPreviewOverlay: View {
                     isMp4Playing = false
                   }
               } else {
-                AnimatedImage(url: URL(string: selectedItem.item.url))
+                AnimatedImage(url: URL(string: selectedItem.item.highQualityUrl))
                   .resizable()
                   .aspectRatio(contentMode: .fill)
                   .frame(width: targetSize.width, height: targetSize.height)

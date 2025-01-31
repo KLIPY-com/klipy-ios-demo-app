@@ -60,6 +60,7 @@ class MasonryLayoutCalculator {
         return GridItemLayout(
           id: Int64(item.id),
           url: dimensions.url,
+          highQualityUrl: item.md?.gif.url ?? "",
           mp4Media: item.singleFile,
           previewUrl: item.blurPreview ?? "",
           width: dimensions.width,
