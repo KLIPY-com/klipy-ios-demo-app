@@ -10,7 +10,7 @@ import SwiftUI
 
 @Observable
 class DynamicMediaViewModel {
-  private(set) var items: [MediaDomainModel] = []
+  var items: [MediaDomainModel] = []
   private(set) var isLoading = false
   private(set) var hasError = false
   private(set) var errorMessage: String?
@@ -51,6 +51,108 @@ class DynamicMediaViewModel {
     service = .create(for: type)
   }
   
+  func loadRecentItems() async {
+    guard !isLoading && hasMorePages else { return }
+    
+    isLoading = true
+    hasError = false
+    errorMessage = nil
+    
+    do {
+      let recentItems = try await service.fetchRecents(
+        page: currentPage,
+        perPage: perPage
+      )
+      
+      if recentItems.count == 0 {
+        let trendingItems = try await service.fetchTrending(page: currentPage, perPage: perPage)
+        
+        
+        await MainActor.run {
+          if currentPage == 1 {
+            items = trendingItems
+          } else {
+            items.append(contentsOf: trendingItems)
+          }
+          
+          hasMorePages = !trendingItems.isEmpty
+          currentPage += 1
+          isLoading = false
+        }
+      } else {
+        await MainActor.run {
+          if currentPage == 1 {
+            items = recentItems
+          } else {
+            items.append(contentsOf: recentItems)
+          }
+          
+          hasMorePages = !recentItems.isEmpty
+          currentPage += 1
+          isLoading = false
+        }
+      }
+    } catch {
+      await MainActor.run {
+        hasError = true
+        errorMessage = error.localizedDescription
+        isLoading = false
+      }
+    }
+  }
+  
+  func baseLoadRecentItems(page: Int = 1) async throws -> [MediaDomainModel] {
+      isLoading = true
+      hasError = false
+      errorMessage = nil
+      
+      do {
+        let domainItems = try await service.fetchRecents(
+          page: page,
+          perPage: perPage
+        )
+        
+        await MainActor.run {
+          isLoading = false
+        }
+        
+        return domainItems
+      } catch {
+        await MainActor.run {
+          hasError = true
+          errorMessage = error.localizedDescription
+          isLoading = false
+        }
+        throw error
+      }
+    }
+  
+  func baseLoadTrendingItems(page: Int = 1) async throws -> [MediaDomainModel] {
+      isLoading = true
+      hasError = false
+      errorMessage = nil
+      
+      do {
+        let domainItems = try await service.fetchTrending(
+          page: page,
+          perPage: perPage
+        )
+        
+        await MainActor.run {
+          isLoading = false
+        }
+        
+        return domainItems
+      } catch {
+        await MainActor.run {
+          hasError = true
+          errorMessage = error.localizedDescription
+          isLoading = false
+        }
+        throw error
+      }
+    }
+  
   func loadTrendingItems() async {
     guard !isLoading && hasMorePages else { return }
     
@@ -70,6 +172,7 @@ class DynamicMediaViewModel {
         } else {
           items.append(contentsOf: domainItems)
         }
+        
         hasMorePages = !domainItems.isEmpty
         currentPage += 1
         isLoading = false
@@ -171,8 +274,8 @@ extension DynamicMediaViewModel {
       let categoriesResponse = try await service.categories()
       
       let predefinedCategories = [
-        Category(name: "trending"),
-        Category(name: "recent")
+        Category(name: "trending", type: .trending),
+        Category(name: "recent", type: .recents)
       ]
       
       let mappedCategories = predefinedCategories + categoriesResponse.data.map {
