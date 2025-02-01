@@ -11,13 +11,21 @@ import SDWebImage
 import SDWebImageSwiftUI
 
 struct Category: Identifiable, Equatable {
+  enum ContentType {
+    case trending
+    case recents
+    case none
+  }
+  
   let name: String
   let id = UUID()
   let iconUrl: String
+  let type: ContentType
   
-  init(name: String) {
+  init(name: String, type: ContentType = .none) {
     self.name = name
     self.iconUrl = "\(CATEGORY_FATCH_URL)\(name).png"
+    self.type = type
   }
 }
 
@@ -31,7 +39,6 @@ struct ContentSearchBar: View {
     ZStack {
       Color(red: 24/255, green: 28/255, blue: 31/255)
       HStack(spacing: 12) {
-        // Leading section with search/back icon
         Group {
           if selectedCategory != nil {
             Button(action: {
@@ -51,7 +58,6 @@ struct ContentSearchBar: View {
         .frame(width: 24, height: 24)
         .contentShape(Rectangle())
         
-        // Search TextField
         TextField("Search", text: $searchText)
           .textFieldStyle(PlainTextFieldStyle())
           .foregroundColor(.white)
