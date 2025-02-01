@@ -32,11 +32,32 @@ struct DynamicMediaView: View {
           categories: viewModel.categories
         )
         .onChange(of: selectedCategory) {_, newCategory in
-          if let categoryName = newCategory?.name {
-            categorySearchText = categoryName
+          if let categoryName = newCategory {
+            switch categoryName.type {
+            case .trending:
+              Task {
+                let items = try await viewModel.baseLoadTrendingItems()
+                await MainActor.run {
+                  viewModel.items = items
+                }
+              }
+            case .recents:
+              Task {
+                let items = try await viewModel.baseLoadRecentItems()
+                await MainActor.run {
+                  viewModel.items = items
+                }
+              }
+            case .none:
+              categorySearchText = categoryName.name
+            }
           } else {
-            searchText = ""
-            categorySearchText = ""
+            Task {
+              let items = try await viewModel.baseLoadRecentItems()
+              await MainActor.run {
+                viewModel.items = items
+              }
+            }
           }
         }
         .padding(.bottom, 12)
@@ -58,16 +79,28 @@ struct DynamicMediaView: View {
       .background(Color(red: 41/255, green: 46/255, blue: 50/255))
     }
     .task {
-      await viewModel.loadTrendingItems()
+      await viewModel.loadRecentItems()
       await viewModel.fetchCategories()
     }
     .onChange(of: searchText) { _, newValue in
       Task {
+        if newValue.isEmpty {
+          let items = try await viewModel.baseLoadRecentItems()
+          await MainActor.run {
+            viewModel.items = items
+          } 
+        }
         await viewModel.searchItems(query: newValue)
       }
     }
     .onChange(of: categorySearchText) { _, newValue in
       Task {
+        if newValue.isEmpty {
+          let items = try await viewModel.baseLoadRecentItems()
+          await MainActor.run {
+            viewModel.items = items
+          }
+        }
         await viewModel.searchItems(query: newValue)
       }
     }
@@ -117,7 +150,10 @@ struct DynamicMediaView: View {
           Button(action: {
             searchText = ""
             Task {
-              await viewModel.loadTrendingItems()
+              await MainActor.run {
+                viewModel.items = []
+              }
+              //await viewModel.loadRecentItems()
             }
           }) {
             Image(systemName: "xmark.circle.fill")
@@ -156,7 +192,7 @@ struct DynamicMediaView: View {
         viewModel.switchToType(type)
         searchText = ""
         Task {
-          await viewModel.loadTrendingItems()
+          await viewModel.loadRecentItems()
         }
       }
     }) {
