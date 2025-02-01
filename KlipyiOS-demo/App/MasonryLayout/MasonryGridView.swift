@@ -27,6 +27,7 @@ struct MasonryGridView: View {
             previewModel: previewModel) { pressedItem in
               onSend(pressedItem)
             }
+            .padding(.bottom, 3)
         }
       }
     }
