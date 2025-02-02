@@ -8,7 +8,7 @@
 import Foundation
 
 struct Message: Identifiable {
-  let id = UUID()
+  let id = UUID().uuidString
   let content: String
   let mediaItem: GridItemLayout?
   let isFromCurrentUser: Bool
