@@ -15,7 +15,7 @@ struct MessagesListView: View {
   var body: some View {
     LazyVStack {
       ForEach(messages) { message in
-        MessageBubble(message: message, viewModel: viewModel)
+        ChatMessageView(message: message, viewModel: viewModel)
           .id(message.id)
           .transition(.asymmetric(
             insertion: .move(edge: .trailing).combined(with: .opacity),

@@ -27,12 +27,15 @@ struct ChatView: View {
     }
     .navigationTitle("John")
     .navigationBarTitleDisplayMode(.inline)
-    .sheet(isPresented: .constant(viewModel.isMediaPickerPresented)) {
+    .sheet(isPresented: $viewModel.isMediaPickerPresented) {
       DynamicMediaView(onSend: handleMediaSend)
         .presentationDetents([.large])
         .presentationDragIndicator(.visible)
     }
     .background(Color(red: 41/255, green: 46/255, blue: 50/255))
+    .onDisappear {
+      viewModel.cleanUp()
+    }
   }
   
   private var chatScrollView: some View {

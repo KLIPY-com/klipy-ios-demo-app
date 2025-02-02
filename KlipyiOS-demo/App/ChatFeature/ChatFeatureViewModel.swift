@@ -13,8 +13,8 @@ import AVKit
 @Observable
 final class ChatFeatureViewModel {
   private(set) var messages: [Message] = Message.examples
-  private(set) var isMediaPickerPresented: Bool = false
   
+  var isMediaPickerPresented: Bool = false
   
   @ObservationIgnored
   private var videoPlayers: [String: AVPlayer] = [:]
@@ -166,5 +166,24 @@ final class ChatFeatureViewModel {
       )
     }
     videoPlayers.removeAll()
+  }
+  
+  func cleanUp() {
+    messages = Message.examples
+    isMediaPickerPresented = false
+    videoPlayers.forEach { (messageID, player) in
+      NotificationCenter.default.removeObserver(
+        self,
+        name: .AVPlayerItemDidPlayToEndTime,
+        object: player.currentItem
+      )
+      
+      player.pause()
+      player.replaceCurrentItem(with: nil)
+    }
+    
+    videoPlayers.removeAll()
+
+    currentlyPlayingID = nil
   }
 }
