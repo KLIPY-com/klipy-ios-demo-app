@@ -14,12 +14,13 @@ struct ContentView: View {
     NavigationStack {
       VStack(spacing: 0) {
         NavigationLink(destination: ChatView()) {
-          ChatPreview(
+          ChatPreview(model: ChatPreviewModel(
             name: "John Brown",
             lastMessage: "Hi, how's it going?",
             time: "19.02.14",
-            unreadCount: 2
-          )
+            unreadCount: 2,
+            isOnline: true
+          ), theme: .default)
         }
         .buttonStyle(PlainButtonStyle())
         .padding(.top, 1)
