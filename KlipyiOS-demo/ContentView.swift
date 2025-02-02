@@ -27,28 +27,33 @@ struct ContentView: View {
         
         Spacer()
       }
-      .background(Color(red: 41/255, green: 46/255, blue: 50/255))
-//      .sheet(isPresented: $isPresented, content: {
-//        DynamicMediaView()
-//      })
+      .background(Color.init(hex: "#19191C"))
       .navigationBarTitleDisplayMode(.inline)
       .toolbar {
         // Left Menu Button
         ToolbarItem(placement: .topBarLeading) {
-          Button(action: {
-            print("Search")
-          }) {
-            Image(systemName: "line.3.horizontal")
-              .foregroundColor(Color(hex: "1E68D7"))
+          HStack {
+            Spacer().frame(width: 10)
+            Button(action: {
+              print("Search")
+            }) {
+              Circle()
+                .fill(Color(hex: "F8DC3B"))
+                .frame(width: 20, height: 20)
+            }
           }
         }
 
         ToolbarItem(placement: .topBarTrailing) {
-          Button(action: {
-            print("Search")
-          }) {
-            Image(systemName: "magnifyingglass")
-              .foregroundColor(Color(hex: "1E68D7"))
+          HStack {
+            Spacer().frame(width: 10)
+            Button(action: {
+              print("Search")
+            }) {
+              Circle()
+                .fill(Color(hex: "F8DC3B"))
+                .frame(width: 20, height: 20)
+            }
           }
         }
       }
