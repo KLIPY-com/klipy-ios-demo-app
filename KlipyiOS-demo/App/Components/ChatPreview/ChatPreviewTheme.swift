@@ -1,3 +1,13 @@
+//
+//  ChatPreviewTheme.swift
+//  KlipyiOS-demo
+//
+//  Created by Tornike Gomareli on 02.02.25.
+//
+
+import SwiftUI
+import Foundation
+
 // MARK: - Theme Structure
 struct ChatPreviewTheme {
     let colors: Colors

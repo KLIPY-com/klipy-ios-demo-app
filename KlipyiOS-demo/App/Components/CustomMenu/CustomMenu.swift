@@ -1,3 +1,11 @@
+//
+//  CustomMenu.swift
+//  KlipyiOS-demo
+//
+//  Created by Tornike Gomareli on 02.02.25.
+//
+
+
 import SwiftUI
 
 struct CustomMenu: View {
