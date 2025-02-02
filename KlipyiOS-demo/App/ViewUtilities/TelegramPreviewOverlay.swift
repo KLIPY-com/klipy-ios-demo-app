@@ -94,7 +94,7 @@ struct TelegramPreviewOverlay: View {
                   }
                 }
                 .aspectRatio(contentMode: .fill)
-                .frame(width: targetSize.width, height: targetSize.height)
+                .frame(width: geometry.size.width * 0.8, height: targetSize.height * 1.5)
                 .onDisappear {
                   videoPlayer.pause()
                   isPlaying = false
