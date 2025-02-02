@@ -18,7 +18,7 @@ class DynamicMediaViewModel {
   private(set) var searchQuery = ""
   private(set) var currentType: MediaType
   
-  var categories: [Category] = []
+  var categories: [MediaCategory] = []
   
   @ObservationIgnored
   private var currentPage = 1
@@ -274,12 +274,12 @@ extension DynamicMediaViewModel {
       let categoriesResponse = try await service.categories()
       
       let predefinedCategories = [
-        Category(name: "trending", type: .trending),
-        Category(name: "recent", type: .recents)
+        MediaCategory(name: "trending", type: .trending),
+        MediaCategory(name: "recent", type: .recents)
       ]
       
       let mappedCategories = predefinedCategories + categoriesResponse.data.map {
-        Category(name: $0)
+        MediaCategory(name: $0)
       }
 
       self.categories = mappedCategories

@@ -13,7 +13,7 @@ struct DynamicMediaView: View {
   
   @State private var searchText = ""
   @State private var categorySearchText = ""
-  @State private var selectedCategory: Category?
+  @State private var selectedCategory: MediaCategory?
   @State private var rows: [RowLayout] = []
   
   let onSend: (GridItemLayout) -> Void
@@ -26,7 +26,7 @@ struct DynamicMediaView: View {
   var body: some View {
     NavigationView {
       VStack(spacing: 0) {
-        ContentSearchBar(
+        MediaSearchBar(
           searchText: $searchText,
           selectedCategory: $selectedCategory,
           categories: viewModel.categories
