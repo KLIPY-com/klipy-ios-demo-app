@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		E65055072D4C477B00E93014 /* GSPlayer in Frameworks */ = {isa = PBXBuildFile; productRef = E65055062D4C477B00E93014 /* GSPlayer */; };
 		E6517A9B2D4834D900C2B5FB /* AlertToast in Frameworks */ = {isa = PBXBuildFile; productRef = E6517A9A2D4834D900C2B5FB /* AlertToast */; };
 		E669D20E2D3AB1C800FCA1BD /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = E669D20D2D3AB1C800FCA1BD /* SDWebImageSwiftUI */; };
 		E6F6AFD92D343C65008CB511 /* Moya in Frameworks */ = {isa = PBXBuildFile; productRef = E6F6AFD82D343C65008CB511 /* Moya */; };
@@ -46,7 +45,6 @@
 				E669D20E2D3AB1C800FCA1BD /* SDWebImageSwiftUI in Frameworks */,
 				E6517A9B2D4834D900C2B5FB /* AlertToast in Frameworks */,
 				E6F6AFD92D343C65008CB511 /* Moya in Frameworks */,
-				E65055072D4C477B00E93014 /* GSPlayer in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -92,7 +90,6 @@
 				E6F6AFD82D343C65008CB511 /* Moya */,
 				E669D20D2D3AB1C800FCA1BD /* SDWebImageSwiftUI */,
 				E6517A9A2D4834D900C2B5FB /* AlertToast */,
-				E65055062D4C477B00E93014 /* GSPlayer */,
 			);
 			productName = "KlipyiOS-demo";
 			productReference = E6D992712D31681A003CAF83 /* KlipyiOS-demo.app */;
@@ -126,7 +123,6 @@
 				E6F6AFD72D343C65008CB511 /* XCRemoteSwiftPackageReference "Moya" */,
 				E669D20C2D3AB1C800FCA1BD /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */,
 				E6517A992D4834D900C2B5FB /* XCRemoteSwiftPackageReference "AlertToast" */,
-				E65055052D4C477B00E93014 /* XCRemoteSwiftPackageReference "GSPlayer" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = E6D992722D31681A003CAF83 /* Products */;
@@ -372,14 +368,6 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		E65055052D4C477B00E93014 /* XCRemoteSwiftPackageReference "GSPlayer" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/wxxsw/GSPlayer.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.2.28;
-			};
-		};
 		E6517A992D4834D900C2B5FB /* XCRemoteSwiftPackageReference "AlertToast" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/elai950/AlertToast.git";
@@ -407,11 +395,6 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		E65055062D4C477B00E93014 /* GSPlayer */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = E65055052D4C477B00E93014 /* XCRemoteSwiftPackageReference "GSPlayer" */;
-			productName = GSPlayer;
-		};
 		E6517A9A2D4834D900C2B5FB /* AlertToast */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = E6517A992D4834D900C2B5FB /* XCRemoteSwiftPackageReference "AlertToast" */;
