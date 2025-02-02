@@ -8,12 +8,31 @@
 import SwiftUI
 import SDWebImage
 import SDWebImageSwiftUI
+import AVKit
 
 struct MessageBubble: View {
-  @Binding var isPlaying: Bool
+  @State var player: AVPlayer?
+  @State var isPlaying: Bool = false
+  @State private var isVideoURLValid: Bool = false
+  
+  let viewModel: ChatFeatureViewModel
+
   let message: Message
   
-  @StateObject private var playbackManager = VideoPlayerManager.shared
+  public init(message: Message, viewModel: ChatFeatureViewModel) {
+    self.message = message
+    self.viewModel = viewModel
+    
+    if message.isMessageContaintsMp4,
+       let mediaItem = message.mediaItem,
+       let mp4Media = mediaItem.mp4Media,
+       let mp4UrlString = mp4Media.mp4?.url,
+       let url = URL(string: mp4UrlString) {
+        if UIApplication.shared.canOpenURL(url) {
+          viewModel.registerVideoPlayer(for: message.id, url: url)
+        }
+     }
+  }
   
   var body: some View {
     HStack {
@@ -23,14 +42,26 @@ struct MessageBubble: View {
       
       VStack(alignment: message.isFromCurrentUser ? .trailing : .leading) {
         if let mediaItem = message.mediaItem {
-          if message.isMessageContaintsMp4,
-             let mp4Url = mediaItem.mp4Media?.mp4?.url {
-            VideoPlayer(url: URL(string: mp4Url)!, play: $isPlaying)
-              .frame(width: mediaItem.width * 1.5, height: mediaItem.height * 1.5)
-              .cornerRadius(16)
-              .onTapGesture {
+          if message.isMessageContaintsMp4 {
+            VideoPlayer(player: viewModel.getPlayer(for: message.id)) {
+              Button {
                 isPlaying.toggle()
+                if isPlaying {
+                  viewModel.playVideo(for: message.id)
+                } else {
+                  viewModel.pauseVideo(for: message.id)
+                }
+              } label: {
+                Image(systemName: viewModel.currentlyPlayingID == message.id ? "" : "play")
+                  .foregroundColor(.white)
+                  .padding()
               }
+            }
+            .frame(width: mediaItem.width * 1.5, height: mediaItem.height * 1.5, alignment: .center)
+            .cornerRadius(16)
+            .onChange(of: viewModel.currentlyPlayingID) { oldValue, newValue in
+              isPlaying = newValue == message.id
+            }
           } else {
             AnimatedImage(url: URL(string: mediaItem.url), isAnimating: .constant(true)) {
               WebImage(url: URL(string: mediaItem.previewUrl))
