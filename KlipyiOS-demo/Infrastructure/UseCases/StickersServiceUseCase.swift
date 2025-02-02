@@ -18,7 +18,7 @@ public struct StickersServiceUseCase {
   func fetchTrending(
     page: Int,
     perPage: Int = 24,
-    customerId: String = CUSTOMER_ID,
+    customerId: String = CustomerIDManager.customerID,
     locale: String = "ka"
   ) async throws -> AnyResponse<StickerItem> {
     try await client.request(
@@ -35,7 +35,7 @@ public struct StickersServiceUseCase {
     query: String,
     page: Int,
     perPage: Int = 24,
-    customerId: String = CUSTOMER_ID,
+    customerId: String = CustomerIDManager.customerID,
     locale: String = "ka"
   ) async throws -> AnyResponse<StickerItem> {
     try await client.request(
@@ -56,7 +56,7 @@ public struct StickersServiceUseCase {
   func fetchRecentItems(
     page: Int,
     perPage: Int = 24,
-    customerId: String = CUSTOMER_ID
+    customerId: String = CustomerIDManager.customerID
   ) async throws -> AnyResponse<StickerItem> {
     try await client.request(
       StickersService.recent(
@@ -69,7 +69,7 @@ public struct StickersServiceUseCase {
   
   func hideFromRecent(
     slug: String,
-    customerId: String = CUSTOMER_ID
+    customerId: String = CustomerIDManager.customerID
   ) async throws -> FireAndForgetResponse {
     try await client.request(
       StickersService.hideFromRecent(
@@ -81,7 +81,7 @@ public struct StickersServiceUseCase {
   
   func trackView(
     slug: String,
-    customerId: String = CUSTOMER_ID
+    customerId: String = CustomerIDManager.customerID
   ) async throws -> FireAndForgetResponse {
     try await client.request(
       StickersService.view(
@@ -93,7 +93,7 @@ public struct StickersServiceUseCase {
   
   func trackShare(
     slug: String,
-    customerId: String = CUSTOMER_ID
+    customerId: String = CustomerIDManager.customerID
   ) async throws -> FireAndForgetResponse {
     try await client.request(
       StickersService.share(
@@ -106,7 +106,7 @@ public struct StickersServiceUseCase {
   func reportSticker(
     slug: String,
     reason: String,
-    customerId: String = CUSTOMER_ID
+    customerId: String = CustomerIDManager.customerID
   ) async throws -> FireAndForgetResponse {
     try await client.request(
       StickersService.report(

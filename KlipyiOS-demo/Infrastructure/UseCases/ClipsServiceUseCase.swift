@@ -15,7 +15,7 @@ public struct ClipsServiceUseCase {
   func fetchTrending(
     page: Int,
     perPage: Int = 24,
-    customerId: String = CUSTOMER_ID,
+    customerId: String = CustomerIDManager.customerID,
     locale: String = "ka"
   ) async throws -> AnyResponse<ClipItem> {
     try await client.request(
@@ -32,7 +32,7 @@ public struct ClipsServiceUseCase {
     query: String,
     page: Int,
     perPage: Int = 24,
-    customerId: String = CUSTOMER_ID,
+    customerId: String = CustomerIDManager.customerID,
     locale: String = "ka"
   ) async throws -> AnyResponse<ClipItem> {
     try await client.request(
@@ -53,7 +53,7 @@ public struct ClipsServiceUseCase {
   func fetchRecentItems(
     page: Int,
     perPage: Int = 24,
-    customerId: String = CUSTOMER_ID
+    customerId: String = CustomerIDManager.customerID
   ) async throws -> AnyResponse<ClipItem> {
     try await client.request(
       ClipsService.recent(
@@ -66,7 +66,7 @@ public struct ClipsServiceUseCase {
   
   func hideFromRecent(
     slug: String,
-    customerId: String = CUSTOMER_ID
+    customerId: String = CustomerIDManager.customerID
   ) async throws -> FireAndForgetResponse {
     try await client.request(
       ClipsService.hideFromRecent(
@@ -78,7 +78,7 @@ public struct ClipsServiceUseCase {
   
   func trackView(
     slug: String,
-    customerId: String = CUSTOMER_ID
+    customerId: String = CustomerIDManager.customerID
   ) async throws -> FireAndForgetResponse {
     try await client.request(
       ClipsService.view(
@@ -90,7 +90,7 @@ public struct ClipsServiceUseCase {
   
   func trackShare(
     slug: String,
-    customerId: String = CUSTOMER_ID
+    customerId: String = CustomerIDManager.customerID
   ) async throws -> FireAndForgetResponse {
     try await client.request(
       ClipsService.share(
@@ -103,7 +103,7 @@ public struct ClipsServiceUseCase {
   func reportClip(
     slug: String,
     reason: String,
-    customerId: String = CUSTOMER_ID
+    customerId: String = CustomerIDManager.customerID
   ) async throws -> FireAndForgetResponse {
     try await client.request(
       ClipsService.report(

@@ -15,6 +15,6 @@ public struct HealthCheckServiceUseCase {
   }
 
   func fetchUpdateInfo() async throws -> MediaContent {
-    try await client.request(HealthCheckService.healthCheck(CUSTOMER_ID))
+    try await client.request(HealthCheckService.healthCheck(CustomerIDManager.customerID))
   }
 }

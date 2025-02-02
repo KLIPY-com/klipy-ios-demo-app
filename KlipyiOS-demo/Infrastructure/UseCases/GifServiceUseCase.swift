@@ -15,13 +15,13 @@ public struct GifServiceUseCase {
     self.client = RestApi.liveValue
   }
   
-  func fetchTrending(page: Int, perPage: Int, customerId: String = CUSTOMER_ID, locale: String = "ka") async throws -> AnyResponse<GifItem> {
+  func fetchTrending(page: Int, perPage: Int, customerId: String = CustomerIDManager.customerID, locale: String = "ka") async throws -> AnyResponse<GifItem> {
     try await client.request(
       GifService.trending(page: page, perPage: perPage, customerId: customerId, locale: locale)
     )
   }
   
-  func searchGifs(query: String, page: Int, perPage: Int, customerId: String = CUSTOMER_ID, locale: String = "ka") async throws -> AnyResponse<GifItem> {
+  func searchGifs(query: String, page: Int, perPage: Int, customerId: String = CustomerIDManager.customerID, locale: String = "ka") async throws -> AnyResponse<GifItem> {
     try await client.request(
       GifService.search(query: query, page: page, perPage: perPage, customerId: customerId, locale: locale)
     )
@@ -34,7 +34,7 @@ public struct GifServiceUseCase {
   func fetchRecentItems(
     page: Int,
     perPage: Int,
-    customerId: String = CUSTOMER_ID
+    customerId: String = CustomerIDManager.customerID
   ) async throws -> AnyResponse<GifItem> {
     try await client.request(
       GifService.recent(customerId: customerId, page: page, perPage: perPage)
@@ -43,7 +43,7 @@ public struct GifServiceUseCase {
   
   func trackView(
     slug: String,
-    customerId: String = CUSTOMER_ID
+    customerId: String = CustomerIDManager.customerID
   ) async throws -> FireAndForgetResponse {
     try await client.request(
       GifService.view(slug: slug,customerId: customerId)
@@ -52,7 +52,7 @@ public struct GifServiceUseCase {
   
   func trackShare(
     slug: String,
-    customerId: String = CUSTOMER_ID
+    customerId: String = CustomerIDManager.customerID
   ) async throws -> FireAndForgetResponse {
     try await client.request(
       GifService.share(
@@ -65,7 +65,7 @@ public struct GifServiceUseCase {
   func reportGif(
     slug: String,
     reason: String,
-    customerId: String = CUSTOMER_ID
+    customerId: String = CustomerIDManager.customerID
   ) async throws -> FireAndForgetResponse {
     try await client.request(
       GifService.report(slug: slug, customerId: customerId, reason: reason)
@@ -74,7 +74,7 @@ public struct GifServiceUseCase {
   
   func hideFromRecent(
     slug: String,
-    customerId: String = CUSTOMER_ID
+    customerId: String = CustomerIDManager.customerID
   ) async throws -> FireAndForgetResponse {
     try await client.request(
       GifService.hideFromRecent(
