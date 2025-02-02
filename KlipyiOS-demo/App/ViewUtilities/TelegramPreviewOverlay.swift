@@ -1,6 +1,7 @@
 import SwiftUI
 import SDWebImage
 import SDWebImageSwiftUI
+import AVKit
 
 struct MenuContainerModifier: ViewModifier {
   @Binding var isPresented: Bool
@@ -31,14 +32,14 @@ extension View {
 
 struct TelegramPreviewOverlay: View {
   @ObservedObject var viewModel: PreviewViewModel
-
+  
   @State private var showingMenu = false
-  @State private var isMp4Playing: Bool = false
-  @State private var videoPlayer: LoopingVideoPlayer?
-
+  @State private var isPlaying: Bool = false
+  @State private var player: AVPlayer?
+  @State private var isVideoURLValid: Bool = false
+  
   let onSend: (GridItemLayout) -> Void
   let onReport: (String, ReportReason) -> Void
-  
   let onDismiss: () -> Void
   
   var body: some View {
@@ -72,13 +73,33 @@ struct TelegramPreviewOverlay: View {
             Spacer()
             
             Group {
-              if let mp4Url = selectedItem.item.mp4Media?.mp4?.url {
-                LoopingVideoPlayer(videoID: selectedItem.item.url, url: URL(string: mp4Url)!, isPlaying: $isMp4Playing)
-                  .aspectRatio(contentMode: .fill)
-                  .frame(width: targetSize.width, height: targetSize.height)
-                  .onDisappear {
-                    isMp4Playing = false
+              if let mp4UrlString = selectedItem.item.mp4Media?.mp4?.url,
+                 let url = URL(string: mp4UrlString),
+                 isVideoURLValid,
+                 let videoPlayer = player {
+                
+                VideoPlayer(player: videoPlayer) {
+                  Button {
+                    if isPlaying {
+                      videoPlayer.pause()
+                    } else {
+                      videoPlayer.seek(to: .zero)
+                      videoPlayer.play()
+                    }
+                    isPlaying.toggle()
+                  } label: {
+                    Image(systemName: isPlaying ? "" : "play")
+                      .foregroundColor(.white)
+                      .padding()
                   }
+                }
+                .aspectRatio(contentMode: .fill)
+                .frame(width: targetSize.width, height: targetSize.height)
+                .onDisappear {
+                  videoPlayer.pause()
+                  isPlaying = false
+                }
+                
               } else {
                 AnimatedImage(url: URL(string: selectedItem.item.highQualityUrl))
                   .resizable()
@@ -96,33 +117,53 @@ struct TelegramPreviewOverlay: View {
                 .onChanged { value in
                   viewModel.isDragging = true
                   viewModel.dragOffset = value.translation
-                    
-                    let dragDistance = abs(value.translation.height)
-                    viewModel.dragScale = max(0.7, min(1, 1 - (dragDistance / 1000)))
-                  }
-                  .onEnded { value in
-                    let dragDistance = abs(value.translation.height)
-                    if dragDistance > 100 {
-                      onDismiss()
-                    } else {
-                      withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
-                        viewModel.isDragging = false
-                        viewModel.dragOffset = .zero
-                        viewModel.dragScale = 1
-                      }
+                  
+                  let dragDistance = abs(value.translation.height)
+                  viewModel.dragScale = max(0.7, min(1, 1 - (dragDistance / 1000)))
+                }
+                .onEnded { value in
+                  let dragDistance = abs(value.translation.height)
+                  if dragDistance > 100 {
+                    onDismiss()
+                  } else {
+                    withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
+                      viewModel.isDragging = false
+                      viewModel.dragOffset = .zero
+                      viewModel.dragScale = 1
                     }
                   }
-              )
-              .onAppear {
-                showingMenu = true
-              }
-              .clipShape(.rect(cornerRadius: 12, style: .continuous))
-              .menuOverlay(isPresented: $showingMenu, onAction: handleMenuAction)
+                }
+            )
+            .onAppear {
+              showingMenu = true
+              setupVideoPlayer(for: selectedItem.item)
+            }
+            .clipShape(.rect(cornerRadius: 12, style: .continuous))
+            .menuOverlay(isPresented: $showingMenu, onAction: handleMenuAction)
             
             Spacer()
           }
         }
       }
+    }
+  }
+  
+  private func setupVideoPlayer(for selectedItem: GridItemLayout) {
+    if let mp4UrlString = selectedItem.mp4Media?.mp4?.url,
+       let url = URL(string: mp4UrlString),
+       UIApplication.shared.canOpenURL(url) {
+      
+      let playerItem = AVPlayerItem(url: url)
+      playerItem.tracks.forEach { track in
+        track.isEnabled = true
+      }
+      
+      self.player = AVPlayer(playerItem: playerItem)
+      self.isVideoURLValid = true
+      
+      // Set up player
+      player?.actionAtItemEnd = .none
+      try? AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
     }
   }
   
@@ -142,13 +183,6 @@ struct TelegramPreviewOverlay: View {
     }
   }
   
-  private func calculateScale() -> CGFloat {
-    if viewModel.isDragging {
-      return viewModel.dragScale
-    }
-    return showingMenu ? 0.85 : 1.0
-  }
-  
   private func calculateTargetSize(
     originalSize: CGSize,
     screenSize: CGSize,
@@ -166,12 +200,6 @@ struct TelegramPreviewOverlay: View {
       width: originalSize.width * scale,
       height: originalSize.height * scale
     )
-  }
-  
-  private func playHapticFeedback() {
-    let impactFeedback = UIImpactFeedbackGenerator(style: .rigid)
-    impactFeedback.prepare()
-    impactFeedback.impactOccurred()
   }
 }
 
