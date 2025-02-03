@@ -62,6 +62,7 @@ struct DynamicMediaView: View {
         }
         .padding(.bottom, 12)
         .padding(.horizontal, 12)
+        .background(Color.init(hex: "#36383F"))
         
         mediaContent
         
@@ -76,7 +77,6 @@ struct DynamicMediaView: View {
       }
       .navigationTitle(viewModel.currentType.displayName)
       .navigationBarTitleDisplayMode(.inline)
-      .background(Color(red: 41/255, green: 46/255, blue: 50/255))
     }
     .task {
       await viewModel.loadRecentItems()
@@ -108,7 +108,7 @@ struct DynamicMediaView: View {
   
   private var mediaContent: some View {
     ZStack {
-      Color(red: 41/255, green: 46/255, blue: 50/255)
+      Color.init(hex: "#36383F")
       MasonryGridView(
         rows: rows,
         onLoadMore: {
@@ -172,7 +172,7 @@ struct DynamicMediaView: View {
   
   private var mediaTypeSelector: some View {
     ZStack {
-      Color(red: 41/255, green: 46/255, blue: 50/255)
+      Color.init(hex: "#36383F")
         .ignoresSafeArea()
       
       HStack(spacing: 20) {
@@ -197,14 +197,15 @@ struct DynamicMediaView: View {
       }
     }) {
       Text(title)
-        .font(.system(size: 17))
-        .foregroundColor(viewModel.currentType == type ? .white : Color.white.opacity(0.5))
+        .font(.system(size: 17, weight: .bold))
+        .foregroundColor(viewModel.currentType == type ? .black : Color.white)
         .padding(.vertical, 12)
         .padding(.horizontal, 16)
         .background(
           viewModel.currentType == type ?
-          Capsule()
-            .fill(Color(red: 52/255, green: 120/255, blue: 246/255))
+          Rectangle()
+            .fill(Color.init(hex: "F8DC3B"))
+            .cornerRadius(8)
           : nil
         )
     }
