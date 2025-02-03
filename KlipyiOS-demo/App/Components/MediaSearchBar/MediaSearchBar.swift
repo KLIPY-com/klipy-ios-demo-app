@@ -16,20 +16,24 @@ struct MediaSearchBar: View {
   let categories: [MediaCategory]
   
   var body: some View {
-    ZStack {
-      MediaSearchConfiguration.Colors.background
-      
-      HStack(spacing: MediaSearchConfiguration.Layout.horizontalSpacing) {
-        navigationControl
-        searchField
-        clearButton
-        categoriesView
+    GeometryReader { geometry in
+      ZStack {
+        MediaSearchConfiguration.Colors.background
+        
+        HStack(spacing: MediaSearchConfiguration.Layout.horizontalSpacing) {
+          navigationControl
+          searchField
+          clearButton
+          categoriesView
+        }
       }
+      .frame(width: geometry.size.width * 0.8, height: MediaSearchConfiguration.Layout.searchBarHeight)
+      .padding(MediaSearchConfiguration.Layout.contentPadding)
+      .background(MediaSearchConfiguration.Colors.background)
+      .cornerRadius(MediaSearchConfiguration.Layout.cornerRadius)
+      .frame(maxWidth: .infinity)
     }
-    .frame(height: MediaSearchConfiguration.Layout.searchBarHeight)
-    .padding(MediaSearchConfiguration.Layout.contentPadding)
-    .background(MediaSearchConfiguration.Colors.background)
-    .cornerRadius(MediaSearchConfiguration.Layout.cornerRadius)
+    .frame(height: 70)
   }
 }
 
@@ -59,13 +63,21 @@ private extension MediaSearchBar {
   
   var searchIcon: some View {
     Image(systemName: "magnifyingglass")
+      .foregroundColor(.white)
+      .padding(8)
+      .background(Circle().fill(Color.init(hex: "#8800FF")))
       .foregroundColor(MediaSearchConfiguration.Colors.icon)
   }
   
   var searchField: some View {
-    TextField("Search", text: $searchText)
+    TextField("", text: $searchText)
       .textFieldStyle(PlainTextFieldStyle())
       .foregroundColor(MediaSearchConfiguration.Colors.text)
+      .accentColor(Color.init(hex: "#8800FF"))
+      .placeholder(when: searchText.isEmpty) {
+        Text("Search")
+          .foregroundColor(MediaSearchConfiguration.Colors.text.opacity(0.5))
+      }
       .disabled(selectedCategory != nil)
       .frame(maxWidth: .infinity)
   }
@@ -152,4 +164,17 @@ private extension MediaSearchBar {
   )
   .padding()
   .background(Color.black)
+}
+
+extension View {
+  func placeholder<Content: View>(
+    when shouldShow: Bool,
+    alignment: Alignment = .leading,
+    @ViewBuilder placeholder: () -> Content
+  ) -> some View {
+    ZStack(alignment: alignment) {
+      placeholder().opacity(shouldShow ? 1 : 0)
+      self
+    }
+  }
 }

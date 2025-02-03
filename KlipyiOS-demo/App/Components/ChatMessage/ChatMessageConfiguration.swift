@@ -26,8 +26,9 @@ struct ChatMessageConfiguration {
   }
   
   struct Colors {
-    static let userMessage = Color(hex: "1E68D7")
-    static let otherMessage = Color(.systemGray6)
-    static let messageText = Color.white
+    static let userMessage = Color(hex: "F8DC3B")
+    static let otherMessage = Color(hex: "#8800FF")
+    static let userMessageText = Color.black
+    static let otherMessageText = Color.white
   }
 }

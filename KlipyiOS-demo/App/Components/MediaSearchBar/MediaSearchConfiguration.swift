@@ -10,7 +10,7 @@ import SwiftUI
 
 struct MediaSearchConfiguration {
   struct Layout {
-    static let cornerRadius: CGFloat = 20
+    static let cornerRadius: CGFloat = 8
     static let categoryIconSize: CGFloat = 22
     static let controlSize: CGFloat = 24
     static let horizontalSpacing: CGFloat = 12
@@ -28,10 +28,10 @@ struct MediaSearchConfiguration {
   }
   
   struct Colors {
-    static let background = Color(red: 24/255, green: 28/255, blue: 31/255)
+    static let background = Color.white
     static let icon = Color.gray
-    static let selectedIcon = Color.blue
-    static let text = Color.white
+    static let selectedIcon = Color.init(hex: "F8DC3B")
+    static let text = Color.black
   }
   
   struct Animation {

@@ -10,7 +10,7 @@ import Foundation
 
 struct MessageInputConfiguration {
   struct Layout {
-    static let cornerRadius: CGFloat = 20
+    static let cornerRadius: CGFloat = 8
     static let buttonSize: CGFloat = 20
     static let contentSpacing: CGFloat = 12
     static let textFieldPadding: CGFloat = 12
@@ -23,9 +23,9 @@ struct MessageInputConfiguration {
   }
   
   struct Colors {
-    static let accent = Color(hex: "1E68D7")
-    static let textFieldBackground = Color(.systemGray6)
-    static let background = Color(red: 24/255, green: 28/255, blue: 31/255)
+    static let accent = Color(hex: "F8DC3B")
+    static let textFieldBackground = Color.init(hex: "36383F")
+    static let background = Color.init(hex: "#14141C")
   }
   
   struct Animation {

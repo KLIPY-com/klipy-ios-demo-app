@@ -73,7 +73,11 @@ struct ChatMessageView: View {
           ChatMessageConfiguration.Colors.userMessage :
             ChatMessageConfiguration.Colors.otherMessage
         )
-        .foregroundColor(ChatMessageConfiguration.Colors.messageText)
+        .foregroundColor(
+          message.isFromCurrentUser ?
+          ChatMessageConfiguration.Colors.userMessageText
+          : ChatMessageConfiguration.Colors.otherMessageText
+        )
         .cornerRadius(ChatMessageConfiguration.Layout.cornerRadius)
     }
   }

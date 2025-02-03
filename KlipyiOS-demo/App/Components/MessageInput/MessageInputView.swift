@@ -19,10 +19,12 @@ struct MessageInputView: View {
   }
   
   var body: some View {
-    VStack(spacing: 0) {
+    VStack {
       Divider()
       inputContent
     }
+    .background(Color.init(hex: "#222224"))
+    .ignoresSafeArea()
   }
   
   private var inputContent: some View {
@@ -32,7 +34,7 @@ struct MessageInputView: View {
       sendButton
     }
     .padding(MessageInputConfiguration.Layout.contentPadding)
-    .background(MessageInputConfiguration.Colors.background)
+    .padding(.bottom, 16)
   }
 }
 
