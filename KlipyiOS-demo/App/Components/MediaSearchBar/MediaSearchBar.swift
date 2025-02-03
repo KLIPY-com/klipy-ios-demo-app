@@ -78,6 +78,8 @@ private extension MediaSearchBar {
         Text("Search")
           .foregroundColor(MediaSearchConfiguration.Colors.text.opacity(0.5))
       }
+      // TODO: Whenever search will be tapped
+      // TODO: It need to be unselected and
       .disabled(selectedCategory != nil)
       .frame(maxWidth: .infinity)
   }
