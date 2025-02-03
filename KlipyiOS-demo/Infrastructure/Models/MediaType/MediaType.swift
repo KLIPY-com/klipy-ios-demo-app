@@ -25,9 +25,9 @@ public enum MediaType: String, Codable {
 extension MediaType {
   var displayName: String {
     switch self {
-    case .clips: return "Clip"
-    case .gifs: return "GIF"
-    case .stickers: return "Sticker"
+    case .clips: return "CLIPs"
+    case .gifs: return "GIFs"
+    case .stickers: return "STICKERs"
     }
   }
   
