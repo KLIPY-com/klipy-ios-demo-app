@@ -30,28 +30,27 @@ struct ContentView: View {
       .background(Color.init(hex: "#19191C"))
       .navigationBarTitleDisplayMode(.inline)
       .toolbar {
-        // Left Menu Button
         ToolbarItem(placement: .topBarLeading) {
           HStack {
             Spacer().frame(width: 10)
             Button(action: {
               print("Search")
             }) {
-              Circle()
-                .fill(Color(hex: "F8DC3B"))
+              Image(systemName: "magnifyingglass")
+                .foregroundStyle(Color(hex: "F8DC3B"))
                 .frame(width: 20, height: 20)
             }
           }
         }
-
+        
         ToolbarItem(placement: .topBarTrailing) {
           HStack {
             Spacer().frame(width: 10)
             Button(action: {
               print("Search")
             }) {
-              Circle()
-                .fill(Color(hex: "F8DC3B"))
+              Image(systemName: "line.horizontal.3")
+                .foregroundColor(Color(hex: "F8DC3B"))
                 .frame(width: 20, height: 20)
             }
           }
