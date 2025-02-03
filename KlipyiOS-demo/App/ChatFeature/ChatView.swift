@@ -13,9 +13,11 @@ struct CustomNavigationBar: View {
   var body: some View {
     HStack {
       Button(action: onBack) {
-        Text("Back")
-          .foregroundColor(Color.init(hex: "#F8DC3B"))
-          .font(.system(size: 20))
+        HStack(spacing: 4) {
+          Image(systemName: "chevron.left")
+          Text("Back")
+        }
+        .foregroundColor(Color.init(hex: "#F8DC3B"))
       }
       .padding(.leading, 16)
       
