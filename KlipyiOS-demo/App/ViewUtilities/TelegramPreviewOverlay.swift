@@ -101,10 +101,17 @@ struct TelegramPreviewOverlay: View {
                 }
                 
               } else {
-                AnimatedImage(url: URL(string: selectedItem.item.highQualityUrl))
-                  .resizable()
-                  .aspectRatio(contentMode: .fill)
-                  .frame(width: targetSize.width, height: targetSize.height)
+                AnimatedImage(url: URL(string: selectedItem.item.highQualityUrl)) {
+                  if let image = Image.fromBase64(selectedItem.item.previewUrl) {
+                    image
+                      .resizable()
+                      .aspectRatio(contentMode: .fill)
+                      .frame(width: targetSize.width, height: targetSize.height)
+                  }
+                }
+                .resizable()
+                .aspectRatio(contentMode: .fill)
+                .frame(width: targetSize.width, height: targetSize.height)
               }
             }
             .offset(
