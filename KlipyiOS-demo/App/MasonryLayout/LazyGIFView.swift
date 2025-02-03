@@ -34,11 +34,12 @@ struct LazyGIFView: View {
   var body: some View {
     Group {
       AnimatedImage(url: URL(string: item.url), isAnimating: .constant(true)) {
-        WebImage(url: URL(string: item.previewUrl))
-          .resizable()
-          .transition(.fade)
-          .aspectRatio(contentMode: .fill)
-          .frame(width: itemFrame.width, height: itemFrame.height)
+          if let image = Image.fromBase64(item.previewUrl) {
+              image
+                  .resizable()
+                  .aspectRatio(contentMode: .fill)
+                  .frame(width: item.width, height: item.height)
+          }
       }
       .resizable()
       .transition(.fade)
@@ -90,3 +91,20 @@ struct LazyGIFView: View {
     }
   }
 }
+
+
+extension Image {
+    /// Creates an Image from a base64 string using SDWebImage
+    /// - Parameter base64String: The base64 encoded image string
+    /// - Returns: An Image view, or nil if the string couldn't be converted
+    static func fromBase64(_ string: String) -> Image? {
+        let base64String = string.replacingOccurrences(of: "data:image/jpeg;base64,", with: "")
+
+        guard let data = Data(base64Encoded: base64String),
+              let uiImage = UIImage(data: data) else {
+            return nil
+        }
+        return Image(uiImage: uiImage)
+    }
+}
+
