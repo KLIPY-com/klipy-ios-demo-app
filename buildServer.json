@@ -1,0 +1,11 @@
+{
+  "name": "xcode build server",
+  "version": "0.2",
+  "bspVersion": "2.0",
+  "languages": ["swift"],
+  "argv": ["/opt/homebrew/bin/xcode-build-server"],
+  "workspace": "/Users/tornikegomareli/Development/klipy-ios-demo/KlipyiOS-demo/KlipyiOS-demo.xcodeproj/project.xcworkspace",
+  "build_root": "/Users/tornikegomareli/Library/Developer/Xcode/DerivedData/KlipyiOS-demo-gqooqksoilufklejgdsizpdyohkw",
+  "scheme": "KlipyiOS-demo",
+  "kind": "xcode"
+}
