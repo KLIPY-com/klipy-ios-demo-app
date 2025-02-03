@@ -7,6 +7,43 @@
 
 import SwiftUI
 
+struct CustomNavigationBar: View {
+  let onBack: () -> Void
+  
+  var body: some View {
+    HStack {
+      Button(action: onBack) {
+        Text("Back")
+          .foregroundColor(Color.init(hex: "#F8DC3B"))
+          .font(.system(size: 20))
+      }
+      .padding(.leading, 16)
+      
+      Spacer()
+      
+      VStack {
+        AvatarView(isOnline: true, theme: .default)
+          .frame(width: 30, height: 30)
+          .padding(.top, 16)
+        Spacer()
+        Text("John Brown")
+          .foregroundStyle(.white)
+          .font(.system(size: 17, weight: .bold))
+      }
+      
+      Spacer()
+      
+      
+      
+      // Empty view to balance the HStack
+      Color.clear
+        .frame(width: 44) // Same as back button area
+    }
+    .frame(height: 84)
+    .background(Color.init(hex: "#19191C"))
+  }
+}
+
 struct ChatView: View {
   @State private var viewModel = ChatFeatureViewModel()
   @State private var messageText = ""
@@ -14,8 +51,15 @@ struct ChatView: View {
   @FocusState private var isFocused: Bool
   @State private var dragOffset: CGFloat = 0
   
+  @Environment(\.dismiss) private var dismiss
+  
+  
   var body: some View {
     VStack(spacing: 0) {
+      CustomNavigationBar(onBack: {
+        dismiss()
+      })
+      
       chatScrollView
       
       MessageInputView(
@@ -25,14 +69,16 @@ struct ChatView: View {
         onMediaPickerTap: viewModel.toggleMediaPicker
       )
     }
-    .navigationTitle("John")
-    .navigationBarTitleDisplayMode(.inline)
+    .navigationBarHidden(true)
     .sheet(isPresented: $viewModel.isMediaPickerPresented) {
       DynamicMediaView(onSend: handleMediaSend)
-        .presentationDetents([.large])
+        .presentationDetents([
+          .custom(CustomDetent.self)
+        ])
         .presentationDragIndicator(.visible)
+        .presentationCornerRadius(60)
     }
-    .background(Color(red: 41/255, green: 46/255, blue: 50/255))
+    .background(Color.init(hex: "#19191C"))
     .onDisappear {
       viewModel.cleanUp()
     }
@@ -85,5 +131,11 @@ struct ChatView: View {
     withAnimation(.easeOut(duration: 0.3)) {
       scrollProxy?.scrollTo(viewModel.messages.last?.id, anchor: .bottom)
     }
+  }
+}
+
+struct CustomDetent: CustomPresentationDetent {
+  static func height(in context: Context) -> CGFloat? {
+    return context.maxDetentValue - 1
   }
 }
