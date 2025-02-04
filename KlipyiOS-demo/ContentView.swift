@@ -21,6 +21,7 @@ struct ContentView: View {
             unreadCount: 2,
             isOnline: true
           ), theme: .default)
+          .contentShape(Rectangle())
         }
         .buttonStyle(PlainButtonStyle())
         .padding(.top, 1)
