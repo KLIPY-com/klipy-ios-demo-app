@@ -80,7 +80,7 @@ struct LazyGIFView: View {
             isFocused = false
 
             if !isPressed {
-              isPressed = false
+              isPressed = true
               timer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { _ in
                 impactFeedback.impactOccurred()
                 previewModel.selectedItem = (item, itemFrame)
