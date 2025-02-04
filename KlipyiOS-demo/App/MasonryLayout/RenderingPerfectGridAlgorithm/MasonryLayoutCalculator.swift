@@ -17,7 +17,7 @@ class MasonryLayoutCalculator {
   private let maxGifsPerRow: Int
   
   init(
-    containerWidth: CGFloat = UIScreen.main.bounds.width,
+    containerWidth: CGFloat = UIScreen.main.bounds.width - 20,
     gap: CGFloat = 3,
     minGifWidth: CGFloat = 60,
     minHeight: CGFloat = 50,
