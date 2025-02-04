@@ -17,17 +17,22 @@ struct LazyGIFView: View {
   @State private var timer: Timer?
   @GestureState private var isPressing: Bool = false
   
+  
+  
   @State var isAnimating: Bool = true
   @State var impactFeedback = UIImpactFeedbackGenerator(style: .medium)
   @State var clickFeedback = UIImpactFeedbackGenerator(style: .heavy)
   @State var longPressInProgress: Bool = false
   @State private var itemFrame: CGRect = .zero
   
+  @FocusState var isFocused: Bool
+  
   var onClick: (() -> Void)
   
-  init(item: GridItemLayout, previewModel: PreviewViewModel, onClick: @escaping () -> Void) {
+  init(item: GridItemLayout, previewModel: PreviewViewModel, onClick: @escaping () -> Void, isFocused: FocusState<Bool>) {
     self.item = item
     self.onClick = onClick
+    self._isFocused = isFocused
     _previewModel = StateObject(wrappedValue: previewModel)
   }
   
@@ -55,6 +60,8 @@ struct LazyGIFView: View {
         return Color.clear
       })
       .onTapGesture {
+        isFocused = false
+
         if item.mp4Media != nil {
           impactFeedback.impactOccurred()
           previewModel.selectedItem = (item, itemFrame)
@@ -66,11 +73,14 @@ struct LazyGIFView: View {
       .simultaneousGesture(
         DragGesture(minimumDistance: 0)
           .updating($isPressing) { _, state, _ in
+            isFocused = false
             state = true
           }
           .onChanged { _ in
+            isFocused = false
+
             if !isPressed {
-              isPressed = true
+              isPressed = false
               timer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { _ in
                 impactFeedback.impactOccurred()
                 previewModel.selectedItem = (item, itemFrame)
@@ -81,6 +91,7 @@ struct LazyGIFView: View {
             }
           }
           .onEnded { _ in
+            isFocused = false
             timer?.invalidate()
             timer = nil
             withAnimation {
