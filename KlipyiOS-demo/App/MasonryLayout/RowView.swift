@@ -15,6 +15,8 @@ struct RowView: View {
   let previewModel: PreviewViewModel
   let onRowPressed: (GridItemLayout) -> Void
   
+  @FocusState var isFocused: Bool
+  
   var body: some View {
     ZStack(alignment: .topLeading) {
       ForEach(row.items) { item in
@@ -22,8 +24,9 @@ struct RowView: View {
           item: item,
           previewModel: previewModel,
           onClick: {
+            isFocused = false
             onRowPressed(item)
-          }
+          }, isFocused: _isFocused
         )
         .frame(width: item.width, height: item.height)
         .offset(x: item.xPosition, y: 0)
