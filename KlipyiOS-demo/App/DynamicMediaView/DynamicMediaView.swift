@@ -32,6 +32,8 @@ struct DynamicMediaView: View {
   @State private var selectedCategory: MediaCategory?
   @State private var rows: [RowLayout] = []
   
+  @FocusState private var isSearchFocused: Bool
+  
   let onSend: (GridItemLayout) -> Void
   
   @State private var showToast = false
@@ -47,6 +49,7 @@ struct DynamicMediaView: View {
         MediaSearchBar(
           searchText: $searchText,
           selectedCategory: $selectedCategory,
+          isFocused: _isSearchFocused,
           categories: viewModel.categories
         )
         .onChange(of: selectedCategory) {_, newCategory in
@@ -80,6 +83,7 @@ struct DynamicMediaView: View {
         }
         .padding(.bottom, 12)
         .padding(.horizontal, 12)
+        .padding(.top, 18)
         .background(Color.init(hex: "#36383F"))
         
         mediaContent
@@ -93,7 +97,11 @@ struct DynamicMediaView: View {
           title: "🚓 Klipy moderators will review your report. \nThank you!"
         )
       }
-      .navigationTitle(viewModel.currentType.displayName)
+      .contentShape(Rectangle())
+      .onTapGesture {
+        isSearchFocused = false
+      }
+      .navigationTitle("")
       .navigationBarTitleDisplayMode(.inline)
     }
     .task {
@@ -150,7 +158,8 @@ struct DynamicMediaView: View {
         },
         onReport: { url, reason in
           showToast = true
-        }
+        },
+        isFocused: _isSearchFocused
       )
       .padding(.horizontal, 10)
       .frame(maxWidth: .infinity)
@@ -206,6 +215,9 @@ struct DynamicMediaView: View {
     }
     .frame(maxWidth: .infinity)
     .frame(height: 44)
+    .safeAreaInset(edge: .bottom) {
+      Color.clear.frame(height: 15)
+    }
   }
   
   private func mediaTypeButton(_ title: String, type: MediaType) -> some View {

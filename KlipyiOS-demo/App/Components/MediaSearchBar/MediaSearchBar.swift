@@ -13,6 +13,9 @@ import SDWebImageSwiftUI
 struct MediaSearchBar: View {
   @Binding var searchText: String
   @Binding var selectedCategory: MediaCategory?
+  
+  @FocusState var isFocused: Bool
+
   let categories: [MediaCategory]
   
   var body: some View {
@@ -81,6 +84,7 @@ private extension MediaSearchBar {
       // TODO: Whenever search will be tapped
       // TODO: It need to be unselected and
       .disabled(selectedCategory != nil)
+      .focused($isFocused)
       .frame(maxWidth: .infinity)
   }
   
