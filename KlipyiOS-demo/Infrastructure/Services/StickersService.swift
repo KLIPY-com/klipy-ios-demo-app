@@ -67,7 +67,7 @@ extension StickersService: KlipyTargetType {
         "per_page": perPage,
         "customer_id": customerId,
         "locale": locale
-      ], encoding: URLEncoding.default)
+      ].withAdParameters(), encoding: URLEncoding.default)
       
     case .search(let query, let page, let perPage, let customerId, let locale):
       return .requestParameters(parameters: [
@@ -76,7 +76,7 @@ extension StickersService: KlipyTargetType {
         "per_page": perPage,
         "customer_id": customerId,
         "locale": locale
-      ], encoding: URLEncoding.default)
+      ].withAdParameters(), encoding: URLEncoding.default)
       
     case .categories:
       return .requestPlain
@@ -85,12 +85,12 @@ extension StickersService: KlipyTargetType {
       return .requestParameters(parameters: [
         "page": page,
         "per_page": perPage
-      ], encoding: URLEncoding.default)
+      ].withAdParameters(), encoding: URLEncoding.default)
       
     case .hideFromRecent(_, let slug):
       return .requestParameters(parameters: [
         "slug": slug
-      ], encoding: URLEncoding.default)
+      ].withAdParameters(), encoding: URLEncoding.default)
       
     case .view(_, let customerId):
       return .requestParameters(
