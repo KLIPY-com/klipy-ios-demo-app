@@ -13,6 +13,9 @@ struct KlipyiOS_demoApp: App {
     WindowGroup {
       ContentView()
         .preferredColorScheme(.dark)
+        .onAppear {
+          UserAgentManager.shared.getUserAgent()
+        }
     }
   }
 }
