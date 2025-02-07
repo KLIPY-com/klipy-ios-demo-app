@@ -5,7 +5,6 @@
 //  Created by Tornike Gomareli on 13.01.25.
 //
 
-
 struct FileMeta: Codable {
   let url: String
   let width: Int

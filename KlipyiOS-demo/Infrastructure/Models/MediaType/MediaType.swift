@@ -12,12 +12,14 @@ public enum MediaType: String, Codable {
   case clips = "clip"
   case gifs = "gif"
   case stickers = "sticker"
+  case ad = "ad"
   
   var path: String {
     switch self {
     case .clips: return "clips"
     case .gifs: return "gifs"
     case .stickers: return "stickers"
+    case .ad: return ""
     }
   }
 }
@@ -28,6 +30,8 @@ extension MediaType {
     case .clips: return "CLIPs"
     case .gifs: return "GIFs"
     case .stickers: return "STICKERs"
+    case .ad:
+      return ""
     }
   }
   
