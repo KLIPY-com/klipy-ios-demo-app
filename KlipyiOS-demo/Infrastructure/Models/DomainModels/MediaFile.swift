@@ -9,6 +9,20 @@ struct MediaFile: Equatable {
   let mp4: MediaFileVariant?
   let gif: MediaFileVariant
   let webp: MediaFileVariant
+  
+  static let empty = MediaFile(
+    mp4: nil,
+    gif: MediaFileVariant(
+      url: "",
+      width: 0,
+      height: 0
+    ),
+    webp: MediaFileVariant(
+      url: "",
+      width: 0,
+      height: 0
+    )
+  )
 }
 
 struct MediaFileVariant: Equatable {
@@ -17,12 +31,23 @@ struct MediaFileVariant: Equatable {
   let height: Int
 }
 
+struct AddContentProperties {
+  let width: Int
+  let height: Int
+  let content: String
+}
+
 struct MediaDomainModel: Identifiable, Equatable {
+  static func == (lhs: MediaDomainModel, rhs: MediaDomainModel) -> Bool {
+    return lhs.id == rhs.id
+  }
+  
   let id: Int
   let title: String
   let slug: String
   let blurPreview: String?
   let type: MediaType
+  let addContentProperties: AddContentProperties?
   
   let hd: MediaFile?
   let md: MediaFile?

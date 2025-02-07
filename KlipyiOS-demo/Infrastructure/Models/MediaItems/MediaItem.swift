@@ -8,9 +8,9 @@
 import Foundation
 
 protocol MediaItem: Codable, Equatable, Identifiable {
-  var id: Int { get }
-  var title: String { get }
-  var slug: String { get }
+  var id: Int? { get }
+  var title: String? { get }
+  var slug: String? { get }
   var blurPreview: String? { get }
   var type: MediaType { get }
 }
