@@ -36,7 +36,7 @@ public extension KlipyTargetType {
   }
 
   var headers: [String: String]? {
-    return [:]
+    ["User-Agent": UserAgentManager.shared.userAgent]
   }
 
   var mayRunAsBackgroundTask: Bool {

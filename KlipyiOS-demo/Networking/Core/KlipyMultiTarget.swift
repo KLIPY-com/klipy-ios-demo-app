@@ -40,7 +40,9 @@ struct KlipyMultiTarget: KlipyTargetType {
   public var validationType: ValidationType { target.validationType }
 
   /// The headers of the embedded target.
-  public var headers: [String: String]? { target.headers }
+  public var headers: [String: String]? {
+    target.headers
+  }
 
   public init(withBaseUrl url: URL, andTarget target: any KlipyTargetType) {
     self._baseURL = url
