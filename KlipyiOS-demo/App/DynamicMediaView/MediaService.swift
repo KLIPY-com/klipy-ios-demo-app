@@ -11,6 +11,7 @@ enum MediaService {
   case gif(GifServiceUseCase)
   case clip(ClipsServiceUseCase)
   case sticker(StickersServiceUseCase)
+  case none
   
   func fetchTrending(page: Int, perPage: Int) async throws -> [MediaDomainModel] {
     switch self {
@@ -24,6 +25,8 @@ enum MediaService {
     case .sticker(let service):
       let response = try await service.fetchTrending(page: page, perPage: perPage)
       return response.data.data.map { $0.toDomain() }
+    case .none:
+      return []
     }
   }
   
@@ -39,6 +42,8 @@ enum MediaService {
     case .sticker(let service):
       let response = try await service.fetchRecentItems(page: page, perPage: perPage)
       return response.data.data.map { $0.toDomain() }
+    case .none:
+      return []
     }
   }
   
@@ -50,6 +55,8 @@ enum MediaService {
       return try await service.fetchCategories()
     case .sticker(let service):
       return try await service.fetchCategories()
+    case .none:
+      return .init(result: false, data: [])
     }
   }
   
@@ -64,6 +71,8 @@ enum MediaService {
     case .sticker(let service):
       let response = try await service.searchStickers(query: query, page: page, perPage: perPage)
       return response.data.data.map { $0.toDomain() }
+    case .none:
+      return []
     }
   }
   
@@ -72,6 +81,7 @@ enum MediaService {
     case .gif(let service): return try await service.trackView(slug: slug)
     case .clip(let service): return try await service.trackView(slug: slug)
     case .sticker(let service): return try await service.trackView(slug: slug)
+    case .none: return .init(result: true)
     }
   }
   
@@ -80,6 +90,7 @@ enum MediaService {
     case .gif(let service): return try await service.trackShare(slug: slug)
     case .clip(let service): return try await service.trackShare(slug: slug)
     case .sticker(let service): return try await service.trackShare(slug: slug)
+    case .none: return .init(result: true)
     }
   }
   
@@ -88,6 +99,7 @@ enum MediaService {
     case .gif(let service): return try await service.hideFromRecent(slug: slug)
     case .clip(let service): return try await service.hideFromRecent(slug: slug)
     case .sticker(let service): return try await service.hideFromRecent(slug: slug)
+    case .none: return .init(result: true)
     }
   }
   
@@ -96,6 +108,7 @@ enum MediaService {
     case .gif(let service): return try await service.reportGif(slug: slug, reason: reason)
     case .clip(let service): return try await service.reportClip(slug: slug, reason: reason)
     case .sticker(let service): return try await service.reportSticker(slug: slug, reason: reason)
+    case .none: return .init(result: true)
     }
   }
   
@@ -104,6 +117,7 @@ enum MediaService {
     case .gifs: return .gif(GifServiceUseCase())
     case .clips: return .clip(ClipsServiceUseCase())
     case .stickers: return .sticker(StickersServiceUseCase())
+    case .ad: return .none
     }
   }
 }
