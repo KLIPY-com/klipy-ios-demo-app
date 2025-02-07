@@ -38,67 +38,72 @@ struct LazyGIFView: View {
   
   var body: some View {
     Group {
-      AnimatedImage(url: URL(string: item.url), isAnimating: .constant(true)) {
+      if item.type == "ad" {
+        KlipyWebViewRepresentable.init(htmlString: item.url)
+          .frame(width: item.width, height: item.height)
+      } else {
+        AnimatedImage(url: URL(string: item.url), isAnimating: .constant(true)) {
           if let image = Image.fromBase64(item.previewUrl) {
-              image
-                  .resizable()
-                  .aspectRatio(contentMode: .fill)
-                  .frame(width: item.width, height: item.height)
+            image
+              .resizable()
+              .aspectRatio(contentMode: .fill)
+              .frame(width: item.width, height: item.height)
           }
-      }
-      .resizable()
-      .transition(.fade)
-      .playbackRate(1.0)
-      .playbackMode(.bounce)
-      .aspectRatio(contentMode: .fill)
-      .scaleEffect(isPressing ? 0.8 : 1.0)
-      .animation(.spring(response: 0.9, dampingFraction: 0.9), value: isPressing)
-      .overlay(GeometryReader { geo -> Color in
-        DispatchQueue.main.async {
-          itemFrame = geo.frame(in: .global)
         }
-        return Color.clear
-      })
-      .onTapGesture {
-        isFocused = false
-
-        if item.mp4Media != nil {
-          impactFeedback.impactOccurred()
-          previewModel.selectedItem = (item, itemFrame)
-        } else {
-          clickFeedback.impactOccurred()
-          onClick()
-        }
-      }
-      .simultaneousGesture(
-        DragGesture(minimumDistance: 0)
-          .updating($isPressing) { _, state, _ in
-            isFocused = false
-            state = true
+        .resizable()
+        .transition(.fade)
+        .playbackRate(1.0)
+        .playbackMode(.bounce)
+        .aspectRatio(contentMode: .fill)
+        .scaleEffect(isPressing ? 0.8 : 1.0)
+        .animation(.spring(response: 0.9, dampingFraction: 0.9), value: isPressing)
+        .overlay(GeometryReader { geo -> Color in
+          DispatchQueue.main.async {
+            itemFrame = geo.frame(in: .global)
           }
-          .onChanged { _ in
-            isFocused = false
-
-            if !isPressed {
-              isPressed = true
-              timer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { _ in
-                impactFeedback.impactOccurred()
-                previewModel.selectedItem = (item, itemFrame)
-                withAnimation {
-                  isPressed = false
+          return Color.clear
+        })
+        .onTapGesture {
+          isFocused = false
+          
+          if item.mp4Media != nil {
+            impactFeedback.impactOccurred()
+            previewModel.selectedItem = (item, itemFrame)
+          } else {
+            clickFeedback.impactOccurred()
+            onClick()
+          }
+        }
+        .simultaneousGesture(
+          DragGesture(minimumDistance: 0)
+            .updating($isPressing) { _, state, _ in
+              isFocused = false
+              state = true
+            }
+            .onChanged { _ in
+              isFocused = false
+              
+              if !isPressed {
+                isPressed = true
+                timer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { _ in
+                  impactFeedback.impactOccurred()
+                  previewModel.selectedItem = (item, itemFrame)
+                  withAnimation {
+                    isPressed = false
+                  }
                 }
               }
             }
-          }
-          .onEnded { _ in
-            isFocused = false
-            timer?.invalidate()
-            timer = nil
-            withAnimation {
-              isPressed = false
+            .onEnded { _ in
+              isFocused = false
+              timer?.invalidate()
+              timer = nil
+              withAnimation {
+                isPressed = false
+              }
             }
-          }
-      )
+        )
+      }
     }
   }
 }
