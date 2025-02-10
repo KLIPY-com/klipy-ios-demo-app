@@ -44,7 +44,7 @@ class MasonryLayoutCalculator {
             guard let file = item.xs?.gif else {
                 return (0, 0, "")
             }
-            return (CGFloat(file.width), CGFloat(file.height), file.url)
+          return (CGFloat(file.width), CGFloat(file.height), file.url)
         case .ad:
           guard let file = item.addContentProperties else {
             return (0, 0, "")
@@ -142,7 +142,7 @@ class MasonryLayoutCalculator {
             rows.append(RowLayout(items: rowItems, height: rowHeight))
             nextItem += rowItems.count
         }
-        
+
         // Calculate positions
         var currentY: CGFloat = 0
         for rowIndex in 0..<rows.count {
