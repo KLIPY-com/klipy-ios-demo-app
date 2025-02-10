@@ -10,13 +10,26 @@ import SwiftUI
 
 @Observable
 class DynamicMediaViewModel {
-  var items: [MediaDomainModel] = []
+  var _items: [MediaDomainModel] = []
+  var items: [MediaDomainModel] {
+    get {
+      return _items
+    }
+    
+    set {
+      _items = newValue
+    }
+  }
   private(set) var isLoading = false
   private(set) var hasError = false
   private(set) var errorMessage: String?
   private(set) var hasMorePages = true
   private(set) var searchQuery = ""
   private(set) var currentType: MediaType
+
+  public var activeCategory: MediaCategory?
+
+  var categorySearchText = ""
   
   var categories: [MediaCategory] = []
   
@@ -37,18 +50,45 @@ class DynamicMediaViewModel {
   func switchToType(_ type: MediaType) {
     guard type != currentType else { return }
     
-    /// Reset state
-    items = []
+    resetState()
+    currentType = type
+    service = .create(for: type)
+  }
+  
+  func resetState() {
     currentPage = 1
     hasMorePages = true
     searchQuery = ""
+    categorySearchText = ""
     isLoading = false
     hasError = false
     errorMessage = nil
-    
-    /// Switch Service Type
-    currentType = type
-    service = .create(for: type)
+    items = []
+  }
+  
+  @MainActor
+  func initialLoad() async {
+    resetState()
+    do {
+      let recentItems = try await service.fetchRecents(page: 1, perPage: perPage)
+      
+      if recentItems.isEmpty {
+        let trendingItems = try await service.fetchTrending(page: 1, perPage: perPage)
+        items = trendingItems
+        activeCategory = categories.first { $0.type == .trending }
+      } else {
+        items = recentItems
+        activeCategory = categories.first { $0.type == .recents }
+      }
+      
+      currentPage = 2
+      hasMorePages = !items.isEmpty
+      isLoading = false
+    } catch {
+      hasError = true
+      errorMessage = error.localizedDescription
+      isLoading = false
+    }
   }
   
   func loadRecentItems() async {
@@ -64,33 +104,16 @@ class DynamicMediaViewModel {
         perPage: perPage
       )
       
-      if recentItems.count == 0 {
-        let trendingItems = try await service.fetchTrending(page: currentPage, perPage: perPage)
-        
-        
-        await MainActor.run {
-          if currentPage == 1 {
-            items = trendingItems
-          } else {
-            items.append(contentsOf: trendingItems)
-          }
-          
-          hasMorePages = !trendingItems.isEmpty
-          currentPage += 1
-          isLoading = false
+      await MainActor.run {
+        if currentPage == 1 {
+          items = recentItems
+        } else {
+          items.append(contentsOf: recentItems)
         }
-      } else {
-        await MainActor.run {
-          if currentPage == 1 {
-            items = recentItems
-          } else {
-            items.append(contentsOf: recentItems)
-          }
-          
-          hasMorePages = !recentItems.isEmpty
-          currentPage += 1
-          isLoading = false
-        }
+        
+        hasMorePages = !recentItems.isEmpty
+        currentPage += 1
+        isLoading = false
       }
     } catch {
       await MainActor.run {
@@ -195,7 +218,6 @@ class DynamicMediaViewModel {
     }
     
     guard !query.isEmpty else {
-      await loadTrendingItems()
       return
     }
     
@@ -234,10 +256,19 @@ class DynamicMediaViewModel {
   func loadNextPageIfNeeded() async {
     guard !isLoading && hasMorePages else { return }
     
-    if searchQuery.isEmpty {
-      await loadTrendingItems()
+    if searchQuery.isEmpty && categorySearchText.isEmpty {
+      switch activeCategory?.type {
+      case .trending:
+       await loadTrendingItems()
+      case .recents:
+       await loadRecentItems()
+      case nil:
+        return
+      case .some(.none):
+        return
+      }
     } else {
-      await searchItems(query: searchQuery)
+      await searchItems(query: searchQuery.isEmpty ? categorySearchText : searchQuery)
     }
   }
   
@@ -288,5 +319,3 @@ extension DynamicMediaViewModel {
     }
   }
 }
-
-
