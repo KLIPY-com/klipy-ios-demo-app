@@ -10,7 +10,7 @@ import SwiftUI
 struct MasonryGridView: View {
   let rows: [RowLayout]
   let onLoadMore: () -> Void
-  
+  let previewLoaded: (GridItemLayout) -> Void
   let onSend: (GridItemLayout) -> Void
   let onReport: (String, ReportReason) -> Void
   
@@ -52,7 +52,11 @@ struct MasonryGridView: View {
             previewModel.dragOffset = .zero
             previewModel.dragScale = 1
           }
-        }
+      }
+      .onAppear {
+        guard let previewModel = previewModel.selectedItem?.item else { return }
+        previewLoaded(previewModel)
+      }
     }
   }
 }
