@@ -39,8 +39,15 @@ struct LazyGIFView: View {
   var body: some View {
     Group {
       if item.type == "ad" {
-        KlipyWebViewRepresentable.init(htmlString: item.url)
-          .frame(width: item.width, height: item.height)
+        Rectangle()
+          .fill(Color.yellow)
+          .frame(width: item.newWidth, height: item.height)
+          .overlay(
+            Text("\(Int(item.width))x\(Int(item.height))")
+              .foregroundColor(.black)
+              .font(.system(size: 14, weight: .bold))
+          )
+//        KlipyWebViewRepresentable.init(htmlString: item.url)
       } else {
         AnimatedImage(url: URL(string: item.url), isAnimating: .constant(true)) {
           if let image = Image.fromBase64(item.previewUrl) {
@@ -54,7 +61,6 @@ struct LazyGIFView: View {
         .transition(.fade)
         .playbackRate(1.0)
         .playbackMode(.bounce)
-        .aspectRatio(contentMode: .fill)
         .scaleEffect(isPressing ? 0.8 : 1.0)
         .animation(.spring(response: 0.9, dampingFraction: 0.9), value: isPressing)
         .overlay(GeometryReader { geo -> Color in
@@ -103,6 +109,7 @@ struct LazyGIFView: View {
               }
             }
         )
+        .frame(width: item.width, height: item.height)
       }
     }
   }
