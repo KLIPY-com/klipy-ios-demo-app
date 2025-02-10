@@ -15,7 +15,7 @@ struct MediaSearchBar: View {
   @Binding var selectedCategory: MediaCategory?
   
   @FocusState var isFocused: Bool
-
+  
   let categories: [MediaCategory]
   
   var body: some View {
@@ -44,10 +44,10 @@ struct MediaSearchBar: View {
 private extension MediaSearchBar {
   var navigationControl: some View {
     Group {
-      if selectedCategory != nil {
-        backButton
-      } else {
+      if searchText.isEmpty {
         searchIcon
+      } else {
+        backButton
       }
     }
     .frame(
@@ -58,7 +58,7 @@ private extension MediaSearchBar {
   }
   
   var backButton: some View {
-    Button(action: clearSelection) {
+    Button(action: clearSearchOnly) {
       Image(systemName: "chevron.left")
         .foregroundColor(MediaSearchConfiguration.Colors.icon)
     }
@@ -81,9 +81,6 @@ private extension MediaSearchBar {
         Text("Search")
           .foregroundColor(MediaSearchConfiguration.Colors.text.opacity(0.5))
       }
-      // TODO: Whenever search will be tapped
-      // TODO: It need to be unselected and
-      .disabled(selectedCategory != nil)
       .focused($isFocused)
       .frame(maxWidth: .infinity)
   }
@@ -91,7 +88,7 @@ private extension MediaSearchBar {
   @ViewBuilder
   var clearButton: some View {
     if !searchText.isEmpty {
-      Button(action: clearSelection) {
+      Button(action: clearSearchOnly) {
         Image(systemName: "xmark.circle.fill")
           .foregroundColor(MediaSearchConfiguration.Colors.icon)
           .frame(
@@ -140,6 +137,12 @@ private extension MediaSearchBar {
     }
   }
   
+  func clearSearchOnly() {
+    withAnimation {
+      searchText = ""
+    }
+  }
+  
   func clearSelection() {
     withAnimation {
       selectedCategory = nil
@@ -149,27 +152,14 @@ private extension MediaSearchBar {
   
   func handleCategorySelection(_ category: MediaCategory) {
     withAnimation {
+      clearSearchOnly()
       if selectedCategory?.name == category.name {
-        selectedCategory = nil
+        return
       } else {
         selectedCategory = category
       }
     }
   }
-}
-
-// MARK: - Preview
-#Preview {
-  MediaSearchBar(
-    searchText: .constant(""),
-    selectedCategory: .constant(nil),
-    categories: [
-      MediaCategory(name: "Trending", type: .trending),
-      MediaCategory(name: "Recent", type: .recents)
-    ]
-  )
-  .padding()
-  .background(Color.black)
 }
 
 extension View {
