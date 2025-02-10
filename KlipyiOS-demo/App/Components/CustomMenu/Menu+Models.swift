@@ -22,7 +22,7 @@ enum ReportReason: String, CaseIterable {
     case .violence: return "exclamationmark.triangle.fill"
     case .pornography: return "exclamationmark.shield.fill"
     case .childAbuse: return "person.fill.xmark"
-    case .copyright: return "doc.fill.badge.exclamationmark"
+    case .copyright: return "exclamationmark.bubble"
     case .other: return "exclamationmark.circle.fill"
     }
   }
