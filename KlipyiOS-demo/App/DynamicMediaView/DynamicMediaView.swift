@@ -145,8 +145,12 @@ struct DynamicMediaView: View {
             }
           }
         },
-        onReport: { url, reason in
+        onReport: { reportedModel, url, reason in
           showToast = true
+          guard let mediaModel = viewModel.getMediaItem(by: reportedModel.id) else { return }
+          Task {
+            try await viewModel.reportItem(item: mediaModel, reason: reason.rawValue)
+          }
         },
         isFocused: _isSearchFocused
       )
