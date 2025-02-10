@@ -12,7 +12,7 @@ struct MasonryGridView: View {
   let onLoadMore: () -> Void
   let previewLoaded: (GridItemLayout) -> Void
   let onSend: (GridItemLayout) -> Void
-  let onReport: (String, ReportReason) -> Void
+  let onReport: (GridItemLayout, String, ReportReason) -> Void
   
   @FocusState var isFocused: Bool
   
@@ -43,7 +43,8 @@ struct MasonryGridView: View {
           onSend(url)
         },
         onReport: { url, reportReason in
-          onReport(url, reportReason)
+          guard let previewModel = previewModel.selectedItem?.item else { return }
+          onReport(previewModel, url, reportReason)
         }
       ) {
           withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
