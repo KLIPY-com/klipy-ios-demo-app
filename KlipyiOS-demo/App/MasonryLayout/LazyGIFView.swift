@@ -39,15 +39,8 @@ struct LazyGIFView: View {
   var body: some View {
     Group {
       if item.type == "ad" {
-        Rectangle()
-          .fill(Color.yellow)
+        KlipyWebViewRepresentable.init(htmlString: item.url)
           .frame(width: item.newWidth, height: item.height)
-          .overlay(
-            Text("\(Int(item.width))x\(Int(item.height))")
-              .foregroundColor(.black)
-              .font(.system(size: 14, weight: .bold))
-          )
-//        KlipyWebViewRepresentable.init(htmlString: item.url)
       } else {
         AnimatedImage(url: URL(string: item.url), isAnimating: .constant(true)) {
           if let image = Image.fromBase64(item.previewUrl) {
