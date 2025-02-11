@@ -9,6 +9,7 @@ import SwiftUI
 
 struct MasonryGridView: View {
   let rows: [RowLayout]
+  let hasNext: Bool
   let onLoadMore: () -> Void
   let previewLoaded: (GridItemLayout) -> Void
   let onSend: (GridItemLayout) -> Void

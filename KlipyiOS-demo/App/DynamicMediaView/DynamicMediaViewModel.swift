@@ -26,11 +26,11 @@ class DynamicMediaViewModel {
   private(set) var hasMorePages = true
   private(set) var searchQuery = ""
   private(set) var currentType: MediaType
+  
 
   public var activeCategory: MediaCategory?
 
   var categorySearchText = ""
-  
   var categories: [MediaCategory] = []
   
   @ObservationIgnored
