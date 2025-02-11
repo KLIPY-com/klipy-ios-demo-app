@@ -70,19 +70,22 @@ class DynamicMediaViewModel {
   func initialLoad() async {
     resetState()
     do {
-      let recentItems = try await service.fetchRecents(page: 1, perPage: perPage)
+      let recentsResult = try await service.fetchRecents(page: 1, perPage: perPage)
+      let recentItems = recentsResult.items
       
       if recentItems.isEmpty {
-        let trendingItems = try await service.fetchTrending(page: 1, perPage: perPage)
+        let trendingResults = try await service.fetchTrending(page: 1, perPage: perPage)
+        let trendingItems = trendingResults.items
+        hasMorePages = trendingResults.hasNext
         items = trendingItems
         activeCategory = categories.first { $0.type == .trending }
       } else {
         items = recentItems
+        hasMorePages = recentsResult.hasNext
         activeCategory = categories.first { $0.type == .recents }
       }
       
       currentPage = 2
-      hasMorePages = !items.isEmpty
       isLoading = false
     } catch {
       hasError = true
@@ -106,12 +109,12 @@ class DynamicMediaViewModel {
       
       await MainActor.run {
         if currentPage == 1 {
-          items = recentItems
+          items = recentItems.items
         } else {
-          items.append(contentsOf: recentItems)
+          items.append(contentsOf: recentItems.items)
         }
         
-        hasMorePages = !recentItems.isEmpty
+        hasMorePages = recentItems.hasNext
         currentPage += 1
         isLoading = false
       }
@@ -139,7 +142,7 @@ class DynamicMediaViewModel {
           isLoading = false
         }
         
-        return domainItems
+        return domainItems.items
       } catch {
         await MainActor.run {
           hasError = true
@@ -165,7 +168,7 @@ class DynamicMediaViewModel {
           isLoading = false
         }
         
-        return domainItems
+        return domainItems.items
       } catch {
         await MainActor.run {
           hasError = true
@@ -191,12 +194,12 @@ class DynamicMediaViewModel {
       
       await MainActor.run {
         if currentPage == 1 {
-          items = domainItems
+          items = domainItems.items
         } else {
-          items.append(contentsOf: domainItems)
+          items.append(contentsOf: domainItems.items)
         }
         
-        hasMorePages = !domainItems.isEmpty
+        hasMorePages = domainItems.hasNext
         currentPage += 1
         isLoading = false
       }
@@ -209,6 +212,7 @@ class DynamicMediaViewModel {
     }
   }
   
+  @MainActor
   func searchItems(query: String) async {
     if searchQuery != query {
       searchQuery = query
@@ -234,16 +238,15 @@ class DynamicMediaViewModel {
         perPage: perPage
       )
       
-      await MainActor.run {
-        if currentPage == 1 {
-          items = domainItems
-        } else {
-          items.append(contentsOf: domainItems)
-        }
-        hasMorePages = !domainItems.isEmpty
-        currentPage += 1
-        isLoading = false
+      if currentPage == 1 {
+        items = domainItems.items
+      } else {
+        items.append(contentsOf: domainItems.items)
       }
+
+      hasMorePages = domainItems.hasNext
+      currentPage += 1
+      isLoading = false
     } catch {
       await MainActor.run {
         hasError = true
@@ -253,6 +256,7 @@ class DynamicMediaViewModel {
     }
   }
   
+  @MainActor
   func loadNextPageIfNeeded() async {
     guard !isLoading && hasMorePages else { return }
     
