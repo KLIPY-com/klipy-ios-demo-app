@@ -110,6 +110,7 @@ struct DynamicMediaView: View {
       Color(hex: "#36383F")
       MasonryGridView(
         rows: rows,
+        hasNext: viewModel.hasMorePages,
         onLoadMore: {
           Task {
             await viewModel.loadNextPageIfNeeded()
