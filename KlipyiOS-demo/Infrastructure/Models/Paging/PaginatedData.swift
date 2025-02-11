@@ -7,6 +7,13 @@
 
 import Foundation
 
+struct PaginatedDomain {
+  let items: [MediaDomainModel]
+  let currentPage: Int
+  let perPage: Int
+  let hasNext: Bool
+}
+
 struct PaginatedData<T: Codable>: Codable {
   let data: [T]
   let currentPage: Int
