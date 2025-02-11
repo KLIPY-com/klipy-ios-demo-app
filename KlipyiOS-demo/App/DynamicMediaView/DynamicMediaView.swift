@@ -8,22 +8,6 @@
 import SwiftUI
 import AlertToast
 
-actor SearchDebouncer {
-  private var task: Task<Void, Never>?
-  
-  func debounce(
-    for duration: Duration = .milliseconds(300),
-    action: @escaping () async -> Void
-  ) {
-    task?.cancel()
-    task = Task {
-      try? await Task.sleep(for: duration)
-      guard !Task.isCancelled else { return }
-      await action()
-    }
-  }
-}
-
 struct DynamicMediaView: View {
   @Bindable private var viewModel = DynamicMediaViewModel()
   
@@ -55,7 +39,7 @@ struct DynamicMediaView: View {
           guard let category = newCategory else {
             return
           }
-  
+          
           viewModel.resetState()
           switch category.type {
           case .trending:
@@ -100,7 +84,7 @@ struct DynamicMediaView: View {
       await viewModel.initialLoad()
     }
     .onChange(of: searchText) { _, newValue in
-      Task {
+      Task { @MainActor in
         await searchDebouncer.debounce {
           if newValue.isEmpty {
             await viewModel.initialLoad()
@@ -111,7 +95,7 @@ struct DynamicMediaView: View {
       }
     }
     .onChange(of: viewModel.categorySearchText) { _, newValue in
-      Task {
+      Task { @MainActor in
         if newValue.isEmpty {
           return
         } else {
