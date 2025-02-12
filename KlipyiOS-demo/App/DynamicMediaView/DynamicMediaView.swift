@@ -80,8 +80,14 @@ struct DynamicMediaView: View {
       .navigationBarTitleDisplayMode(.inline)
     }
     .task {
+      await viewModel.checkServicesHealth()
       await viewModel.fetchCategories()
       await viewModel.initialLoad()
+    }
+    .onChange(of: viewModel.shouldDismiss) { _, shouldDismiss in
+      if shouldDismiss {
+        dismiss()
+      }
     }
     .onChange(of: searchText) { _, newValue in
       Task { @MainActor in
@@ -167,26 +173,57 @@ struct DynamicMediaView: View {
   }
   
   private func mediaTypeButton(_ title: String, type: MediaType) -> some View {
-    Button(action: {
-      withAnimation {
-        viewModel.switchToType(type)
-        searchText = ""
-        Task {
-          await viewModel.initialLoad()
+    let isAvailable = isTypeAvailable(type)
+    
+    return Button(action: {
+      if isAvailable {
+        withAnimation {
+          viewModel.switchToType(type)
+          searchText = ""
+          Task {
+            await viewModel.initialLoad()
+          }
         }
       }
     }) {
       Text(title)
         .font(.system(size: 17, weight: .bold))
-        .foregroundColor(viewModel.currentType == type ? .black : .white)
+        .foregroundColor(buttonTextColor(for: type, isAvailable: isAvailable))
         .padding(.vertical, 12)
         .padding(.horizontal, 16)
         .background(
-          viewModel.currentType == type ?
-          RoundedRectangle(cornerRadius: 8)
-            .fill(Color(hex: "F8DC3B"))
-          : nil
+          buttonBackground(for: type, isAvailable: isAvailable)
         )
+    }
+    .disabled(!isAvailable)
+  }
+  
+  private func buttonTextColor(for type: MediaType, isAvailable: Bool) -> Color {
+    if !isAvailable {
+      return .gray
+    }
+    return viewModel.currentType == type ? .black : .white
+  }
+  
+  private func buttonBackground(for type: MediaType, isAvailable: Bool) -> some View {
+    Group {
+      if viewModel.currentType == type && isAvailable {
+        RoundedRectangle(cornerRadius: 8)
+          .fill(Color(hex: "F8DC3B"))
+      } else {
+        EmptyView()
+      }
+    }
+  }
+  
+  private func isTypeAvailable(_ type: MediaType) -> Bool {
+    guard let availability = viewModel.mediaAvailability else { return true }
+    
+    switch type {
+    case .gifs: return availability.gifs.isAlive
+    case .clips: return availability.clips.isAlive
+    case .stickers: return availability.stickers.isAlive
+    case .ad: return true
     }
   }
 }

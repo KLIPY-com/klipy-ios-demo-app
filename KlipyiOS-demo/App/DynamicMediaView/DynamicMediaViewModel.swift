@@ -20,6 +20,7 @@ class DynamicMediaViewModel {
       _items = newValue
     }
   }
+
   private(set) var isLoading = false
   private(set) var hasError = false
   private(set) var errorMessage: String?
@@ -27,9 +28,14 @@ class DynamicMediaViewModel {
   private(set) var searchQuery = ""
   private(set) var currentType: MediaType
   
+  private(set) var mediaAvailability: MediaContent?
+  private let healthCheckService = HealthCheckServiceUseCase()
+
+  
 
   public var activeCategory: MediaCategory?
 
+  var shouldDismiss: Bool = false
   var categorySearchText = ""
   var categories: [MediaCategory] = []
   
@@ -45,6 +51,46 @@ class DynamicMediaViewModel {
   init(initialType: MediaType = .gifs) {
     self.currentType = initialType
     self.service = .create(for: initialType)
+  }
+  
+  @MainActor
+  func checkServicesHealth() async {
+    do {
+      let healthStatus = try await healthCheckService.fetchUpdateInfo()
+      self.mediaAvailability = healthStatus
+      
+      if !isCurrentTypeAvailable {
+        switchToFirstAvailableType()
+      }
+    } catch {
+      print("Health check failed: \(error)")
+    }
+  }
+  
+  private var isCurrentTypeAvailable: Bool {
+    guard let availability = mediaAvailability else { return true }
+    
+    switch currentType {
+    case .gifs: return availability.gifs.isAlive
+    case .clips: return availability.clips.isAlive
+    case .stickers: return availability.stickers.isAlive
+    case .ad: return true
+    }
+  }
+  
+  @MainActor
+  private func switchToFirstAvailableType() {
+    guard let availability = mediaAvailability else { return }
+    
+    if availability.clips.isAlive {
+      switchToType(.clips)
+    } else if availability.stickers.isAlive {
+      switchToType(.stickers)
+    } else if availability.gifs.isAlive {
+      switchToType(.gifs)
+    } else {
+      shouldDismiss = true
+    }
   }
   
   func switchToType(_ type: MediaType) {
