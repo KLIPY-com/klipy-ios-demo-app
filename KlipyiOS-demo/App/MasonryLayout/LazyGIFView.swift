@@ -47,7 +47,7 @@ struct LazyGIFView: View {
             image
               .resizable()
               .aspectRatio(contentMode: .fill)
-              .frame(width: item.width, height: item.height)
+              .frame(width: item.newWidth, height: item.height)
           }
         }
         .resizable()
