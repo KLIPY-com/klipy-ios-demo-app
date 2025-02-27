@@ -11,11 +11,13 @@ import SwiftUI
 struct KlipyiOS_demoApp: App {
   var body: some Scene {
     WindowGroup {
-      ContentView()
-        .preferredColorScheme(.dark)
-        .onAppear {
-          UserAgentManager.shared.getUserAgent()
-        }
+      RootView {
+        ContentView()
+          .preferredColorScheme(.dark)
+          .onAppear {
+            UserAgentManager.shared.getUserAgent()
+          }
+      }
     }
   }
 }
