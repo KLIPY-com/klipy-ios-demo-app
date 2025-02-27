@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import AlertToast
 
 struct CustomNavigationBar: View {
   let onBack: () -> Void
@@ -37,12 +38,27 @@ struct CustomNavigationBar: View {
       
       
       
-      // Empty view to balance the HStack
       Color.clear
-        .frame(width: 44) // Same as back button area
+        .frame(width: 44)
     }
     .frame(height: 84)
     .background(Color.init(hex: "#19191C"))
+  }
+}
+
+public struct GlobalMediaItem: Identifiable, Equatable {
+  public static func == (lhs: GlobalMediaItem, rhs: GlobalMediaItem) -> Bool {
+    return lhs.id == rhs.id
+  }
+  
+  public var id: String
+  var item: GridItemLayout
+  var frame: CGRect
+  
+  init(id: String = UUID().uuidString, item: GridItemLayout, frame: CGRect) {
+    self.id = id
+    self.item = item
+    self.frame = frame
   }
 }
 
@@ -50,35 +66,68 @@ struct ChatView: View {
   @State private var viewModel = ChatFeatureViewModel()
   @State private var messageText = ""
   @State private var scrollProxy: ScrollViewProxy?
+  
   @FocusState private var isFocused: Bool
+  
   @State private var dragOffset: CGFloat = 0
+  @State private var showToast = false
   
   @Environment(\.dismiss) private var dismiss
   
-  
+  @State var previewItem: GlobalMediaItem? = nil
+  @StateObject var previewModel: PreviewViewModel = PreviewViewModel()
+
   var body: some View {
-    VStack(spacing: 0) {
-      CustomNavigationBar(onBack: {
-        dismiss()
-      })
-      
-      chatScrollView
-      
-      MessageInputView(
-        messageText: $messageText,
-        isFocused: _isFocused,
-        onSendMessage: handleSendMessage,
-        onMediaPickerTap: viewModel.toggleMediaPicker
-      )
+    ZStack {
+      VStack(spacing: 0) {
+        CustomNavigationBar(onBack: {
+          dismiss()
+        })
+        
+        chatScrollView
+          .onAppear {
+            previewModel.selectedItem = previewItem
+          }
+        
+        MessageInputView(
+          messageText: $messageText,
+          isFocused: _isFocused,
+          onSendMessage: handleSendMessage,
+          onMediaPickerTap: viewModel.toggleMediaPicker
+        )
+      }
     }
     .navigationBarHidden(true)
+    .universalOverlay(item: $previewItem, content: { item in
+      TelegramPreviewOverlay(viewModel: previewItem) { item in
+        handleMediaSend(item)
+      } onReport: { error, reportReason in
+        /// TODO: Lets do real reporting
+        showToast = true
+      } onDismiss: {
+        previewItem = nil
+      }
+      .onAppear {
+        UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+      }
+    })
+    .toast(isPresenting: $showToast, duration: 5.0) {
+      AlertToast(
+        displayMode: .banner(.pop),
+        type: .regular,
+        title: "🚓 Klipy moderators will review your report. \nThank you!"
+      )
+    }
     .sheet(isPresented: $viewModel.isMediaPickerPresented) {
-      DynamicMediaView(onSend: handleMediaSend)
-        .presentationDetents([
-          .custom(CustomDetent.self)
-        ])
-        .presentationDragIndicator(.visible)
-        .presentationCornerRadius(60)
+      DynamicMediaView(
+        onSend: handleMediaSend,
+        previewItem: $previewItem
+      )
+      .presentationDetents([
+        .medium
+      ])
+      .presentationDragIndicator(.visible)
+      .presentationCornerRadius(60)
     }
     .background(Color.init(hex: "#19191C"))
     .onDisappear {
@@ -101,6 +150,62 @@ struct ChatView: View {
       .simultaneousGesture(createDragGesture())
       .overlay(ScrollOverlayView(dragOffset: dragOffset, isFocused: isFocused))
     }
+  }
+  
+  private func previewOverlay(for preview: GlobalMediaItem) -> some View {
+    ZStack {
+      Color.black.opacity(0.85)
+        .edgesIgnoringSafeArea(.all)
+        .onTapGesture {
+          withAnimation(.easeInOut) {
+            previewItem = nil
+          }
+        }
+      
+      VStack {
+        // Media content
+        if preview.item.mp4Media != nil {
+          EmptyView()
+        } else {
+          EmptyView()
+        }
+        
+        // Action buttons
+        HStack(spacing: 20) {
+          Button(action: {
+            // Send the media
+            handleMediaSend(preview.item)
+            withAnimation {
+              previewItem = nil
+            }
+          }) {
+            Text("Send")
+              .fontWeight(.bold)
+              .padding(.horizontal, 30)
+              .padding(.vertical, 12)
+              .background(Color(hex: "#F8DC3B"))
+              .foregroundColor(.black)
+              .cornerRadius(12)
+          }
+          
+          Button(action: {
+            withAnimation {
+              previewItem = nil
+            }
+          }) {
+            Text("Cancel")
+              .fontWeight(.bold)
+              .padding(.horizontal, 30)
+              .padding(.vertical, 12)
+              .background(Color.gray.opacity(0.3))
+              .foregroundColor(.white)
+              .cornerRadius(12)
+          }
+        }
+        .padding(.bottom, 30)
+      }
+    }
+    .transition(.opacity)
   }
   
   // MARK: - Private Methods
