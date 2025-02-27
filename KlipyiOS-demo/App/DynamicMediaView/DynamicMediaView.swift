@@ -18,8 +18,8 @@ struct DynamicMediaView: View {
   @FocusState private var isSearchFocused: Bool
   
   let onSend: (GridItemLayout) -> Void
-  
-  @State private var showToast = false
+    
+  @Binding var previewItem: GlobalMediaItem?
   
   @Environment(\.dismiss) private var dismiss
   var searchDebouncer = SearchDebouncer()
@@ -64,13 +64,6 @@ struct DynamicMediaView: View {
         mediaContent
         
         mediaTypeSelector
-      }
-      .toast(isPresenting: $showToast, duration: 5.0) {
-        AlertToast(
-          displayMode: .banner(.pop),
-          type: .regular,
-          title: "🚓 Klipy moderators will review your report. \nThank you!"
-        )
       }
       .contentShape(Rectangle())
       .onTapGesture {
@@ -136,14 +129,15 @@ struct DynamicMediaView: View {
             }
           }
         },
-        onReport: { reportedModel, url, reason in
-          showToast = true
-          guard let mediaModel = viewModel.getMediaItem(by: reportedModel.id) else { return }
-          Task {
-            try await viewModel.reportItem(item: mediaModel, reason: reason.rawValue)
-          }
-        },
-        isFocused: _isSearchFocused
+//        onReport: { reportedModel, url, reason in
+//          showToast = true
+//          guard let mediaModel = viewModel.getMediaItem(by: reportedModel.id) else { return }
+//          Task {
+//            try await viewModel.reportItem(item: mediaModel, reason: reason.rawValue)
+//          }
+//        },
+        isFocused: _isSearchFocused,
+        previewItem: $previewItem
       )
       .padding(.horizontal, 10)
       .frame(maxWidth: .infinity)
@@ -226,8 +220,4 @@ struct DynamicMediaView: View {
     case .ad: return true
     }
   }
-}
-
-#Preview {
-  DynamicMediaView(onSend: { item in })
 }
