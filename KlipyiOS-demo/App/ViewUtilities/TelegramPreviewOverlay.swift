@@ -31,7 +31,7 @@ extension View {
 }
 
 struct TelegramPreviewOverlay: View {
-  @ObservedObject var viewModel: PreviewViewModel
+  var viewModel: GlobalMediaItem?
   
   @State private var showingMenu = false
   @State private var isPlaying: Bool = false
@@ -46,24 +46,17 @@ struct TelegramPreviewOverlay: View {
     GeometryReader { geometry in
       ZStack {
         VisualEffectView(effect: UIBlurEffect(style: .dark))
-          .opacity({
-            if viewModel.isDragging {
-              let dragPercentage = abs(viewModel.dragOffset.height) / 300
-              return 0.8 * (1.0 - dragPercentage)
-            }
-            return 0.8
-          }())
           .ignoresSafeArea()
           .onTapGesture {
             onDismiss()
           }
         
-        if let selectedItem = viewModel.selectedItem {
+        if let selectedItem = viewModel?.item {
           let screenSize = geometry.size
           let targetSize = calculateTargetSize(
             originalSize: CGSize(
-              width: selectedItem.item.width,
-              height: selectedItem.item.height
+              width: selectedItem.width,
+              height: selectedItem.height
             ),
             screenSize: screenSize,
             isMenuShown: showingMenu
@@ -73,7 +66,7 @@ struct TelegramPreviewOverlay: View {
             Spacer()
             
             Group {
-              if let mp4UrlString = selectedItem.item.mp4Media?.mp4?.url,
+              if let mp4UrlString = selectedItem.mp4Media?.mp4?.url,
                  let url = URL(string: mp4UrlString),
                  isVideoURLValid,
                  let videoPlayer = player {
@@ -105,8 +98,8 @@ struct TelegramPreviewOverlay: View {
                 }
                 
               } else {
-                AnimatedImage(url: URL(string: selectedItem.item.highQualityUrl)) {
-                  if let image = Image.fromBase64(selectedItem.item.previewUrl) {
+                AnimatedImage(url: URL(string: selectedItem.highQualityUrl)) {
+                  if let image = Image.fromBase64(selectedItem.previewUrl) {
                     image
                       .resizable()
                       .aspectRatio(contentMode: .fill)
@@ -118,40 +111,12 @@ struct TelegramPreviewOverlay: View {
                 .frame(width: targetSize.width, height: targetSize.height)
               }
             }
-            .offset(
-              x: viewModel.isDragging ? viewModel.dragOffset.width : 0,
-              y: viewModel.isDragging ? viewModel.dragOffset.height : 0
-            )
-            .scaleEffect(viewModel.dragScale)
-            .gesture(
-              DragGesture()
-                .onChanged { value in
-                  viewModel.isDragging = true
-                  viewModel.dragOffset = value.translation
-                  
-                  let dragDistance = abs(value.translation.height)
-                  viewModel.dragScale = max(0.7, min(1, 1 - (dragDistance / 1000)))
-                }
-                .onEnded { value in
-                  let dragDistance = abs(value.translation.height)
-                  if dragDistance > 100 {
-                    onDismiss()
-                  } else {
-                    withAnimation(.spring(response: 0.3, dampingFraction: 0.8)) {
-                      viewModel.isDragging = false
-                      viewModel.dragOffset = .zero
-                      viewModel.dragScale = 1
-                    }
-                  }
-                }
-            )
             .onAppear {
               showingMenu = true
-              setupVideoPlayer(for: selectedItem.item)
+              setupVideoPlayer(for: selectedItem)
             }
             .clipShape(.rect(cornerRadius: 12, style: .continuous))
             .menuOverlay(isPresented: $showingMenu, onAction: handleMenuAction)
-            
             Spacer()
           }
         }
@@ -179,7 +144,9 @@ struct TelegramPreviewOverlay: View {
   }
   
   private func handleMenuAction(_ action: MenuAction) {
-    guard let selectedItem = viewModel.selectedItem else { return }
+    guard let selectedItem = viewModel?.item else {
+      return
+    }
     
     withAnimation(.spring(response: 0.3)) {
       showingMenu = false
@@ -188,9 +155,9 @@ struct TelegramPreviewOverlay: View {
     
     switch action {
     case .send:
-      onSend(selectedItem.item)
+      onSend(selectedItem)
     case .report(let reason):
-      onReport(selectedItem.item.url, reason)
+      onReport(selectedItem.url, reason)
     }
   }
   
@@ -210,17 +177,6 @@ struct TelegramPreviewOverlay: View {
     return CGSize(
       width: originalSize.width * scale,
       height: originalSize.height * scale
-    )
-  }
-}
-
-struct TelegramPreviewOverlay_Previews: PreviewProvider {
-  static var previews: some View {
-    TelegramPreviewOverlay(
-      viewModel: PreviewViewModel(),
-      onSend: { _ in },
-      onReport: { _, _ in },
-      onDismiss: { }
     )
   }
 }
