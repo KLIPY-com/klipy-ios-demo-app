@@ -12,21 +12,40 @@ struct RowView: View {
   let row: RowLayout
   let isLastRow: Bool
   let onLoadMore: () -> Void
-  let previewModel: PreviewViewModel
   let onRowPressed: (GridItemLayout) -> Void
   
   @FocusState var isFocused: Bool
+  
+  @Binding var previewItem: GlobalMediaItem?
+  
+  public init(
+    row: RowLayout,
+    isLastRow: Bool,
+    isFocused: Bool,
+    previewItem: Binding<GlobalMediaItem?> = .constant(nil),
+    onLoadMore: @escaping () -> Void,
+    onRowPressed: @escaping (
+      GridItemLayout
+    ) -> Void
+  ) {
+    self.row = row
+    self.isLastRow = isLastRow
+    self.onLoadMore = onLoadMore
+    self.onRowPressed = onRowPressed
+    self._previewItem = previewItem
+  }
   
   var body: some View {
     ZStack(alignment: .topLeading) {
       ForEach(row.items) { item in
         LazyGIFView(
           item: item,
-          previewModel: previewModel,
+          previewItem: $previewItem,
           onClick: {
             isFocused = false
             onRowPressed(item)
-          }, isFocused: _isFocused
+          },
+          isFocused: _isFocused
         )
         .frame(width: item.width, height: item.height)
         .offset(x: item.xPosition, y: 0)
