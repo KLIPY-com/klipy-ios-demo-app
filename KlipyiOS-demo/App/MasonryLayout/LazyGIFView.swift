@@ -12,7 +12,6 @@ import SDWebImageSwiftUI
 struct LazyGIFView: View {
   let item: GridItemLayout
   
-  @StateObject private var previewModel: PreviewViewModel
   @State private var isPressed: Bool = false
   @State private var timer: Timer?
   @GestureState private var isPressing: Bool = false
@@ -29,11 +28,13 @@ struct LazyGIFView: View {
   
   var onClick: (() -> Void)
   
-  init(item: GridItemLayout, previewModel: PreviewViewModel, onClick: @escaping () -> Void, isFocused: FocusState<Bool>) {
+  @Binding var previewItem: GlobalMediaItem?
+  
+  init(item: GridItemLayout, previewItem: Binding<GlobalMediaItem?>, onClick: @escaping () -> Void, isFocused: FocusState<Bool>) {
     self.item = item
     self.onClick = onClick
     self._isFocused = isFocused
-    _previewModel = StateObject(wrappedValue: previewModel)
+    self._previewItem = previewItem
   }
   
   var body: some View {
@@ -67,7 +68,7 @@ struct LazyGIFView: View {
           
           if item.mp4Media != nil {
             impactFeedback.impactOccurred()
-            previewModel.selectedItem = (item, itemFrame)
+            previewItem = .init(item: item, frame: itemFrame)
           } else {
             clickFeedback.impactOccurred()
             onClick()
@@ -86,7 +87,7 @@ struct LazyGIFView: View {
                 isPressed = true
                 timer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { _ in
                   impactFeedback.impactOccurred()
-                  previewModel.selectedItem = (item, itemFrame)
+                  previewItem = .init(item: item, frame: itemFrame)
                   withAnimation {
                     isPressed = false
                   }
