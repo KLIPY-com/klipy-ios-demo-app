@@ -1,4 +1,12 @@
 //
+//  RootView.swift
+//  KlipyiOS-demo
+//
+//  Created by Tornike Gomareli on 27.02.25.
+//
+
+
+//
 //  UniversalOverlay.swift
 //  UniversalView
 //
@@ -7,16 +15,15 @@
 
 import SwiftUI
 
-/// Extensions
 extension View {
     @ViewBuilder
-    func universalOverlay<Content: View>(
+  func universalOverlay<Item: Identifiable & Equatable, Content: View>(
         animation: Animation = .snappy,
-        show: Binding<Bool>,
-        @ViewBuilder content: @escaping () -> Content
+        item: Binding<Item?>,
+        @ViewBuilder content: @escaping (Item) -> Content
     ) -> some View {
         self
-            .modifier(UniversalOverlayModifier(animation: animation, show: show, viewContent: content))
+            .modifier(UniversalOverlayItemModifier(animation: animation, item: item, viewContent: content))
     }
 }
 
@@ -59,32 +66,42 @@ class UniversalOverlayProperties {
     }
 }
 
-fileprivate struct UniversalOverlayModifier<ViewContent: View>: ViewModifier {
+fileprivate struct UniversalOverlayItemModifier<Item: Identifiable & Equatable, ViewContent: View>: ViewModifier {
     var animation: Animation
-    @Binding var show: Bool
-    @ViewBuilder var viewContent: ViewContent
+    @Binding var item: Item?
+    @ViewBuilder var viewContent: (Item) -> ViewContent
+    
     /// Local View Properties
     @Environment(UniversalOverlayProperties.self) private var properties
     @State private var viewID: String?
+    @State private var currentItem: Item?
     
     func body(content: Content) -> some View {
         content
-            .onChange(of: show, initial: true) { oldValue, newValue in
-                if newValue {
-                    addView()
+            .onChange(of: item) { oldValue, newValue in
+                if let newValue {
+                    addView(for: newValue)
                 } else {
                     removeView()
                 }
             }
     }
     
-    private func addView() {
-        if properties.window != nil && viewID == nil {
-            viewID = UUID().uuidString
-            guard let viewID else { return }
+    private func addView(for item: Item) {
+        if properties.window != nil {
+            if viewID == nil {
+                viewID = UUID().uuidString
+            }
             
+            guard let viewID else { return }
+            currentItem = item
+            
+            // If the item already exists, remove it first to replace with the new view
+            removeView()
+            
+            // Add the new view
             withAnimation(animation) {
-                properties.views.append(.init(id: viewID, view: .init(viewContent)))
+                properties.views.append(.init(id: viewID, view: .init(viewContent(item))))
             }
         }
     }
@@ -95,7 +112,8 @@ fileprivate struct UniversalOverlayModifier<ViewContent: View>: ViewModifier {
                 properties.views.removeAll(where: { $0.id == viewID })
             }
             
-            self.viewID = nil
+            // Only clear the currentItem, keep the viewID in case we need to reuse it
+            currentItem = nil
         }
     }
 }
