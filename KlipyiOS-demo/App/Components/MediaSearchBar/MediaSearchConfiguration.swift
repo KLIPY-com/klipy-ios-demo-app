@@ -31,7 +31,7 @@ struct MediaSearchConfiguration {
     static let background = Color.white
     static let icon = Color.gray
     static let selectedIcon = Color.init(hex: "F8DC3B")
-    static let text = Color.black
+    static let text = Color.white
   }
   
   struct Animation {

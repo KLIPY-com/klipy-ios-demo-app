@@ -21,8 +21,6 @@ struct MediaSearchBar: View {
   var body: some View {
     GeometryReader { geometry in
       ZStack {
-        MediaSearchConfiguration.Colors.background
-        
         HStack(spacing: MediaSearchConfiguration.Layout.horizontalSpacing) {
           navigationControl
           searchField
@@ -30,9 +28,8 @@ struct MediaSearchBar: View {
           categoriesView
         }
       }
-      .frame(width: geometry.size.width * 0.8, height: MediaSearchConfiguration.Layout.searchBarHeight)
       .padding(MediaSearchConfiguration.Layout.contentPadding)
-      .background(MediaSearchConfiguration.Colors.background)
+      .background(.clear)
       .cornerRadius(MediaSearchConfiguration.Layout.cornerRadius)
       .frame(maxWidth: .infinity)
     }
@@ -68,7 +65,6 @@ private extension MediaSearchBar {
     Image(systemName: "magnifyingglass")
       .foregroundColor(.white)
       .padding(8)
-      .background(Circle().fill(Color.init(hex: "#8800FF")))
       .foregroundColor(MediaSearchConfiguration.Colors.icon)
   }
   
@@ -76,7 +72,6 @@ private extension MediaSearchBar {
     TextField("", text: $searchText)
       .textFieldStyle(PlainTextFieldStyle())
       .foregroundColor(MediaSearchConfiguration.Colors.text)
-      .accentColor(Color.init(hex: "#8800FF"))
       .placeholder(when: searchText.isEmpty) {
         Text("Search")
           .foregroundColor(MediaSearchConfiguration.Colors.text.opacity(0.5))
