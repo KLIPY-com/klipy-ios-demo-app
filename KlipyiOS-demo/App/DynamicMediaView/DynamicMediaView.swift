@@ -56,9 +56,6 @@ struct DynamicMediaView: View {
             viewModel.categorySearchText = category.name
           }
         }
-        .padding(.bottom, 12)
-        .padding(.horizontal, 12)
-        .padding(.top, 18)
         .background(Color(hex: "#36383F"))
         
         mediaContent
@@ -139,7 +136,6 @@ struct DynamicMediaView: View {
         isFocused: _isSearchFocused,
         previewItem: $previewItem
       )
-      .padding(.horizontal, 10)
       .frame(maxWidth: .infinity)
     }
     .onChange(of: viewModel.items) { newValue in
