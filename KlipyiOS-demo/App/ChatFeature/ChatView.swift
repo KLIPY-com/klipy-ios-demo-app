@@ -118,17 +118,7 @@ struct ChatView: View {
         title: "🚓 Klipy moderators will review your report. \nThank you!"
       )
     }
-    .sheet(isPresented: $viewModel.isMediaPickerPresented) {
-      DynamicMediaView(
-        onSend: handleMediaSend,
-        previewItem: $previewItem
-      )
-      .presentationDetents([
-        .medium
-      ])
-      .presentationDragIndicator(.visible)
-      .presentationCornerRadius(60)
-    }
+    .contentPushingMediaPicker(isPresented: $viewModel.isMediaPickerPresented, onSend: handleMediaSend, previewItem: $previewItem)
     .background(Color.init(hex: "#19191C"))
     .onDisappear {
       viewModel.cleanUp()
@@ -235,7 +225,7 @@ struct ChatView: View {
   }
   
   private func scrollToBottom() {
-    withAnimation(.easeOut(duration: 0.3)) {
+    withAnimation(.easeOut(duration: 0.1)) {
       scrollProxy?.scrollTo(viewModel.messages.last?.id, anchor: .bottom)
     }
   }
