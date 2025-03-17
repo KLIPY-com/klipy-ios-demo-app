@@ -23,8 +23,7 @@ struct MessageInputView: View {
       Divider()
       inputContent
     }
-    .background(Color.init(hex: "#222224"))
-    .ignoresSafeArea()
+    .background(MessageInputConfiguration.Colors.textFieldBackground)
   }
   
   private var inputContent: some View {
@@ -33,16 +32,14 @@ struct MessageInputView: View {
       mediaButton
       sendButton
     }
-    .padding(MessageInputConfiguration.Layout.contentPadding)
-    .padding(.bottom, 16)
+    .padding(.horizontal, 16)
   }
 }
 
 // MARK: - Subviews
 private extension MessageInputView {
   var messageTextField: some View {
-    TextField("Message", text: $messageText)
-      .padding(MessageInputConfiguration.Layout.textFieldPadding)
+    TextField("Enter message", text: $messageText)
       .background(MessageInputConfiguration.Colors.textFieldBackground)
       .cornerRadius(MessageInputConfiguration.Layout.cornerRadius)
       .focused($isFocused)
@@ -50,6 +47,7 @@ private extension MessageInputView {
         MessageInputConfiguration.Animation.textField,
         value: messageText
       )
+      .frame(height: 60)
   }
   
   var mediaButton: some View {
