@@ -18,6 +18,8 @@ struct MediaSearchBar: View {
   
   let categories: [MediaCategory]
   
+  @Binding var sheetHeight: SheetHeight
+  
   var body: some View {
     GeometryReader { geometry in
       ZStack {
@@ -32,6 +34,11 @@ struct MediaSearchBar: View {
       .background(.clear)
       .cornerRadius(MediaSearchConfiguration.Layout.cornerRadius)
       .frame(maxWidth: .infinity)
+      .onChange(of: isFocused) { oldValue, newValue in
+        if newValue {
+          expandToFullHeight()
+        }
+      }
     }
     .frame(height: 70)
   }
@@ -78,6 +85,9 @@ private extension MediaSearchBar {
       }
       .focused($isFocused)
       .frame(maxWidth: .infinity)
+      .onTapGesture {
+        expandToFullHeight()
+      }
   }
   
   @ViewBuilder
@@ -153,6 +163,12 @@ private extension MediaSearchBar {
       } else {
         selectedCategory = category
       }
+    }
+  }
+  
+  private func expandToFullHeight() {
+    withAnimation(.spring(response: 0.4, dampingFraction: 0.7)) {
+      sheetHeight = .full
     }
   }
 }

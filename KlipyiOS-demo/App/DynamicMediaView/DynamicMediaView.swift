@@ -20,6 +20,7 @@ struct DynamicMediaView: View {
   let onSend: (GridItemLayout) -> Void
     
   @Binding var previewItem: GlobalMediaItem?
+  @Binding var sheetHeight: SheetHeight
   
   @Environment(\.dismiss) private var dismiss
   var searchDebouncer = SearchDebouncer()
@@ -33,7 +34,8 @@ struct DynamicMediaView: View {
           searchText: $searchText,
           selectedCategory: $viewModel.activeCategory,
           isFocused: _isSearchFocused,
-          categories: viewModel.categories
+          categories: viewModel.categories,
+          sheetHeight: $sheetHeight
         )
         .onChange(of: viewModel.activeCategory) { _, newCategory in
           guard let category = newCategory else {
