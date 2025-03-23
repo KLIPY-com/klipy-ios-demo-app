@@ -11,13 +11,13 @@ import SwiftUI
 struct MediaSearchConfiguration {
   struct Layout {
     static let cornerRadius: CGFloat = 8
-    static let categoryIconSize: CGFloat = 22
-    static let controlSize: CGFloat = 24
-    static let horizontalSpacing: CGFloat = 12
-    static let categorySpacing: CGFloat = 16
+    static let categoryIconSize: CGFloat = 18
+    static let controlSize: CGFloat = 20
+    static let horizontalSpacing: CGFloat = 10
+    static let categorySpacing: CGFloat = 8
     static let searchBarHeight: CGFloat = 28
     static let gradientWidth: CGFloat = 20
-    static let categoriesWidth: CGFloat = 165
+    static let categoriesWidth: CGFloat = 190
     
     static let contentPadding = EdgeInsets(
       top: 12,

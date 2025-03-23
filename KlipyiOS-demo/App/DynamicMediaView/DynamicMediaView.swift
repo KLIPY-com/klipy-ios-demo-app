@@ -159,9 +159,6 @@ struct DynamicMediaView: View {
     }
     .frame(maxWidth: .infinity)
     .frame(height: 44)
-    .safeAreaInset(edge: .bottom) {
-      Color.clear.frame(height: 15)
-    }
   }
   
   private func mediaTypeButton(_ title: String, type: MediaType) -> some View {
@@ -181,8 +178,8 @@ struct DynamicMediaView: View {
       Text(title)
         .font(.system(size: 17, weight: .bold))
         .foregroundColor(buttonTextColor(for: type, isAvailable: isAvailable))
-        .padding(.vertical, 12)
-        .padding(.horizontal, 16)
+        .padding(.vertical, 4)
+        .padding(.horizontal, 8)
         .background(
           buttonBackground(for: type, isAvailable: isAvailable)
         )

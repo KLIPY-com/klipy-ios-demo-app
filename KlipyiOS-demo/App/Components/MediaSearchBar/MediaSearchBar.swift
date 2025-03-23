@@ -124,7 +124,6 @@ private extension MediaSearchBar {
       }
     }
     .frame(width: MediaSearchConfiguration.Layout.categoriesWidth)
-    .overlay(gradientOverlay)
   }
   
   var gradientOverlay: some View {
