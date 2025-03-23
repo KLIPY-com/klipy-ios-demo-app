@@ -76,6 +76,8 @@ struct ChatView: View {
   
   @State var previewItem: GlobalMediaItem? = nil
   @StateObject var previewModel: PreviewViewModel = PreviewViewModel()
+  
+  @State var _defaultSheetHeightStateForMedia: SheetHeight = .half
 
   var body: some View {
     ZStack {
@@ -118,8 +120,17 @@ struct ChatView: View {
         title: "🚓 Klipy moderators will review your report. \nThank you!"
       )
     }
-    .contentPushingMediaPicker(isPresented: $viewModel.isMediaPickerPresented, onSend: handleMediaSend, previewItem: $previewItem)
-    .background(Color.init(hex: "#19191C"))
+    .contentPushingMediaPicker(
+      isPresented: $viewModel.isMediaPickerPresented,
+      onSend: handleMediaSend,
+      previewItem: $previewItem,
+      heightState: $_defaultSheetHeightStateForMedia
+    )
+    .background(
+      Color.init(
+        hex: "#19191C"
+      )
+    )
     .onDisappear {
       viewModel.cleanUp()
     }
@@ -215,7 +226,7 @@ struct ChatView: View {
   }
   
   private func handleMediaSend(_ item: GridItemLayout) {
-    viewModel.toggleMediaPicker()
+    // viewModel.toggleMediaPicker()
     viewModel.sendMediaMessage(item: item)
   }
   

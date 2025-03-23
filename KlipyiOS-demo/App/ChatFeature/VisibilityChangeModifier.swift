@@ -8,29 +8,17 @@
 
 import SwiftUI
 
-struct VisibilityChangeModifier: ViewModifier {
-  let isVisible: Bool
-  let action: () -> Void
+enum SheetHeight {
+  case half
+  case full
   
-  @State private var hasAppeared = false
-  
-  func body(content: Content) -> some View {
-    content
-      .onChange(of: isVisible) { _, newValue in
-        if newValue && !hasAppeared {
-          hasAppeared = true
-          action()
-        } else if !newValue {
-          // Reset so it can trigger again when shown next time
-          hasAppeared = false
-        }
-      }
-      .onAppear {
-        if isVisible && !hasAppeared {
-          hasAppeared = true
-          action()
-        }
-      }
+  func value(for screen: CGRect = UIScreen.main.bounds) -> CGFloat {
+    switch self {
+    case .half:
+      return screen.height * 0.5
+    case .full:
+      return screen.height * 0.9 /// Using 90% to keep status bar visible
+    }
   }
 }
 
@@ -38,10 +26,27 @@ struct ContentPushingMediaPickerModifier: ViewModifier {
   @Binding var isPresented: Bool
   let onSend: (GridItemLayout) -> Void
   @Binding var previewItem: GlobalMediaItem?
-  let sheetHeight: CGFloat
   
   private let hiddenOffset: CGFloat = 100
   @State private var dragOffset: CGFloat = 0
+  
+  @Binding var heightState: SheetHeight
+  @State private var currentHeight: CGFloat
+  
+  @State private var heightVersion: Int = 0
+
+  init(
+    isPresented: Binding<Bool>,
+    onSend: @escaping (GridItemLayout) -> Void,
+    previewItem: Binding<GlobalMediaItem?>,
+    heightState: Binding<SheetHeight>
+  ) {
+      self._isPresented = isPresented
+      self.onSend = onSend
+      self._previewItem = previewItem
+      self._heightState = heightState
+      self._currentHeight = State(initialValue: heightState.wrappedValue.value())
+  }
   
   func body(content: Content) -> some View {
     ZStack(alignment: .bottom) {
@@ -50,14 +55,13 @@ struct ContentPushingMediaPickerModifier: ViewModifier {
         .clipShape(Rectangle())
       
       content
-        .offset(y: isPresented ? -sheetHeight : 0)
+        .offset(y: isPresented ? -currentHeight : 0)
         .animation(.spring(response: 0.3, dampingFraction: 0.8), value: isPresented)
       
-      // Custom Media Picker
       if isPresented {
         Color.black.opacity(0.3)
           .ignoresSafeArea()
-          .offset(y: isPresented ? -sheetHeight : 0)
+          .offset(y: isPresented ? -currentHeight : 0)
           .animation(.spring(response: 0.3, dampingFraction: 0.8), value: isPresented)
           .onTapGesture {
             isPresented = false
@@ -65,14 +69,13 @@ struct ContentPushingMediaPickerModifier: ViewModifier {
       }
       
       if isPresented {
-        DynamicMediaView(
+        DynamicMediaViewWrapper(
           onSend: onSend,
-          previewItem: $previewItem
+          previewItem: $previewItem,
+          sheetHeight: $heightState,
+          heightVersion: heightVersion
         )
-        .onVisibilityChange(isVisible: isPresented, perform: {
-          print("visibilityh changed")
-        })
-        .frame(height: sheetHeight)
+        .frame(height: currentHeight)
         .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: -2)
         .offset(y: isPresented ? 0 : UIScreen.main.bounds.height + 100)
         .gesture(
@@ -83,14 +86,21 @@ struct ContentPushingMediaPickerModifier: ViewModifier {
               }
             }
             .onEnded { gesture in
-              if gesture.translation.height > sheetHeight * 0.2 {
+              if gesture.translation.height > currentHeight * 0.2 {
                 isPresented = false
+                heightState = .half
               }
               dragOffset = 0
             }
         )
         .animation(.spring(response: 0.3, dampingFraction: 0.8), value: isPresented)
         .animation(.spring(response: 0.3, dampingFraction: 0.8), value: dragOffset)
+      }
+    }
+    .onChange(of: heightState) { _, newHeightState in
+      withAnimation(.spring(response: 0.4, dampingFraction: 0.7)) {
+        currentHeight = newHeightState.value()
+        heightVersion += 1
       }
     }
   }
@@ -101,17 +111,29 @@ extension View {
     isPresented: Binding<Bool>,
     onSend: @escaping (GridItemLayout) -> Void,
     previewItem: Binding<GlobalMediaItem?>,
-    height: CGFloat = 350
+    heightState: Binding<SheetHeight>
   ) -> some View {
     self.modifier(ContentPushingMediaPickerModifier(
       isPresented: isPresented,
       onSend: onSend,
       previewItem: previewItem,
-      sheetHeight: height
+      heightState: heightState
     ))
   }
+}
+
+struct DynamicMediaViewWrapper: View {
+  let onSend: (GridItemLayout) -> Void
+  @Binding var previewItem: GlobalMediaItem?
+  @Binding var sheetHeight: SheetHeight
+  let heightVersion: Int
   
-  func onVisibilityChange(isVisible: Bool, perform action: @escaping () -> Void) -> some View {
-    self.modifier(VisibilityChangeModifier(isVisible: isVisible, action: action))
+  var body: some View {
+    DynamicMediaView(
+      onSend: onSend,
+      previewItem: $previewItem,
+      sheetHeight: $sheetHeight
+    )
+    .id("mediaView-\(heightVersion)")
   }
 }
