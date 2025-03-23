@@ -67,7 +67,6 @@ struct TelegramPreviewOverlay: View {
             
             Group {
               if let mp4UrlString = selectedItem.mp4Media?.mp4?.url,
-                 let url = URL(string: mp4UrlString),
                  isVideoURLValid,
                  let videoPlayer = player {
                 

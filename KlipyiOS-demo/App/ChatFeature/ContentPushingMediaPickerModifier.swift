@@ -1,5 +1,5 @@
 //
-//  VisibilityChangeModifier.swift
+//  ContentPushingMediaPickerModifier.swift
 //  KlipyiOS-demo
 //
 //  Created by Tornike Gomareli on 17.03.25.
