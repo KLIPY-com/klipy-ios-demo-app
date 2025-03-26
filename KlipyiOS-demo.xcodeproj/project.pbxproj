@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E63603D12D9406EB00750D26 /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = E63603D02D9406EB00750D26 /* FirebaseCrashlytics */; };
 		E6517A9B2D4834D900C2B5FB /* AlertToast in Frameworks */ = {isa = PBXBuildFile; productRef = E6517A9A2D4834D900C2B5FB /* AlertToast */; };
 		E669D20E2D3AB1C800FCA1BD /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = E669D20D2D3AB1C800FCA1BD /* SDWebImageSwiftUI */; };
 		E6F6AFD92D343C65008CB511 /* Moya in Frameworks */ = {isa = PBXBuildFile; productRef = E6F6AFD82D343C65008CB511 /* Moya */; };
@@ -43,6 +44,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E669D20E2D3AB1C800FCA1BD /* SDWebImageSwiftUI in Frameworks */,
+				E63603D12D9406EB00750D26 /* FirebaseCrashlytics in Frameworks */,
 				E6517A9B2D4834D900C2B5FB /* AlertToast in Frameworks */,
 				E6F6AFD92D343C65008CB511 /* Moya in Frameworks */,
 			);
@@ -77,6 +79,7 @@
 				E6D9926D2D31681A003CAF83 /* Sources */,
 				E6D9926E2D31681A003CAF83 /* Frameworks */,
 				E6D9926F2D31681A003CAF83 /* Resources */,
+				E63603D52D94111300750D26 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -90,6 +93,7 @@
 				E6F6AFD82D343C65008CB511 /* Moya */,
 				E669D20D2D3AB1C800FCA1BD /* SDWebImageSwiftUI */,
 				E6517A9A2D4834D900C2B5FB /* AlertToast */,
+				E63603D02D9406EB00750D26 /* FirebaseCrashlytics */,
 			);
 			productName = "KlipyiOS-demo";
 			productReference = E6D992712D31681A003CAF83 /* KlipyiOS-demo.app */;
@@ -123,6 +127,7 @@
 				E6F6AFD72D343C65008CB511 /* XCRemoteSwiftPackageReference "Moya" */,
 				E669D20C2D3AB1C800FCA1BD /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */,
 				E6517A992D4834D900C2B5FB /* XCRemoteSwiftPackageReference "AlertToast" */,
+				E63603CF2D9406EB00750D26 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = E6D992722D31681A003CAF83 /* Products */;
@@ -143,6 +148,32 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		E63603D52D94111300750D26 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}",
+				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Resources/DWARF/${PRODUCT_NAME}",
+				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Info.plist",
+				"$(TARGET_BUILD_DIR)/$(UNLOCALIZED_RESOURCES_FOLDER_PATH)/GoogleService-Info.plist",
+				"$(TARGET_BUILD_DIR)/$(EXECUTABLE_PATH)",
+				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Resources/DWARF/${PRODUCT_NAME}.debug.dylib",
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${BUILD_DIR%/Build/*}/SourcePackages/checkouts/firebase-ios-sdk/Crashlytics/run\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		E6D9926D2D31681A003CAF83 /* Sources */ = {
@@ -280,7 +311,8 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 17;
+				CURRENT_PROJECT_VERSION = 18;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_ASSET_PATHS = "\"KlipyiOS-demo/Preview Content\"";
 				DEVELOPMENT_TEAM = 22H6S3D7DG;
 				ENABLE_PREVIEWS = YES;
@@ -315,7 +347,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 17;
+				CURRENT_PROJECT_VERSION = 18;
 				DEVELOPMENT_ASSET_PATHS = "\"KlipyiOS-demo/Preview Content\"";
 				DEVELOPMENT_TEAM = 22H6S3D7DG;
 				ENABLE_PREVIEWS = YES;
@@ -368,6 +400,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		E63603CF2D9406EB00750D26 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 11.10.0;
+			};
+		};
 		E6517A992D4834D900C2B5FB /* XCRemoteSwiftPackageReference "AlertToast" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/elai950/AlertToast.git";
@@ -395,6 +435,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		E63603D02D9406EB00750D26 /* FirebaseCrashlytics */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E63603CF2D9406EB00750D26 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCrashlytics;
+		};
 		E6517A9A2D4834D900C2B5FB /* AlertToast */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = E6517A992D4834D900C2B5FB /* XCRemoteSwiftPackageReference "AlertToast" */;
