@@ -14,6 +14,11 @@ struct ContentView: View {
     NavigationStack {
       VStack(spacing: 0) {
         NavigationLink(destination: ChatView()) {
+          
+          Button("Fatal Crash") {
+            fatalError("Crash was triggered")
+          }
+
           ChatPreview(model: ChatPreviewModel(
             name: "John Brown",
             lastMessage: "Hi, how's it going?",
