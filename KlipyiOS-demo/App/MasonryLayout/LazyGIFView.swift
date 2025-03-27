@@ -57,12 +57,14 @@ struct LazyGIFView: View {
         .playbackMode(.bounce)
         .scaleEffect(isPressing ? 0.8 : 1.0)
         .animation(.spring(response: 0.9, dampingFraction: 0.9), value: isPressing)
-        .overlay(GeometryReader { geo -> Color in
-          DispatchQueue.main.async {
-            itemFrame = geo.frame(in: .global)
-          }
-          return Color.clear
-        })
+        .overlay(
+            GeometryReader { geo in
+               Color.clear
+                 .onAppear {
+                   itemFrame = geo.frame(in: .global)
+                 }
+             }
+        )
         .onTapGesture {
           isFocused = false
           
