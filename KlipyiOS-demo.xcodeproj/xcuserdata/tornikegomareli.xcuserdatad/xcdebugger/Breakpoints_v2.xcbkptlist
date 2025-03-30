@@ -8,7 +8,7 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "C0298A94-026A-406B-A7B9-90638854C3C8"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "KlipyiOS-demo/Networking/Services/MediaType.swift"
@@ -24,7 +24,7 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "D002D7D0-CBDF-40EC-B98C-AB96AA5F00E4"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "KlipyiOS-demo/Networking/Core/NetworkingProviderProtocol.swift"
@@ -40,7 +40,7 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "E92F7BA8-A0F3-4A32-845B-080ABF0DB6A5"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "KlipyiOS-demo/Networking/Core/NetworkingProviderProtocol.swift"
@@ -56,7 +56,7 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "7E3B0330-292F-4E61-BD32-17C955FF7A3A"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "KlipyiOS-demo/Networking/Core/NetworkingProviderProtocol.swift"
@@ -87,17 +87,17 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "7EDF45B8-CA4D-415D-A5DB-42CCE49B41A4"
+            uuid = "EDDEB89A-F127-48FE-A726-547CA0D4E9E2"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "KlipyiOS-demo/App/Components/MediaSearchBar/MediaSearchBar.swift"
+            filePath = "KlipyiOS-demo/Infrastructure/UseCases/ClipsServiceUseCase.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "89"
-            endingLineNumber = "89"
-            landmarkName = "searchField"
-            landmarkType = "24">
+            startingLineNumber = "96"
+            endingLineNumber = "96"
+            landmarkName = "trackShare(slug:customerId:)"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VariablesViewState
+   version = "1.0">
+   <ContextStates>
+      <ContextState
+         contextName = "GifServiceUseCase.trackShare(slug:customerId:):GifServiceUseCase.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "slug">
+            </PersistentString>
+            <PersistentString
+               value = "customerId">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "closure #1 in RowView.body.getter:RowView.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "row.items">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "DynamicMediaViewModel.baseLoadRecentItems(page:):DynamicMediaViewModel.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "domainItems.items">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "closure #1 in LazyGIFView.body.getter:LazyGIFView.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "item.url">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "RowView.body.getter:RowView.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "row.items">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "MediaService.trackShare(slug:):MediaService.swift">
+         <PersistentStrings>
+            <PersistentString
+               value = "self">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+   </ContextStates>
+</VariablesViewState>
