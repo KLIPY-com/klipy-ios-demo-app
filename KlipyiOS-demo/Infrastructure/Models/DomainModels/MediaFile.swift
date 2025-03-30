@@ -71,7 +71,7 @@ extension MediaDomainModel {
       return single
     }
     
-    return xs ?? sm ?? md ?? hd!
+    return sm ?? md ?? hd!
   }
   
   func getFileVariant(size: MediaSize) -> MediaFile? {
