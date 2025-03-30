@@ -13,20 +13,82 @@ struct ContentView: View {
   var body: some View {
     NavigationStack {
       VStack(spacing: 0) {
-        NavigationLink(destination: ChatView()) {
-          
-          Button("Fatal Crash") {
-            fatalError("Crash was triggered")
-          }
-
+        NavigationLink(destination: ChatView(viewModel: .init(chatPreviewModel: ChatPreviewModel(
+          name: "KLIPY",
+          lastMessage: "Feel free to use all the fun content",
+          time: "19:42",
+          unreadCount: 0,
+          isOnline: true,
+          messages: Message.klipyExample
+        )))) {
+          ChatPreview(model: ChatPreviewModel(
+            name: "KLIPY",
+            lastMessage: "Feel free to use all the fun content",
+            time: "19:42",
+            unreadCount: 0,
+            isOnline: true,
+            messages: Message.klipyExample
+          ))
+        }
+        .buttonStyle(PlainButtonStyle())
+        .padding(.top, 1)
+    
+        NavigationLink(destination: ChatView(viewModel: .init(chatPreviewModel: ChatPreviewModel(
+          name: "John Brown",
+          lastMessage: "All good!",
+          time: "23:11",
+          unreadCount: 0,
+          isOnline: true,
+          messages: Message.johnBrowExample
+        )))) {
           ChatPreview(model: ChatPreviewModel(
             name: "John Brown",
-            lastMessage: "Hi, how's it going?",
-            time: "19.02.14",
-            unreadCount: 2,
-            isOnline: true
-          ), theme: .default)
-          .contentShape(Rectangle())
+            lastMessage: "All good!",
+            time: "23:11",
+            unreadCount: 0,
+            isOnline: true,
+            messages: Message.johnBrowExample
+          ))
+        }
+        .buttonStyle(PlainButtonStyle())
+        .padding(.top, 1)
+        
+        NavigationLink(destination: ChatView(viewModel: .init(chatPreviewModel: ChatPreviewModel(
+          name: "Sarah",
+          lastMessage: "Sarah sent a sticker",
+          time: "17:23",
+          unreadCount: 0,
+          isOnline: false,
+          messages: Message.saraExample
+        )))) {
+          ChatPreview(model: ChatPreviewModel(
+            name: "Sarah",
+            lastMessage: "Sarah sent a sticker",
+            time: "17:23",
+            unreadCount: 0,
+            isOnline: false,
+            messages: Message.saraExample
+          ))
+        }
+        .buttonStyle(PlainButtonStyle())
+        .padding(.top, 1)
+        
+        NavigationLink(destination: ChatView(viewModel: .init(chatPreviewModel: ChatPreviewModel(
+          name: "Alex",
+          lastMessage: "hey, how's it going?",
+          time: "13:02",
+          unreadCount: 1,
+          isOnline: true,
+          messages: Message.alexExample
+        )))) {
+          ChatPreview(model: ChatPreviewModel(
+            name: "Alex",
+            lastMessage: "hey, how's it going?",
+            time: "13:02",
+            unreadCount: 1,
+            isOnline: true,
+            messages: Message.alexExample
+          ))
         }
         .buttonStyle(PlainButtonStyle())
         .padding(.top, 1)
