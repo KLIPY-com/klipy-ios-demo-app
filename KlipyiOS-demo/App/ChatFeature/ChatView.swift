@@ -11,6 +11,13 @@ import AlertToast
 struct CustomNavigationBar: View {
   let onBack: () -> Void
   
+  let title: String
+  
+  public init(title: String, onBack: @escaping () -> Void) {
+    self.title = title
+    self.onBack = onBack
+  }
+  
   var body: some View {
     HStack {
       Button(action: onBack) {
@@ -29,7 +36,7 @@ struct CustomNavigationBar: View {
           .frame(width: 30, height: 30)
           .padding(.top, 16)
         Spacer()
-        Text("John Brown")
+        Text(title)
           .foregroundStyle(.white)
           .font(.system(size: 17, weight: .bold))
       }
@@ -63,7 +70,7 @@ public struct GlobalMediaItem: Identifiable, Equatable {
 }
 
 struct ChatView: View {
-  @State private var viewModel = ChatFeatureViewModel()
+  @State private var viewModel: ChatFeatureViewModel
   @State private var messageText = ""
   @State private var scrollProxy: ScrollViewProxy?
   
@@ -78,11 +85,17 @@ struct ChatView: View {
   @StateObject var previewModel: PreviewViewModel = PreviewViewModel()
   
   @State var _defaultSheetHeightStateForMedia: SheetHeight = .half
+  
+  @State private var chatTitle = ""
+  
+  public init(viewModel: ChatFeatureViewModel) {
+    self.viewModel = viewModel
+  }
 
   var body: some View {
     ZStack {
       VStack(spacing: 0) {
-        CustomNavigationBar(onBack: {
+        CustomNavigationBar(title: chatTitle, onBack: {
           dismiss()
         })
         
@@ -98,6 +111,9 @@ struct ChatView: View {
           onMediaPickerTap: viewModel.toggleMediaPicker
         )
       }
+    }
+    .onAppear {
+      chatTitle = viewModel.chatPreviewModel.name
     }
     .navigationBarHidden(true)
     .universalOverlay(item: $previewItem, content: { item in
@@ -139,13 +155,13 @@ struct ChatView: View {
   private var chatScrollView: some View {
     ScrollViewReader { proxy in
       ScrollView {
-        MessagesListView(messages: viewModel.messages, viewModel: viewModel)
+        MessagesListView(messages: viewModel.chatPreviewModel.messages, viewModel: viewModel)
       }
       .onAppear {
         scrollProxy = proxy
         scrollToBottom()
       }
-      .onChange(of: viewModel.messages.count) { _, _ in
+      .onChange(of: viewModel.chatPreviewModel.messages.count) { _, _ in
         scrollToBottom()
       }
       .simultaneousGesture(createDragGesture())
@@ -237,7 +253,7 @@ struct ChatView: View {
   
   private func scrollToBottom() {
     withAnimation(.easeOut(duration: 0.1)) {
-      scrollProxy?.scrollTo(viewModel.messages.last?.id, anchor: .bottom)
+      scrollProxy?.scrollTo(viewModel.chatPreviewModel.messages.last?.id, anchor: .bottom)
     }
   }
 }

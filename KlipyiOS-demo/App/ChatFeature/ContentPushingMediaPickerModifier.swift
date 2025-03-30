@@ -17,7 +17,7 @@ enum SheetHeight {
     case .half:
       return screen.height * 0.5
     case .full:
-      return screen.height * 0.9 /// Using 90% to keep status bar visible
+      return screen.height * 0.9
     }
   }
 }
@@ -130,10 +130,12 @@ struct DynamicMediaViewWrapper: View {
   
   var body: some View {
     DynamicMediaView(
-      onSend: onSend,
+      onSend: { mediaItem in
+        onSend(mediaItem)
+      },
       previewItem: $previewItem,
       sheetHeight: $sheetHeight
     )
-    .id("mediaView-\(heightVersion)")
+    .id("mediaView-\(heightVersion)-\(sheetHeight)")
   }
 }

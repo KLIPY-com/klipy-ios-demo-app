@@ -12,7 +12,7 @@ import AVKit
 
 @Observable
 final class ChatFeatureViewModel {
-  private(set) var messages: [Message] = Message.examples
+  var chatPreviewModel: ChatPreviewModel
   
   var isMediaPickerPresented: Bool = false
   
@@ -20,6 +20,10 @@ final class ChatFeatureViewModel {
   private var videoPlayers: [String: AVPlayer] = [:]
   
   public var currentlyPlayingID: String?
+  
+  public init(chatPreviewModel: ChatPreviewModel) {
+    self.chatPreviewModel = chatPreviewModel
+  }
   
   // MARK: - Public Methods
   func sendTextMessage(_ text: String) {
@@ -36,7 +40,7 @@ final class ChatFeatureViewModel {
     )
     
     withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
-      messages.append(newMessage)
+      chatPreviewModel.messages.append(newMessage)
     }
     
     simulateReply()
@@ -53,7 +57,7 @@ final class ChatFeatureViewModel {
     )
     
     withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
-      messages.append(newMessage)
+      chatPreviewModel.messages.append(newMessage)
     }
     
     simulateMediaReply()
@@ -73,7 +77,7 @@ final class ChatFeatureViewModel {
       )
       
       withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
-        self.messages.append(reply)
+        self.chatPreviewModel.messages.append(reply)
         SoundManager.shared.gotMessageSound()
       }
     }
@@ -89,7 +93,7 @@ final class ChatFeatureViewModel {
       )
       
       withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
-        self.messages.append(reply)
+        self.chatPreviewModel.messages.append(reply)
         SoundManager.shared.gotMessageSound()
       }
     }
@@ -169,7 +173,7 @@ final class ChatFeatureViewModel {
   }
   
   func cleanUp() {
-    messages = Message.examples
+    chatPreviewModel.messages = chatPreviewModel.originalNonMutableMessages
     isMediaPickerPresented = false
     videoPlayers.forEach { (messageID, player) in
       NotificationCenter.default.removeObserver(
