@@ -134,7 +134,8 @@ class MasonryLayoutCalculator {
                     height: dimensions.height,
                     originalWidth: dimensions.width,
                     originalHeight: dimensions.height,
-                    type: item.type.rawValue
+                    type: item.type.rawValue,
+                    title: item.title
                 )
             }
             
