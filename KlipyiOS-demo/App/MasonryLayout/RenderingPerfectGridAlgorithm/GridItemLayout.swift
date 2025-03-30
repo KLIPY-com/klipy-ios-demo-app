@@ -22,4 +22,5 @@ struct GridItemLayout: Identifiable {
   let originalHeight: CGFloat
   var newWidth: CGFloat = 0
   let type: String
+  let title: String
 }

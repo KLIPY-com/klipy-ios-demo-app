@@ -58,14 +58,43 @@ struct LazyGIFView: View {
         .playbackMode(.bounce)
         .scaleEffect(isPressing ? 0.8 : 1.0)
         .animation(.spring(response: 0.9, dampingFraction: 0.9), value: isPressing)
-        .overlay(
-            GeometryReader { geo in
-               Color.clear
-                 .onAppear {
-                   itemFrame = geo.frame(in: .global)
-                 }
-             }
-        )
+        .overlay {
+                  GeometryReader { geo in
+                    Color.clear
+                      .onAppear {
+                        itemFrame = geo.frame(in: .global)
+                      }
+                  }
+
+                  if item.type == "clip" {
+                    ZStack(alignment: .topLeading) {
+                      Image(systemName: "speaker.slash.fill")
+                        .foregroundColor(.white)
+                        .padding(2)
+                        .background(Color.black.opacity(0.4))
+                        .cornerRadius(4)
+                        .padding(4)
+
+                      VStack {
+                        Spacer()
+                        HStack {
+                          Text(item.title)
+                            .foregroundColor(.white)
+                            .font(.footnote)
+                            .fontWeight(.medium)
+                            .lineLimit(2)
+                            .multilineTextAlignment(.leading)
+                            .truncationMode(.tail)
+                            .padding(8)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+
+                          Spacer()
+                        }
+                      }
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                  }
+                }
         .onTapGesture {
           isFocused = false
           
