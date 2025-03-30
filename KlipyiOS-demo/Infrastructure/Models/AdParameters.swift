@@ -28,7 +28,7 @@ struct AdParameters {
     params["ad-min-width"] = 50
     params["ad-max-width"] = UIScreen.main.bounds.width - 20
     params["ad-min-height"] = 50
-    params["ad-max-height"] = 250
+    params["ad-max-height"] = 200
     
     let identifierForAdvertising = ASIdentifierManager.shared().advertisingIdentifier
     params["ad-ifa"] = identifierForAdvertising.uuidString
