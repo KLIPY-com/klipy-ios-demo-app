@@ -37,6 +37,7 @@ struct DynamicMediaView: View {
           categories: viewModel.categories,
           sheetHeight: $sheetHeight
         )
+        .id("ASDOMASODMSAO")
         .onChange(of: viewModel.activeCategory) { _, newCategory in
           guard let category = newCategory else {
             return
@@ -111,7 +112,7 @@ struct DynamicMediaView: View {
           .progressViewStyle(CircularProgressViewStyle(tint: .white))
           .scaleEffect(1.5)
       } else if viewModel.items.isEmpty && viewModel.hasCompletedInitialLoad {
-        Text("EMPTY")
+        Text("There is no recent content")
       } else {
         MasonryGridView(
           rows: rows,
