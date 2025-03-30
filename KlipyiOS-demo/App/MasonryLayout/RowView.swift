@@ -55,7 +55,7 @@ struct RowView: View {
           }
         }
       }
+      .frame(maxWidth: .infinity, maxHeight: row.height, alignment: .leading)
     }
-    .frame(maxWidth: .infinity, maxHeight: row.height, alignment: .leading)
   }
 }

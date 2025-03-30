@@ -42,6 +42,7 @@ struct LazyGIFView: View {
       if item.type == "ad" {
         KlipyWebViewRepresentable.init(htmlString: item.url)
           .frame(width: item.newWidth, height: item.height)
+          .padding(1)
       } else {
         AnimatedImage(url: URL(string: item.url), isAnimating: .constant(true)) {
           if let image = Image.fromBase64(item.previewUrl) {
@@ -106,6 +107,7 @@ struct LazyGIFView: View {
             }
         )
         .frame(width: item.width, height: item.height)
+        .padding(1)
       }
     }
   }
