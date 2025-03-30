@@ -111,7 +111,7 @@ struct DynamicMediaView: View {
           .progressViewStyle(CircularProgressViewStyle(tint: .white))
           .scaleEffect(1.5)
       } else if viewModel.items.isEmpty && viewModel.hasCompletedInitialLoad {
-        Text("EMPTY")
+        Text("There is no recent content")
       } else {
         MasonryGridView(
           rows: rows,
