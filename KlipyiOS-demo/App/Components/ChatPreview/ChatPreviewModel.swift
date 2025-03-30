@@ -11,18 +11,23 @@ struct ChatPreviewModel {
   let time: String
   let unreadCount: Int
   let isOnline: Bool
+  var messages: [Message]
+  let originalNonMutableMessages: [Message]
   
   init(
     name: String,
     lastMessage: String,
     time: String,
     unreadCount: Int = 0,
-    isOnline: Bool = true
+    isOnline: Bool = true,
+    messages: [Message]
   ) {
     self.name = name
     self.lastMessage = lastMessage
     self.time = time
     self.unreadCount = unreadCount
     self.isOnline = isOnline
+    self.messages = messages
+    self.originalNonMutableMessages = messages
   }
 }

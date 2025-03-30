@@ -43,6 +43,7 @@ struct ChatPreview: View {
     lastMessage: "Seen",
     time: "19.02.14",
     unreadCount: 2,
-    isOnline: true
+    isOnline: true,
+    messages: []
   ), theme: .default)
 }

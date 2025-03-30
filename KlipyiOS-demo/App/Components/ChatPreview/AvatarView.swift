@@ -21,11 +21,11 @@ struct AvatarView: View {
           height: theme.sizes.avatarDiameter
         )
         .overlay(
-          Image("boy-genmoji")
+          Image(systemName: "person.fill")
             .resizable()
-            .foregroundColor(theme.colors.avatarForeground)
+            .foregroundColor(.black)
             .font(.system(size: theme.sizes.avatarIconSize))
-            .frame(width: 40, height: 40)
+            .padding(10)
         )
       
       if isOnline {
