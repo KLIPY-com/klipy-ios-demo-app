@@ -18,8 +18,53 @@ struct Message: Identifiable {
    mediaItem?.mp4Media != nil
   }
   
+  static let klipyExample = [
+    Message(
+      content: "Hey! I'm using this demo app to help me with integration to KLIPY.",
+      mediaItem: nil,
+      isFromCurrentUser: true,
+      timestamp: Date().addingTimeInterval(-3900)
+    ),
+    Message(
+      content: "Hi! Welcome to the KLIPY Demo App",
+      mediaItem: nil,
+      isFromCurrentUser: false,
+      timestamp: Date().addingTimeInterval(-3700)
+    ),
+    Message(
+      content: "Feel free to use all the fun content",
+      mediaItem: nil,
+      isFromCurrentUser: false,
+      timestamp: Date().addingTimeInterval(-3700)
+    ),
+  ]
+  
+  static let alexExample = [
+    Message(
+      content: "hey, how's it going?",
+      mediaItem: nil,
+      isFromCurrentUser: true,
+      timestamp: Date().addingTimeInterval(-3900)
+    )
+  ]
+  
+  static let saraExample = [
+    Message(
+      content: "Please remind me about my appointment time",
+      mediaItem: nil,
+      isFromCurrentUser: true,
+      timestamp: Date().addingTimeInterval(-3900)
+    ),
+    Message(
+      content: "at 4",
+      mediaItem: nil,
+      isFromCurrentUser: false,
+      timestamp: Date().addingTimeInterval(-3700)
+    )
+  ]
+  
   // Example messages for preview
-  static let examples = [
+  static let johnBrowExample = [
     Message(
       content: "Hey John",
       mediaItem: GridItemLayout(
@@ -34,7 +79,8 @@ struct Message: Identifiable {
         originalWidth: 90.0,
         originalHeight: 90.0,
         newWidth: 132.0,
-        type: "gif"
+        type: "gif",
+        title: ""
       ),
       isFromCurrentUser: true,
       timestamp: Date().addingTimeInterval(-3900)
@@ -53,10 +99,17 @@ struct Message: Identifiable {
         originalWidth: 100.0,
         originalHeight: 55.0,
         newWidth: 258.0,
-        type: "sticker"
+        type: "sticker",
+        title: ""
       ),
       isFromCurrentUser: false,
       timestamp: Date().addingTimeInterval(-3700)
+    ),
+    Message(
+      content: "All good",
+      mediaItem: nil,
+      isFromCurrentUser: true,
+      timestamp: Date().addingTimeInterval(-3500)
     )
   ]
 }
