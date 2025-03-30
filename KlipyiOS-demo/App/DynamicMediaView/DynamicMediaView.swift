@@ -60,8 +60,8 @@ struct DynamicMediaView: View {
         }
         .background(Color(hex: "#36383F"))
         
-        mediaContent
         
+        mediaContent
         mediaTypeSelector
       }
       .contentShape(Rectangle())
@@ -106,39 +106,47 @@ struct DynamicMediaView: View {
   private var mediaContent: some View {
     ZStack {
       Color(hex: "#36383F")
-      MasonryGridView(
-        rows: rows,
-        hasNext: viewModel.hasMorePages,
-        onLoadMore: {
-          Task {
-            await viewModel.loadNextPageIfNeeded()
-          }
-        },
-        previewLoaded: { model in
-          Task {
-            guard let mediaItem = viewModel.getMediaItem(by: model.id) else { return }
-            try await viewModel.trackView(for: mediaItem)
-          }
-        },
-        onSend: { mediaItem in
-          onSend(mediaItem)
-          if let item = viewModel.getMediaItem(by: mediaItem.id) {
+      if viewModel.isLoading {
+        ProgressView()
+          .progressViewStyle(CircularProgressViewStyle(tint: .white))
+          .scaleEffect(1.5)
+      } else if viewModel.items.isEmpty && viewModel.hasCompletedInitialLoad {
+        Text("EMPTY")
+      } else {
+        MasonryGridView(
+          rows: rows,
+          hasNext: viewModel.hasMorePages,
+          onLoadMore: {
             Task {
-              try await viewModel.trackShare(for: item)
+              await viewModel.loadNextPageIfNeeded()
             }
-          }
-        },
-//        onReport: { reportedModel, url, reason in
-//          showToast = true
-//          guard let mediaModel = viewModel.getMediaItem(by: reportedModel.id) else { return }
-//          Task {
-//            try await viewModel.reportItem(item: mediaModel, reason: reason.rawValue)
-//          }
-//        },
-        isFocused: _isSearchFocused,
-        previewItem: $previewItem
-      )
-      .frame(maxWidth: .infinity)
+          },
+          previewLoaded: { model in
+            Task {
+              guard let mediaItem = viewModel.getMediaItem(by: model.id) else { return }
+              try await viewModel.trackView(for: mediaItem)
+            }
+          },
+          onSend: { mediaItem in
+            onSend(mediaItem)
+            if let item = viewModel.getMediaItem(by: mediaItem.id) {
+              Task {
+                try await viewModel.trackShare(for: item)
+              }
+            }
+          },
+          //        onReport: { reportedModel, url, reason in
+          //          showToast = true
+          //          guard let mediaModel = viewModel.getMediaItem(by: reportedModel.id) else { return }
+          //          Task {
+          //            try await viewModel.reportItem(item: mediaModel, reason: reason.rawValue)
+          //          }
+          //        },
+          isFocused: _isSearchFocused,
+          previewItem: $previewItem
+        )
+        .frame(maxWidth: .infinity)
+      }
     }
     .onChange(of: viewModel.items) { newValue in
       rows = calculator.createRows(from: newValue)

@@ -110,11 +110,16 @@ class DynamicMediaViewModel {
     hasError = false
     errorMessage = nil
     items = []
+    hasCompletedInitialLoad = false
   }
+  
+  private(set) var hasCompletedInitialLoad = false
   
   @MainActor
   func initialLoad() async {
     resetState()
+    isLoading = true
+
     do {
       let recentsResult = try await service.fetchRecents(page: 1, perPage: perPage)
       let recentItems = recentsResult.items
@@ -129,6 +134,7 @@ class DynamicMediaViewModel {
         items = recentItems
         hasMorePages = recentsResult.hasNext
         activeCategory = categories.first { $0.type == .recents }
+        hasCompletedInitialLoad = true
       }
       
       currentPage = 2
