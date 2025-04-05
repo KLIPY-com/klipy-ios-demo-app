@@ -21,36 +21,31 @@ class MasonryLayoutCalculator {
 
     /// The spacing (in points) between items horizontally.
     /// We recommend using the same padding in MasonryGridView (bottom) and in LazyGifView for a consistent visual experience.
-    private let gap: CGFloat
-
-    /// The minimum allowed width for a non-ad media item.
-    private let minGifWidth: CGFloat
+    private let horizontalSpacing: CGFloat
 
     /// The minimum allowed height for any row.
-    private let minHeight: CGFloat
+    private let minRowHeight: CGFloat
 
     /// The maximum allowed height for any row.
-    private let maxHeight: CGFloat
+    private let maxRowHeight: CGFloat
 
     /// The maximum number of items allowed per row (helps with readability and ad placement).
-    private let maxGifsPerRow: Int
+    private let maxItemsPerRow: Int
 
     // MARK: - Initializer
 
     init(
         containerWidth: CGFloat = UIScreen.main.bounds.width,
-        gap: CGFloat = 1,
-        minGifWidth: CGFloat = 50,
-        minHeight: CGFloat = 50,
-        maxHeight: CGFloat = 180,
-        maxGifsPerRow: Int = 4
+        horizontalSpacing: CGFloat = 1,
+        minRowHeight: CGFloat = 50,
+        maxRowHeight: CGFloat = 180,
+        maxItemsPerRow: Int = 4
     ) {
         self.containerWidth = containerWidth
-        self.gap = gap
-        self.minGifWidth = minGifWidth
-        self.minHeight = minHeight
-        self.maxHeight = maxHeight
-        self.maxGifsPerRow = maxGifsPerRow
+        self.horizontalSpacing = horizontalSpacing
+        self.minRowHeight = minRowHeight
+        self.maxRowHeight = maxRowHeight
+        self.maxItemsPerRow = maxItemsPerRow
     }
 
     // MARK: - Helper: Extract dimensions and media URL based on media type
@@ -82,31 +77,33 @@ class MasonryLayoutCalculator {
 
     /// Finds the best combination of items for a single row based on resizing, aspect ratio, and available width.
     /// Also handles special rules for ad positioning and scaling.
-    private func calculateOptimalRow(_ possibleItems: [GridItemLayout], _ itemMinWidth: Int, _ adMaxResizePercent: Int) -> ([GridItemLayout], CGFloat) {
+    private func calculateOptimalRow(_ candidateItems: [GridItemLayout], _ itemMinWidth: Int, _ adMaxResizePercent: Int) -> ([GridItemLayout], CGFloat) {
         var minimumChange = CGFloat.greatestFiniteMagnitude
-        var currentRow: [GridItemLayout] = []
-        var optimalHeight: CGFloat = 0
+        var optimizedRow: [GridItemLayout] = []
+        var optimalRowHeight: CGFloat = 0
 
-        var currentMinHeight = minHeight
-        var currentMaxHeight = maxHeight
+        var currentMinHeight = minRowHeight
+        var currentMaxHeight = maxRowHeight
 
         // Check if an ad exists in the row, and adjust height rules accordingly.
-        let adIndex = possibleItems.firstIndex { $0.type == "ad" }
+        let adIndex = candidateItems.firstIndex { $0.type == "ad" }
         if let adIndex = adIndex, adIndex > 1 {
             // If ad is after index 1 (i.e., 3rd+ position), reduce row to just 2 items
-            let items = Array(possibleItems.prefix(2))
+            /// If the ad is positioned after the first two items in the row, the number of items in the row is reduced to 2.
+            /// This helps with better positioning of ads and ensures a clean, visually pleasing layout.
+            let items = Array(candidateItems.prefix(2))
             return calculateOptimalRow(items, itemMinWidth, adMaxResizePercent)
         } else if let adIndex = adIndex {
             // If ad exists early, use its height as fixed for the row
-            currentMinHeight = possibleItems[adIndex].height
-            currentMaxHeight = possibleItems[adIndex].height
+            currentMinHeight = candidateItems[adIndex].height
+            currentMaxHeight = candidateItems[adIndex].height
         }
 
         // Try every height from min to max and find best-fit row with least leftover width
         for height in Int(currentMinHeight)...Int(currentMaxHeight) {
             var itemsInRow: [GridItemLayout] = []
 
-            for item in possibleItems {
+            for item in candidateItems {
                 var newItem = item
                 if item.type == "ad" {
                     // Ads are not resized
@@ -118,52 +115,59 @@ class MasonryLayoutCalculator {
                 }
                 itemsInRow.append(newItem)
 
-                // Compute row total width including gaps
-                let totalWidth = itemsInRow.reduce(0) { $0 + $1.newWidth } + CGFloat(itemsInRow.count - 1) * gap
+                // Compute row total width including horizontal spacings
+                let totalWidth = itemsInRow.reduce(0) { $0 + $1.newWidth } + CGFloat(itemsInRow.count - 1) * horizontalSpacing
                 let change = containerWidth - totalWidth
 
                 // Pick the row closest to exact fit (or if current row only had 1 item)
-                if abs(change) < abs(minimumChange) || (currentRow.count == 1 && itemsInRow.count != 1) {
-                    if itemsInRow.count != 1 || currentRow.isEmpty {
+                if abs(change) < abs(minimumChange) || (optimizedRow.count == 1 && itemsInRow.count != 1) {
+                    if itemsInRow.count != 1 || optimizedRow.isEmpty {
                         minimumChange = change
-                        currentRow = itemsInRow
-                        optimalHeight = CGFloat(height)
+                        optimizedRow = itemsInRow
+                        optimalRowHeight = CGFloat(height)
                     }
                 }
             }
         }
 
         // Final adjustment: spread leftover pixels across non-ad items to perfectly fill width
-        let nonAdItems = currentRow.filter { $0.type != "ad" }
+        /// In cases where the row does not fit perfectly due to an ad, we adjust the width of the non-ad items.
+        /// This ensures the row fills the container width, making the layout look more uniform and balanced.
+        /// The adjustment is done by calculating the leftover width and distributing it evenly across the non-ad items.
+        let nonAdItems = optimizedRow.filter { $0.type != "ad" }
         let adjustmentPerItem = nonAdItems.isEmpty ? 0 : minimumChange / CGFloat(nonAdItems.count)
 
-        for i in 0..<currentRow.count {
-            if currentRow[i].type == "ad" {
-                currentRow[i].width = currentRow[i].newWidth
+        for i in 0..<optimizedRow.count {
+            if optimizedRow[i].type == "ad" {
+                optimizedRow[i].width = optimizedRow[i].newWidth
             } else {
-                currentRow[i].width = currentRow[i].newWidth + adjustmentPerItem
+                optimizedRow[i].width = optimizedRow[i].newWidth + adjustmentPerItem
             }
-            currentRow[i].height = optimalHeight
+            optimizedRow[i].height = optimalRowHeight
         }
 
-        // MARK: - Ad Resize Logic (only if row contains ad and non-ads were too small)
+        // MARK: - Ad Resize Logic (only if row contains ad)
 
-        if let adIndex = adIndex, nonAdItems.count != currentRow.count {
-            let itemsBelowMin = nonAdItems.filter { $0.width < CGFloat(itemMinWidth) }
+        /// Ad Resize Logic: This block is responsible for handling the resizing of the ad in a row
+        /// The goal is to ensure that ads are not overly stretched
+        /// and that the overall row width is correctly balanced. If necessary, the ad width is reduced
+        /// while redistributing the leftover space to other items.
+        if let adIndex = adIndex, nonAdItems.count != optimizedRow.count {
+            let itemsBelowMinWidth = nonAdItems.filter { $0.width < CGFloat(itemMinWidth) }
 
-            if !itemsBelowMin.isEmpty {
+            if !itemsBelowMinWidth.isEmpty {
                 // Force small items to min width
-                for i in 0..<currentRow.count {
-                    if currentRow[i].type != "ad", currentRow[i].width < CGFloat(itemMinWidth) {
-                        currentRow[i].width = CGFloat(itemMinWidth)
+                for i in 0..<optimizedRow.count {
+                    if optimizedRow[i].type != "ad", optimizedRow[i].width < CGFloat(itemMinWidth) {
+                        optimizedRow[i].width = CGFloat(itemMinWidth)
                     }
                 }
 
                 // Recalculate row width after forcing min width
-                let newRowWidth = currentRow.reduce(0) { $0 + $1.width } + CGFloat(currentRow.count - 1) * gap
+                let newRowWidth = optimizedRow.reduce(0) { $0 + $1.width } + CGFloat(optimizedRow.count - 1) * horizontalSpacing
 
                 if newRowWidth > containerWidth {
-                    var adItem = currentRow[adIndex]
+                    var adItem = optimizedRow[adIndex]
 
                     // Calculate how much we are allowed to shrink the ad
                     let minAdWidth = adItem.width * (100 - CGFloat(adMaxResizePercent)) / 100
@@ -172,9 +176,9 @@ class MasonryLayoutCalculator {
                     if resizedAdWidth < minAdWidth {
                         // Spread some of the excess to other items again if ad hit minimum size
                         let adWidthDifference = minAdWidth - resizedAdWidth
-                        for i in 0..<currentRow.count {
-                            if currentRow[i].type != "ad", currentRow[i].width == CGFloat(itemMinWidth) {
-                                currentRow[i].width -= adWidthDifference / CGFloat(itemsBelowMin.count)
+                        for i in 0..<optimizedRow.count {
+                            if optimizedRow[i].type != "ad", optimizedRow[i].width == CGFloat(itemMinWidth) {
+                                optimizedRow[i].width -= adWidthDifference / CGFloat(itemsBelowMinWidth.count)
                             }
                         }
                         resizedAdWidth = minAdWidth
@@ -185,19 +189,19 @@ class MasonryLayoutCalculator {
                     adItem.height *= scaleFactor
                     adItem.width = resizedAdWidth
                     adItem.newWidth = resizedAdWidth
-                    currentRow[adIndex] = adItem
+                    optimizedRow[adIndex] = adItem
 
-                    for i in 0..<currentRow.count {
-                        if currentRow[i].type != "ad" {
-                            currentRow[i].height = adItem.height
+                    for i in 0..<optimizedRow.count {
+                        if optimizedRow[i].type != "ad" {
+                            optimizedRow[i].height = adItem.height
                         }
                     }
-                    optimalHeight = adItem.height
+                    optimalRowHeight = adItem.height
                 }
             }
         }
 
-        return (currentRow, optimalHeight)
+        return (optimizedRow, optimalRowHeight)
     }
 
     // MARK: - Public: Generate full layout of multiple rows
@@ -209,8 +213,8 @@ class MasonryLayoutCalculator {
         var nextItem = 0
 
         while nextItem < items.count {
-            // Take maxGifsPerRow items to try building the next row
-            let possibleItems = Array(items[nextItem..<min(nextItem + maxGifsPerRow, items.count)])
+            // Take maxItemsPerRow items to try building the next row
+            let possibleItems = Array(items[nextItem..<min(nextItem + maxItemsPerRow, items.count)])
 
             let possibleLayoutItems = possibleItems.map { item -> GridItemLayout in
                 let dimensions = getDimensions(from: item)
@@ -243,9 +247,9 @@ class MasonryLayoutCalculator {
             for itemIndex in 0..<rows[rowIndex].items.count {
                 rows[rowIndex].items[itemIndex].xPosition = currentX
                 rows[rowIndex].items[itemIndex].yPosition = currentY
-                currentX += rows[rowIndex].items[itemIndex].width + gap
+                currentX += rows[rowIndex].items[itemIndex].width + horizontalSpacing
             }
-            currentY += rows[rowIndex].height + gap
+            currentY += rows[rowIndex].height + horizontalSpacing
         }
 
         return rows
