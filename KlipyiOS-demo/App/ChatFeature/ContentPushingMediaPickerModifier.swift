@@ -132,6 +132,9 @@ struct DynamicMediaViewWrapper: View {
     DynamicMediaView(
       onSend: { mediaItem in
         onSend(mediaItem)
+        if sheetHeight == .full {
+          sheetHeight = .half
+        }
       },
       previewItem: $previewItem,
       sheetHeight: $sheetHeight
