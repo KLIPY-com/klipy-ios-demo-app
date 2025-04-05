@@ -80,7 +80,8 @@ struct Message: Identifiable {
         originalHeight: 90.0,
         newWidth: 132.0,
         type: "gif",
-        title: ""
+        title: "",
+        slug: ""
       ),
       isFromCurrentUser: true,
       timestamp: Date().addingTimeInterval(-3900)
@@ -100,7 +101,8 @@ struct Message: Identifiable {
         originalHeight: 55.0,
         newWidth: 258.0,
         type: "sticker",
-        title: ""
+        title: "",
+        slug: ""
       ),
       isFromCurrentUser: false,
       timestamp: Date().addingTimeInterval(-3700)
