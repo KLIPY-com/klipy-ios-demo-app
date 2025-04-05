@@ -18,7 +18,7 @@ class MasonryLayoutCalculator {
     
     init(
         containerWidth: CGFloat = UIScreen.main.bounds.width,
-        gap: CGFloat = 3,
+        gap: CGFloat = 1,
         minGifWidth: CGFloat = 50,
         minHeight: CGFloat = 50,
         maxHeight: CGFloat = 180,
@@ -115,7 +115,7 @@ class MasonryLayoutCalculator {
         return (currentRow, optimalHeight)
     }
     
-    func createRows(from items: [MediaDomainModel]) -> [RowLayout] {
+  func createRows(from items: [MediaDomainModel], withMeta: GridMeta) -> [RowLayout] {
         var rows: [RowLayout] = []
         var nextItem = 0
         
@@ -135,7 +135,8 @@ class MasonryLayoutCalculator {
                     originalWidth: dimensions.width,
                     originalHeight: dimensions.height,
                     type: item.type.rawValue,
-                    title: item.title
+                    title: item.title,
+                    slug: item.slug
                 )
             }
             

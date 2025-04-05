@@ -23,4 +23,5 @@ struct GridItemLayout: Identifiable {
   var newWidth: CGFloat = 0
   let type: String
   let title: String
+  let slug: String
 }
