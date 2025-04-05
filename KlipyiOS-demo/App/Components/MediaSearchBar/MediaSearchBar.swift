@@ -40,7 +40,7 @@ struct MediaSearchBar: View {
         }
       }
     }
-    .frame(height: 70)
+    .frame(height: 45)
   }
 }
 
