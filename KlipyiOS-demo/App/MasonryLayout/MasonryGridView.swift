@@ -31,7 +31,7 @@ struct MasonryGridView: View {
             onLoadMore: onLoadMore) { pressedItem in
               onSend(pressedItem)
             }
-            .padding(.bottom, 3)
+            .padding(.bottom, 1)
         }
       }
     }
