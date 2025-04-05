@@ -15,6 +15,7 @@ struct MasonryGridView: View {
   let onSend: (GridItemLayout) -> Void
   
   @FocusState var isFocused: Bool
+  @State private var dragOffset: CGFloat = 0
   
   @Binding var previewItem: GlobalMediaItem?
   
@@ -31,11 +32,31 @@ struct MasonryGridView: View {
               onSend(pressedItem)
             }
             .padding(.bottom, 3)
-          /// If !hasNext == true || rowIndex != rows.count - 1 ? 1 : 0
-            .opacity(rowIndex != rows.count - 1 ? 1 : 0)
         }
       }
     }
     .allowsHitTesting(previewItem == nil)
+    .simultaneousGesture(createDragGesture())
   }
+  
+  private func createDragGesture() -> some Gesture {
+      DragGesture()
+      .onChanged { value in
+        if value.translation.height < 0 {
+          if isFocused {
+            hideKeyboard()
+          }
+        }
+        
+        if value.translation.height > 0 {
+          if isFocused {
+            hideKeyboard()
+          }
+        }
+      }
+    }
+  
+  private func hideKeyboard() {
+      UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+    }
 }

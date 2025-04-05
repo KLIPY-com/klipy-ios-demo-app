@@ -42,7 +42,7 @@ struct LazyGIFView: View {
       if item.type == "ad" {
         KlipyWebViewRepresentable.init(htmlString: item.url)
           .frame(width: item.newWidth, height: item.height)
-          .padding(1)
+          .padding(0.5)
       } else {
         AnimatedImage(url: URL(string: item.url), isAnimating: .constant(true)) {
           if let image = Image.fromBase64(item.previewUrl) {
@@ -68,31 +68,34 @@ struct LazyGIFView: View {
 
                   if item.type == "clip" {
                     ZStack(alignment: .topLeading) {
-                      Image(systemName: "speaker.slash.fill")
-                        .foregroundColor(.white)
-                        .padding(2)
-                        .background(Color.black.opacity(0.4))
-                        .cornerRadius(4)
-                        .padding(4)
-
                       VStack {
-                        Spacer()
                         HStack {
-                          Text(item.title)
+                          Image(systemName: "speaker.slash.fill")
                             .foregroundColor(.white)
-                            .font(.footnote)
-                            .fontWeight(.medium)
-                            .lineLimit(2)
-                            .multilineTextAlignment(.leading)
-                            .truncationMode(.tail)
-                            .padding(8)
-                            .frame(maxWidth: .infinity, alignment: .leading)
-
+                            .padding(.leading, 2)
+                            Spacer()
+                        }
+                        
+                        VStack(alignment: .leading) {
                           Spacer()
+                          HStack {
+                            Text(item.title)
+                              .foregroundColor(.white)
+                              .font(.footnote)
+                              .fontWeight(.medium)
+                              .lineLimit(2)
+                              .multilineTextAlignment(.leading)
+                              .truncationMode(.tail)
+                              .padding(.leading, 2)
+                              .frame(maxWidth: .infinity, alignment: .leading)
+                            
+                            Spacer()
+                          }
                         }
                       }
+                      .padding(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
                     }
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
                   }
                 }
         .onTapGesture {
@@ -113,6 +116,10 @@ struct LazyGIFView: View {
               state = true
             }
             .onChanged { _ in
+              if isFocused {
+                return
+              }
+
               isFocused = false
               
               if !isPressed {
@@ -136,7 +143,7 @@ struct LazyGIFView: View {
             }
         )
         .frame(width: item.width, height: item.height)
-        .padding(1)
+        .padding(0.5)
       }
     }
   }
