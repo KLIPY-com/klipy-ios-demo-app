@@ -21,7 +21,8 @@ enum MediaService {
         items: response.data.data.map { $0.toDomain() },
         currentPage: response.data.currentPage,
         perPage: response.data.perPage,
-        hasNext: response.data.hasNext
+        hasNext: response.data.hasNext,
+        gridMeta: response.data.gridMeta
       )
     case .clip(let service):
       let response = try await service.fetchTrending(page: page, perPage: perPage)
@@ -29,7 +30,8 @@ enum MediaService {
         items: response.data.data.map { $0.toDomain() },
         currentPage: response.data.currentPage,
         perPage: response.data.perPage,
-        hasNext: response.data.hasNext
+        hasNext: response.data.hasNext,
+        gridMeta: response.data.gridMeta
       )
     case .sticker(let service):
       let response = try await service.fetchTrending(page: page, perPage: perPage)
@@ -37,10 +39,11 @@ enum MediaService {
         items: response.data.data.map { $0.toDomain() },
         currentPage: response.data.currentPage,
         perPage: response.data.perPage,
-        hasNext: response.data.hasNext
+        hasNext: response.data.hasNext,
+        gridMeta: response.data.gridMeta
       )
     case .none:
-      return PaginatedDomain(items: [], currentPage: page, perPage: perPage, hasNext: false)
+      return PaginatedDomain(items: [], currentPage: page, perPage: perPage, hasNext: false, gridMeta: .init(itemMinWidth: 0, adMaxResizePercent: 0))
     }
   }
   
@@ -52,7 +55,8 @@ enum MediaService {
         items: response.data.data.map { $0.toDomain() },
         currentPage: response.data.currentPage,
         perPage: response.data.perPage,
-        hasNext: response.data.hasNext
+        hasNext: response.data.hasNext,
+        gridMeta: response.data.gridMeta
       )
     case .clip(let service):
       let response = try await service.fetchRecentItems(page: page, perPage: perPage)
@@ -60,7 +64,8 @@ enum MediaService {
         items: response.data.data.map { $0.toDomain() },
         currentPage: response.data.currentPage,
         perPage: response.data.perPage,
-        hasNext: response.data.hasNext
+        hasNext: response.data.hasNext,
+        gridMeta: response.data.gridMeta
       )
     case .sticker(let service):
       let response = try await service.fetchRecentItems(page: page, perPage: perPage)
@@ -68,10 +73,11 @@ enum MediaService {
         items: response.data.data.map { $0.toDomain() },
         currentPage: response.data.currentPage,
         perPage: response.data.perPage,
-        hasNext: response.data.hasNext
+        hasNext: response.data.hasNext,
+        gridMeta: response.data.gridMeta
       )
     case .none:
-      return PaginatedDomain(items: [], currentPage: page, perPage: perPage, hasNext: false)
+      return PaginatedDomain(items: [], currentPage: page, perPage: perPage, hasNext: false, gridMeta: .init(itemMinWidth: 0, adMaxResizePercent: 0))
     }
   }
   
@@ -83,7 +89,8 @@ enum MediaService {
         items: response.data.data.map { $0.toDomain() },
         currentPage: response.data.currentPage,
         perPage: response.data.perPage,
-        hasNext: response.data.hasNext
+        hasNext: response.data.hasNext,
+        gridMeta: response.data.gridMeta
       )
     case .clip(let service):
       let response = try await service.searchClips(query: query, page: page, perPage: perPage)
@@ -91,7 +98,8 @@ enum MediaService {
         items: response.data.data.map { $0.toDomain() },
         currentPage: response.data.currentPage,
         perPage: response.data.perPage,
-        hasNext: response.data.hasNext
+        hasNext: response.data.hasNext,
+        gridMeta: response.data.gridMeta
       )
     case .sticker(let service):
       let response = try await service.searchStickers(query: query, page: page, perPage: perPage)
@@ -99,10 +107,11 @@ enum MediaService {
         items: response.data.data.map { $0.toDomain() },
         currentPage: response.data.currentPage,
         perPage: response.data.perPage,
-        hasNext: response.data.hasNext
+        hasNext: response.data.hasNext,
+        gridMeta: response.data.gridMeta
       )
     case .none:
-      return PaginatedDomain(items: [], currentPage: page, perPage: perPage, hasNext: false)
+      return PaginatedDomain(items: [], currentPage: page, perPage: perPage, hasNext: false, gridMeta: .init(itemMinWidth: 0, adMaxResizePercent: 0))
     }
   }
   

@@ -21,7 +21,9 @@ class DynamicMediaViewModel {
     }
   }
 
+  @ObservationIgnored
   private(set) var isLoading = false
+  
   private(set) var hasError = false
   private(set) var errorMessage: String?
   private(set) var hasMorePages = true
@@ -48,9 +50,13 @@ class DynamicMediaViewModel {
   @ObservationIgnored
   private var service: MediaService
   
+  @ObservationIgnored
+  var gridMeta: GridMeta
+  
   init(initialType: MediaType = .gifs) {
     self.currentType = initialType
     self.service = .create(for: initialType)
+    self.gridMeta = .init(itemMinWidth: 0, adMaxResizePercent: 0)
   }
   
   @MainActor
@@ -118,24 +124,15 @@ class DynamicMediaViewModel {
   @MainActor
   func initialLoad() async {
     resetState()
-    isLoading = true
-
     do {
-      let recentsResult = try await service.fetchRecents(page: 1, perPage: perPage)
-      let recentItems = recentsResult.items
+      activeCategory = categories.first { $0.type == .trending }
       
-      if recentItems.isEmpty {
-        let trendingResults = try await service.fetchTrending(page: 1, perPage: perPage)
-        let trendingItems = trendingResults.items
-        hasMorePages = trendingResults.hasNext
-        items = trendingItems
-        activeCategory = categories.first { $0.type == .trending }
-      } else {
-        items = recentItems
-        hasMorePages = recentsResult.hasNext
-        activeCategory = categories.first { $0.type == .recents }
-        hasCompletedInitialLoad = true
-      }
+      let trendingResults = try await service.fetchTrending(page: 1, perPage: perPage)
+      gridMeta = trendingResults.gridMeta
+      items = trendingResults.items
+      hasMorePages = trendingResults.hasNext
+      
+      let recentsResult = try await service.fetchRecents(page: 1, perPage: perPage)
       
       currentPage = 2
       isLoading = false
@@ -158,6 +155,8 @@ class DynamicMediaViewModel {
         page: currentPage,
         perPage: perPage
       )
+      
+      gridMeta = recentItems.gridMeta
       
       await MainActor.run {
         if currentPage == 1 {
@@ -244,6 +243,8 @@ class DynamicMediaViewModel {
         perPage: perPage
       )
       
+      gridMeta = domainItems.gridMeta
+      
       await MainActor.run {
         if currentPage == 1 {
           items = domainItems.items
@@ -289,6 +290,8 @@ class DynamicMediaViewModel {
         page: currentPage,
         perPage: perPage
       )
+      
+      gridMeta = domainItems.gridMeta
       
       if currentPage == 1 {
         items = domainItems.items
@@ -353,6 +356,10 @@ class DynamicMediaViewModel {
 extension DynamicMediaViewModel {
   func getMediaItem(by id: Int64) -> MediaDomainModel? {
     return items.first { $0.id == Int(id) }
+  }
+  
+  func getMediaItemBySlug(by slug: String) -> MediaDomainModel? {
+    return items.first { $0.slug == slug }
   }
   
   @MainActor

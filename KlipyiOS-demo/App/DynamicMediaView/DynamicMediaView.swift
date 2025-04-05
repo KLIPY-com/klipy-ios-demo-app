@@ -25,7 +25,7 @@ struct DynamicMediaView: View {
   @Environment(\.dismiss) private var dismiss
   var searchDebouncer = SearchDebouncer()
   
-  private let calculator = MasonryLayoutCalculator()
+  @State private var calculator = MasonryLayoutCalculator()
   
   var body: some View {
     NavigationView {
@@ -59,8 +59,6 @@ struct DynamicMediaView: View {
           }
         }
         .background(Color(hex: "#36383F"))
-        
-        
         mediaContent
         mediaTypeSelector
       }
@@ -123,14 +121,14 @@ struct DynamicMediaView: View {
           },
           previewLoaded: { model in
             Task {
-              guard let mediaItem = viewModel.getMediaItem(by: model.id) else { return }
+              guard let mediaItem = viewModel.getMediaItemBySlug(by: model.slug) else { return }
               try await viewModel.trackView(for: mediaItem)
             }
           },
           onSend: { mediaItem in
             onSend(mediaItem)
-            if let item = viewModel.getMediaItem(by: mediaItem.id) {
-              Task {
+            if let item = viewModel.getMediaItemBySlug(by: mediaItem.slug) {
+               Task {
                 try await viewModel.trackShare(for: item)
               }
             }
@@ -148,8 +146,8 @@ struct DynamicMediaView: View {
         .frame(maxWidth: .infinity)
       }
     }
-    .onChange(of: viewModel.items) { newValue in
-      rows = calculator.createRows(from: newValue)
+    .onChange(of: viewModel.items) { _, newValue in
+      rows = calculator.createRows(from: newValue, withMeta: viewModel.gridMeta)
     }
   }
   
@@ -176,6 +174,7 @@ struct DynamicMediaView: View {
       if isAvailable {
         withAnimation {
           viewModel.switchToType(type)
+          calculator = MasonryLayoutCalculator(maxGifsPerRow: type == .clips ? 3 : 4)
           searchText = ""
           Task {
             await viewModel.initialLoad()
