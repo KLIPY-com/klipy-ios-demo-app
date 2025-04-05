@@ -22,6 +22,9 @@ enum SheetHeight {
   }
 }
 
+/// DragOffset ზე ჩამოვიდეს .half სტეიტზე
+/// და ზევით დავამატოთ native sheet ის ვიუ რომ მიხვდეს უზერი რომ ჩამოსქროლვა შეიძლება
+
 struct ContentPushingMediaPickerModifier: ViewModifier {
   @Binding var isPresented: Bool
   let onSend: (GridItemLayout) -> Void

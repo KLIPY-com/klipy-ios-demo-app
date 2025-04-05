@@ -79,6 +79,9 @@ struct ChatView: View {
   @State private var dragOffset: CGFloat = 0
   @State private var showToast = false
   
+  @ObservationIgnored
+  @State var service: MediaService = .none
+  
   @Environment(\.dismiss) private var dismiss
   
   @State var previewItem: GlobalMediaItem? = nil
@@ -118,7 +121,12 @@ struct ChatView: View {
     .navigationBarHidden(true)
     .universalOverlay(item: $previewItem, content: { item in
       TelegramPreviewOverlay(viewModel: previewItem) { item in
+        service = .create(for: .clips)
         handleMediaSend(item)
+        Task {
+          try await service.trackShare(slug: item.slug)
+        }
+        
       } onReport: { error, reportReason in
         /// TODO: Lets do real reporting
         showToast = true
@@ -126,6 +134,17 @@ struct ChatView: View {
         previewItem = nil
       }
       .onAppear {
+        guard let correctMediaType = MediaType(rawValue: item.item.type) else {
+          return
+        }
+        
+        service = .create(for: correctMediaType)
+        
+        Task {
+          try await service.trackView(slug: item.item.slug)
+        }
+        
+        
         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
       }
     })
