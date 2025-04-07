@@ -174,7 +174,7 @@ struct DynamicMediaView: View {
       if isAvailable {
         withAnimation {
           viewModel.switchToType(type)
-          calculator = MasonryLayoutCalculator(maxGifsPerRow: type == .clips ? 3 : 4)
+          calculator = MasonryLayoutCalculator(maxItemsPerRow: type == .clips ? 3 : 4)
           searchText = ""
           Task {
             await viewModel.initialLoad()
