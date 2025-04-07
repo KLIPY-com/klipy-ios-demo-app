@@ -139,6 +139,15 @@ struct TelegramPreviewOverlay: View {
       // Set up player
       player?.actionAtItemEnd = .none
       try? AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
+      
+      NotificationCenter.default.addObserver(
+        forName: .AVPlayerItemDidPlayToEndTime,
+        object: playerItem,
+        queue: .main
+      ) { [weak player] _ in
+        player?.seek(to: .zero)
+        player?.play()
+      }
     }
   }
   
