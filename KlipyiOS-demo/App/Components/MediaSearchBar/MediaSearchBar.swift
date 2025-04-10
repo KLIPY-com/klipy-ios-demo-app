@@ -166,9 +166,7 @@ private extension MediaSearchBar {
   }
   
   private func expandToFullHeight() {
-    withAnimation(.spring(response: 0.4, dampingFraction: 0.7)) {
-      sheetHeight = .full
-    }
+    sheetHeight = .full
   }
 }
 
