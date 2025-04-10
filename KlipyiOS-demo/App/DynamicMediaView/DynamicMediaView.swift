@@ -63,9 +63,6 @@ struct DynamicMediaView: View {
         mediaTypeSelector
       }
       .contentShape(Rectangle())
-      .onTapGesture {
-        isSearchFocused = false
-      }
       .navigationTitle("")
       .navigationBarTitleDisplayMode(.inline)
     }
