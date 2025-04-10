@@ -32,6 +32,8 @@ struct MasonryGridView: View {
               onSend(pressedItem)
             }
             .padding(.bottom, 1)
+            /// If !hasNext == true || rowIndex != rows.count - 1 ? 1 : 0
+            .opacity(rowIndex != rows.count - 1 ? 1 : 0)
         }
       }
     }
