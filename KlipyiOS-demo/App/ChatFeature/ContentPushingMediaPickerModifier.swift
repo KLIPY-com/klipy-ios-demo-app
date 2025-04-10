@@ -22,9 +22,6 @@ enum SheetHeight {
   }
 }
 
-/// DragOffset ზე ჩამოვიდეს .half სტეიტზე
-/// და ზევით დავამატოთ native sheet ის ვიუ რომ მიხვდეს უზერი რომ ჩამოსქროლვა შეიძლება
-
 struct ContentPushingMediaPickerModifier: ViewModifier {
   @Binding var isPresented: Bool
   let onSend: (GridItemLayout) -> Void
@@ -93,14 +90,12 @@ struct ContentPushingMediaPickerModifier: ViewModifier {
       if isPresented {
         VStack {
           if heightState == .full {
-            SheetHandleIndicator()
-              .contentShape(Rectangle())
-              .gesture(dragGesture)
-              .onTapGesture(count: 2) {
-                withAnimation {
-                  heightState = heightState == .half ? .full : .half
-                }
+            SheetHandleButton {
+              withAnimation {
+                heightState = .half
               }
+            }
+            .gesture(dragGesture)
           }
 
           DynamicMediaViewWrapper(
@@ -173,28 +168,20 @@ struct DynamicMediaViewWrapper: View {
   }
 }
 
-struct SheetHandleIndicator: View {
+struct SheetHandleButton: View {
+    var onTap: () -> Void
+    
     var body: some View {
-        // This VStack creates a larger interactive area
-        VStack(spacing: 0) {
-            // Top padding creates space above the handle
-            Spacer()
-                .frame(height: 8)
-            
-            // The visible handle indicator
-            Rectangle()
-                .fill(Color(UIColor.systemGray3))
-                .frame(width: 40, height: 5)
-                .cornerRadius(2.5)
-            
-            // Bottom padding creates space below the handle
-            Spacer()
-                .frame(height: 8)
+        Button(action: onTap) {
+            VStack(spacing: 4) {
+                Image(systemName: "chevron.compact.down")
+                    .font(.system(size: 22))
+                    .foregroundColor(.secondary)
+            }
+            .padding(.vertical, 8)
+            .frame(width: 80, height: 36)
+            .contentShape(Rectangle())
         }
-        // Make the entire area (including padding) tappable/draggable
-        .frame(width: 60, height: 30)
-        .contentShape(Rectangle())
-        // Debug option - uncomment to see the touch area
-        // .background(Color.red.opacity(0.2))
+        .buttonStyle(PlainButtonStyle())
     }
 }

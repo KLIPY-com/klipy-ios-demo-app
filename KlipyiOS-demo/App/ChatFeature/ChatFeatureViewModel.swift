@@ -64,7 +64,10 @@ final class ChatFeatureViewModel {
   }
   
   func toggleMediaPicker() {
-    isMediaPickerPresented.toggle()
+    UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
+      self?.isMediaPickerPresented.toggle()
+    }
   }
   
   private func simulateReply() {
