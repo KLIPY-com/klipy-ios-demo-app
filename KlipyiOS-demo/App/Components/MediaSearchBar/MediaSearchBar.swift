@@ -34,9 +34,11 @@ struct MediaSearchBar: View {
       .background(.clear)
       .cornerRadius(MediaSearchConfiguration.Layout.cornerRadius)
       .frame(maxWidth: .infinity)
-      .onChange(of: isFocused) { oldValue, newValue in
-        if newValue {
-          expandToFullHeight()
+      .onAppear {
+        if sheetHeight == .full {
+          DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+              isFocused = true
+          }
         }
       }
     }
@@ -76,18 +78,27 @@ private extension MediaSearchBar {
   }
   
   var searchField: some View {
-    TextField("", text: $searchText)
-      .textFieldStyle(PlainTextFieldStyle())
-      .foregroundColor(MediaSearchConfiguration.Colors.text)
-      .placeholder(when: searchText.isEmpty) {
-        Text("Search")
-          .foregroundColor(MediaSearchConfiguration.Colors.text.opacity(0.5))
+    ZStack {
+      TextField("", text: $searchText)
+        .textFieldStyle(PlainTextFieldStyle())
+        .foregroundColor(MediaSearchConfiguration.Colors.text)
+        .placeholder(when: searchText.isEmpty) {
+          Text("Search")
+            .foregroundColor(MediaSearchConfiguration.Colors.text.opacity(0.5))
+        }
+        .focused($isFocused)
+        .frame(maxWidth: .infinity)
+      
+      if sheetHeight == .half {
+        Button(action: {
+          expandToFullHeight()
+        }) {
+          Rectangle()
+            .fill(Color.clear)
+            .contentShape(Rectangle())
+        }
       }
-      .focused($isFocused)
-      .frame(maxWidth: .infinity)
-      .onTapGesture {
-        expandToFullHeight()
-      }
+    }
   }
   
   @ViewBuilder
