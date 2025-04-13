@@ -128,7 +128,6 @@ struct ChatView: View {
         }
         
       } onReport: { error, reportReason in
-        /// TODO: Lets do real reporting
         showToast = true
       } onDismiss: {
         previewItem = nil
