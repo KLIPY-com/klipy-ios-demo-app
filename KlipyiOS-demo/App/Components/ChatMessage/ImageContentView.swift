@@ -13,6 +13,26 @@ import SDWebImageSwiftUI
 struct ImageContentView: View {
   let mediaItem: GridItemLayout
   
+  private var normalizedSize: (width: CGFloat, height: CGFloat) {
+      let originalWidth = mediaItem.width * 2
+      let originalHeight = mediaItem.height * 2
+      
+      /// Check if the image needs normalization
+      if originalWidth > 200 && originalHeight > 120 {
+        let aspectRatio = originalWidth / originalHeight
+        
+        /// Normalize to smaller size while maintaining aspect ratio
+        /// You can adjust these values based on your preference
+        let maxWidth: CGFloat = 280
+        let maxHeight = maxWidth / aspectRatio
+        
+        return (width: maxWidth, height: maxHeight)
+      }
+      
+      /// Return original size if normalization isn't needed
+      return (width: originalWidth, height: originalHeight)
+    }
+  
   var body: some View {
     AnimatedImage(url: URL(string: mediaItem.url), isAnimating: .constant(true)) {
       WebImage(url: URL(string: mediaItem.previewUrl))
@@ -21,7 +41,7 @@ struct ImageContentView: View {
         .aspectRatio(contentMode: .fill)
     }
     .resizable()
-    .frame(width: mediaItem.width, height: mediaItem.height)
+    .frame(width: normalizedSize.width, height: normalizedSize.height)
     .aspectRatio(contentMode: .fill)
     .cornerRadius(ChatMessageConfiguration.Layout.cornerRadius)
   }
