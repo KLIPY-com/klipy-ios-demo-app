@@ -260,7 +260,7 @@ struct ChatView: View {
   }
   
   private func handleMediaSend(_ item: GridItemLayout) {
-    // viewModel.toggleMediaPicker()
+    _defaultSheetHeightStateForMedia = .half
     viewModel.sendMediaMessage(item: item)
   }
   
