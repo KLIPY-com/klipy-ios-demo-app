@@ -114,8 +114,10 @@ struct LazyGIFView: View {
             .updating($isPressing) { _, state, _ in
               isFocused = false
               state = true
+              UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
             }
             .onChanged { _ in
+              UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
               if isFocused {
                 return
               }
