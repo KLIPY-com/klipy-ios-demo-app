@@ -12,7 +12,6 @@ struct DynamicMediaView: View {
   @Bindable private var viewModel = DynamicMediaViewModel()
   
   @State private var searchText = ""
-  @State private var selectedCategory: MediaCategory?
   @State private var rows: [RowLayout] = []
   
   @FocusState private var isSearchFocused: Bool
@@ -138,7 +137,8 @@ struct DynamicMediaView: View {
           //          }
           //        },
           isFocused: _isSearchFocused,
-          previewItem: $previewItem
+          previewItem: $previewItem,
+          selectedCategory: viewModel.activeCategory
         )
         .frame(maxWidth: .infinity)
       }
