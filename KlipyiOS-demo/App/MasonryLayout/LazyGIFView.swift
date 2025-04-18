@@ -41,15 +41,15 @@ struct LazyGIFView: View {
     Group {
       if item.type == "ad" {
         KlipyWebViewRepresentable.init(htmlString: item.url)
-          .frame(width: item.newWidth, height: item.height)
+          .frame(width: item.width, height: item.height)
           .padding(1)
       } else {
         AnimatedImage(url: URL(string: item.url), isAnimating: .constant(true)) {
           if let image = Image.fromBase64(item.previewUrl) {
             image
               .resizable()
-              .aspectRatio(contentMode: .fill)
-              .frame(width: item.newWidth, height: item.height)
+              .frame(width: item.width, height: item.height)
+              .clipped()
           }
         }
         .resizable()
@@ -144,7 +144,8 @@ struct LazyGIFView: View {
               }
             }
         )
-        .frame(width: item.newWidth, height: item.height)
+        .clipped()
+        .frame(width: item.width, height: item.height)
         .padding(1)
       }
     }
