@@ -144,7 +144,7 @@ struct LazyGIFView: View {
               }
             }
         )
-        .frame(width: item.width, height: item.height)
+        .frame(width: item.newWidth, height: item.height)
         .padding(1)
       }
     }
