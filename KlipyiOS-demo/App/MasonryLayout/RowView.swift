@@ -50,7 +50,7 @@ struct RowView: View {
         .frame(width: item.width, height: item.height)
         .offset(x: item.xPosition, y: 0)
         .onAppear {
-          if isLastRow && item.id == row.items.last?.id {
+          if isLastRow {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
               withAnimation(.smoothSheet) {
                 onLoadMore()
