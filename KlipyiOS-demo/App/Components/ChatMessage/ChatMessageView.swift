@@ -33,13 +33,9 @@ struct ChatMessageView: View {
         Spacer()
       }
       
-      VStack(alignment: message.isFromCurrentUser ? .trailing : .leading, spacing: 8) {
-          messageContent
-            .padding(.bottom, 4)
-        
-        if !message.content.isEmpty {
-          messageText
-        }
+      VStack(alignment: message.isFromCurrentUser ? .trailing : .leading) {
+        messageContent
+        messageText
       }
       .padding(ChatMessageConfiguration.Layout.messagePadding)
       
@@ -71,7 +67,6 @@ struct ChatMessageView: View {
   private var messageText: some View {
     if !message.content.isEmpty {
       Text(message.content)
-        .fixedSize(horizontal: false, vertical: true)
         .padding(ChatMessageConfiguration.Layout.contentPadding)
         .background(
           message.isFromCurrentUser ?

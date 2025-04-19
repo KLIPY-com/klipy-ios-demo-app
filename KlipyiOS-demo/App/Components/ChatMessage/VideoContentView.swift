@@ -15,36 +15,34 @@ struct VideoContentView: View {
   
   @Binding var isPlaying: Bool
   
+  private var normalizedSize: (width: CGFloat, height: CGFloat) {
+    let originalWidth = mediaItem.width * 2
+    let originalHeight = mediaItem.height * 2
+    
+    if originalWidth > 200 && originalHeight > 120 {
+      let aspectRatio = originalWidth / originalHeight
+      
+      let maxWidth: CGFloat = 280
+      let maxHeight = maxWidth / aspectRatio
+      
+      return (width: maxWidth, height: maxHeight)
+    }
+    
+    return (width: originalWidth, height: originalHeight)
+  }
+  
   var body: some View {
-    GeometryReader { geometry in
-      ZStack {
-        VideoPlayer(player: viewModel.getPlayer(for: message.id)) {
-          playButton
-        }
-        .aspectRatio(contentMode: .fit)
-        .frame(
-          width: min(geometry.size.width * 0.85, 300),
-          height: min(calculateScaledHeight(geometry: geometry), 400)
-        )
-        .cornerRadius(ChatMessageConfiguration.Layout.cornerRadius)
+    ZStack {
+      VideoPlayer(player: viewModel.getPlayer(for: message.id)) {
+        playButton
       }
+      .frame(width: normalizedSize.width, height: normalizedSize.height)
+      .cornerRadius(ChatMessageConfiguration.Layout.cornerRadius)
     }
     .onChange(of: viewModel.currentlyPlayingID) { _, newValue in
       isPlaying = newValue == message.id
     }
   }
-  
-  private func calculateScaledHeight(geometry: GeometryProxy) -> CGFloat {
-     let maxWidth = min(geometry.size.width * 0.85, 300)
-     let aspectRatio = mediaItem.height / mediaItem.width
-     return maxWidth * aspectRatio
-   }
-   
-   private func calculateAdaptiveHeight() -> CGFloat {
-     let aspectRatio = mediaItem.height / mediaItem.width
-     let baseHeight = 500 * aspectRatio
-     return min(max(baseHeight, 180), 400)
-   }
   
   private var playButton: some View {
     Button {
