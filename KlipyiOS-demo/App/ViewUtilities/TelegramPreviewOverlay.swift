@@ -123,6 +123,34 @@ struct TelegramPreviewOverlay: View {
     }
   }
   
+  private func calculateTargetSize(
+    originalSize: CGSize,
+    screenSize: CGSize,
+    isMenuShown: Bool
+  ) -> CGSize {
+    /// Maximum width is device width - 20 (10 margin from left, 10 margin from right)
+    let maxWidth = screenSize.width - 20
+    
+    /// Maximum height is 60% of the screen height
+    let maxHeight = screenSize.height * 0.6
+    
+    /// Calculate scale to fit within constraints while maintaining aspect ratio
+    let widthRatio = maxWidth / originalSize.width
+    let heightRatio = maxHeight / originalSize.height
+    
+    /// Use the smaller ratio to ensure both dimensions fit within constraints
+    let scale = min(widthRatio, heightRatio)
+    
+    /// Calculate final dimensions
+    let finalWidth = originalSize.width * scale
+    let finalHeight = originalSize.height * scale
+    
+    return CGSize(
+      width: finalWidth,
+      height: finalHeight
+    )
+  }
+  
   private func setupVideoPlayer(for selectedItem: GridItemLayout) {
     if let mp4UrlString = selectedItem.mp4Media?.mp4?.url,
        let url = URL(string: mp4UrlString),
@@ -169,22 +197,22 @@ struct TelegramPreviewOverlay: View {
     }
   }
   
-  private func calculateTargetSize(
-    originalSize: CGSize,
-    screenSize: CGSize,
-    isMenuShown: Bool
-  ) -> CGSize {
-    let maxWidth = screenSize.width * 0.9 * (isMenuShown ? 0.8 : 0.9)
-    let maxHeight = screenSize.height * (isMenuShown ? 0.6 : 0.7)
-    
-    let widthRatio = maxWidth / originalSize.width
-    let heightRatio = maxHeight / originalSize.height
-    
-    let scale = min(widthRatio, heightRatio)
-    
-    return CGSize(
-      width: originalSize.width * scale,
-      height: originalSize.height * scale
-    )
-  }
+//  private func calculateTargetSize(
+//    originalSize: CGSize,
+//    screenSize: CGSize,
+//    isMenuShown: Bool
+//  ) -> CGSize {
+//    let maxWidth = screenSize.width * 0.9 * (isMenuShown ? 0.8 : 0.9)
+//    let maxHeight = screenSize.height * (isMenuShown ? 0.6 : 0.7)
+//    
+//    let widthRatio = maxWidth / originalSize.width
+//    let heightRatio = maxHeight / originalSize.height
+//    
+//    let scale = min(widthRatio, heightRatio)
+//    
+//    return CGSize(
+//      width: originalSize.width * scale,
+//      height: originalSize.height * scale
+//    )
+//  }
 }
