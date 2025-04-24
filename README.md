@@ -200,6 +200,33 @@ Use the extension method to add ad parameters to your API requests:
 let apiParams = ["query": "cat"].withAdParameters()
 ```
 
+### WebView for Ad Rendering
+
+The app uses a custom WebView implementation (`KlipyWebView` and `KlipyWebViewRepresentable`) specifically designed for rendering ads within the UI:
+
+- Secure ad rendering isolated from app content
+- Custom navigation handling for ad interactions  
+- SwiftUI integration via UIViewRepresentable
+
+### withAdParameters Extension
+
+The `withAdParameters()` extension method simplifies adding standardized ad parameters to API requests:
+
+```swift
+// Inside Dictionary extension
+func withAdParameters() -> [String: Any] {
+  self.merging(AdParameters.shared.parameters) { current, _ in current }
+}
+```
+
+This extension ensures consistent ad targeting parameters are included with requests, such as:
+- Device information (OS, model, screen dimensions)
+- Ad size constraints
+- Device identifiers for ad targeting
+- User language preferences
+
+Using this approach with User Agent details allows the ad delivery system to serve appropriate and correctly sized ads for each device and context.
+
 ## Media Content Display
 
 The demo shows how to efficiently display different types of media:
