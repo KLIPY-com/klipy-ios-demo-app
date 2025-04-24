@@ -1,10 +1,12 @@
 # Klipy iOS Demo Application
 
-A comprehensive demo application showcasing Klipy's media display capabilities, featuring a perfect masonry grid layout for GIFs, stickers, and video clips.
+<img src="https://github.com/user-attachments/assets/9b687d60-f96e-4702-908c-eb797e794697" alt="Klipy iOS Demo Screenshot" width="350" height="350">
+
+iOS Demo application showcasing Klipy's media display capabilities, featuring a perfect masonry grid layout for GIFs, stickers, and video clips.
 
 ## Overview
 
-KlipyiOS-demo demonstrates how to implement a responsive, performant media grid using the MasonryLayoutCalculator for optimal display of media content. The app provides examples of:
+App demonstrates how to implement a responsive, performant media grid using the MasonryLayoutCalculator for optimal display of media content. The app provides examples of
 
 - Masonry-style grid layouts with perfect content fitting
 - Media content display (GIFs, stickers, video clips)
@@ -27,6 +29,7 @@ KlipyiOS-demo demonstrates how to implement a responsive, performant media grid 
 The application follows a modern SwiftUI-based architecture with:
 
 - **MVVM** (Model-View-ViewModel) pattern for UI components
+- **MVVM** Observation framework
 - **Use Case** pattern for business logic
 - **Service** layer for API communication
 - **Repository** pattern for data abstraction
@@ -35,7 +38,7 @@ The application follows a modern SwiftUI-based architecture with:
 
 ### [ChatFeature Module](./KlipyiOS-demo/App/ChatFeature/README.md)
 
-The ChatFeature module implements a comprehensive chat interface with media sharing capabilities, demonstrating the integration of the masonry grid within a messaging context.
+The ChatFeature module implements a chat interface with media sharing capabilities, demonstrating the integration of the masonry grid within a messaging context.
 
 ### [Components Module](./KlipyiOS-demo/App/Components/README.md)
 
@@ -236,7 +239,3 @@ The app demonstrates proper techniques for efficient media loading:
 2. Open `KlipyiOS-demo.xcodeproj` in Xcode
 3. Install dependencies using Swift Package Manager (automatically handled by Xcode)
 4. Build and run on a simulator or device
-
-## Documentation
-
-For more detailed information about specific modules, please refer to the individual README files linked in the [Core Modules](#core-modules) section.
