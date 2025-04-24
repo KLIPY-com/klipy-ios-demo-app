@@ -1,4 +1,4 @@
-# KlipyiOS-demo
+# Klipy iOS Demo Application
 
 A comprehensive demo application showcasing Klipy's media display capabilities, featuring a perfect masonry grid layout for GIFs, stickers, and video clips.
 
