@@ -225,7 +225,52 @@ This extension ensures consistent ad targeting parameters are included with requ
 - Device identifiers for ad targeting
 - User language preferences
 
-Using this approach with User Agent details allows the ad delivery system to serve appropriate and correctly sized ads for each device and context.
+We use UserAgentManager to get correct user agent and then we use it inside headers
+
+```swift
+var headers: [String: String]? {
+    ["User-Agent": UserAgentManager.shared.userAgent]
+}
+```
+
+For  configuring Ad parameters, you can check `AdParameters.swift` file
+
+```swift
+struct AdParameters {
+  static let shared = AdParameters()
+  
+  var parameters: [String: Any] {
+    var params: [String: Any] = [:]
+    
+    // Device Info
+    params["ad-os"] = "ios"
+    params["ad-osv"] = UIDevice.current.systemVersion
+    params["ad-make"] = "apple"
+    params["ad-model"] = "iphone"
+    params["ad-device-w"] = UIScreen.main.bounds.width
+    params["ad-device-h"] = UIScreen.main.bounds.height
+    params["ad-pxratio"] = UIScreen.main.scale
+    
+    // Ad dimensions
+    params["ad-min-width"] = 50
+    params["ad-max-width"] = UIScreen.main.bounds.width - 20
+    params["ad-min-height"] = 50
+    params["ad-max-height"] = 200
+    
+    let identifierForAdvertising = ASIdentifierManager.shared().advertisingIdentifier
+    params["ad-ifa"] = identifierForAdvertising.uuidString
+    params["ad-language"] = "EN"
+    
+    return params
+  }
+}
+
+extension Dictionary where Key == String, Value == Any {
+  func withAdParameters() -> [String: Any] {
+    self.merging(AdParameters.shared.parameters) { current, _ in current }
+  }
+}
+```
 
 ## Media Content Display
 
