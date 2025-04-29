@@ -29,7 +29,7 @@ struct ContentView: View {
     ),
     ChatPreviewModel(
       name: "Sarah",
-      lastMessage: "Sarah sent a sticker",
+      lastMessage: "Sarah sent a gif",
       time: "17:23",
       unreadCount: 0,
       isOnline: false,
@@ -37,7 +37,7 @@ struct ContentView: View {
     ),
     ChatPreviewModel(
       name: "Alex",
-      lastMessage: "hey, how's it going?",
+      lastMessage: "Everything is good! Thanks!",
       time: "13:02",
       unreadCount: 1,
       isOnline: true,
