@@ -34,7 +34,7 @@ struct ImageContentView: View {
   }
   
   var body: some View {
-    AnimatedImage(url: URL(string: mediaItem.url), isAnimating: .constant(true)) {
+    AnimatedImage(url: URL(string: mediaItem.highQualityUrl), isAnimating: .constant(true)) {
       WebImage(url: URL(string: mediaItem.previewUrl))
         .resizable()
         .transition(.fade)
