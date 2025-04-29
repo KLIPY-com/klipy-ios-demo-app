@@ -9,89 +9,56 @@ import SwiftUI
 
 struct ContentView: View {
   @State var isPresented: Bool = true
-  
+    
+  let chatModels = [
+    ChatPreviewModel(
+      name: "KLIPY",
+      lastMessage: "Feel free to use all the fun content",
+      time: "19:42",
+      unreadCount: 0,
+      isOnline: true,
+      messages: Message.klipyExample
+    ),
+    ChatPreviewModel(
+      name: "John Brown",
+      lastMessage: "All good!",
+      time: "23:11",
+      unreadCount: 0,
+      isOnline: true,
+      messages: Message.johnBrowExample
+    ),
+    ChatPreviewModel(
+      name: "Sarah",
+      lastMessage: "Sarah sent a sticker",
+      time: "17:23",
+      unreadCount: 0,
+      isOnline: false,
+      messages: Message.saraExample
+    ),
+    ChatPreviewModel(
+      name: "Alex",
+      lastMessage: "hey, how's it going?",
+      time: "13:02",
+      unreadCount: 1,
+      isOnline: true,
+      messages: Message.alexExample
+    )
+  ]
+
   var body: some View {
     NavigationStack {
       VStack(spacing: 0) {
-        NavigationLink(destination: ChatView(viewModel: .init(chatPreviewModel: ChatPreviewModel(
-          name: "KLIPY",
-          lastMessage: "Feel free to use all the fun content",
-          time: "19:42",
-          unreadCount: 0,
-          isOnline: true,
-          messages: Message.klipyExample
-        )))) {
-          ChatPreview(model: ChatPreviewModel(
-            name: "KLIPY",
-            lastMessage: "Feel free to use all the fun content",
-            time: "19:42",
-            unreadCount: 0,
-            isOnline: true,
-            messages: Message.klipyExample
-          ))
+        ForEach(chatModels, id: \.name) { chatModel in
+          NavigationLink {
+            ChatView(viewModel: .init(chatPreviewModel: chatModel))
+          } label: {
+            // The entire row becomes the clickable area
+            ChatPreview(model: chatModel)
+              .contentShape(Rectangle()) // This ensures the entire area is tappable
+              .padding(.top, 1)
+          }
+          .buttonStyle(PlainButtonStyle())
         }
-        .buttonStyle(PlainButtonStyle())
-        .padding(.top, 1)
-    
-        NavigationLink(destination: ChatView(viewModel: .init(chatPreviewModel: ChatPreviewModel(
-          name: "John Brown",
-          lastMessage: "All good!",
-          time: "23:11",
-          unreadCount: 0,
-          isOnline: true,
-          messages: Message.johnBrowExample
-        )))) {
-          ChatPreview(model: ChatPreviewModel(
-            name: "John Brown",
-            lastMessage: "All good!",
-            time: "23:11",
-            unreadCount: 0,
-            isOnline: true,
-            messages: Message.johnBrowExample
-          ))
-        }
-        .buttonStyle(PlainButtonStyle())
-        .padding(.top, 1)
-        
-        NavigationLink(destination: ChatView(viewModel: .init(chatPreviewModel: ChatPreviewModel(
-          name: "Sarah",
-          lastMessage: "Sarah sent a sticker",
-          time: "17:23",
-          unreadCount: 0,
-          isOnline: false,
-          messages: Message.saraExample
-        )))) {
-          ChatPreview(model: ChatPreviewModel(
-            name: "Sarah",
-            lastMessage: "Sarah sent a sticker",
-            time: "17:23",
-            unreadCount: 0,
-            isOnline: false,
-            messages: Message.saraExample
-          ))
-        }
-        .buttonStyle(PlainButtonStyle())
-        .padding(.top, 1)
-        
-        NavigationLink(destination: ChatView(viewModel: .init(chatPreviewModel: ChatPreviewModel(
-          name: "Alex",
-          lastMessage: "hey, how's it going?",
-          time: "13:02",
-          unreadCount: 1,
-          isOnline: true,
-          messages: Message.alexExample
-        )))) {
-          ChatPreview(model: ChatPreviewModel(
-            name: "Alex",
-            lastMessage: "hey, how's it going?",
-            time: "13:02",
-            unreadCount: 1,
-            isOnline: true,
-            messages: Message.alexExample
-          ))
-        }
-        .buttonStyle(PlainButtonStyle())
-        .padding(.top, 1)
         
         Spacer()
       }
