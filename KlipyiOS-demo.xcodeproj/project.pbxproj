@@ -21,7 +21,12 @@
 		E6517A982D47C13800C2B5FB /* Exceptions for "KlipyiOS-demo" folder in "KlipyiOS-demo" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				App/ChatFeature/README.md,
+				App/Components/README.md,
+				App/DynamicMediaView/README.md,
 				Info.plist,
+				Infrastructure/README.md,
+				Networking/README.md,
 			);
 			target = E6D992702D31681A003CAF83 /* KlipyiOS-demo */;
 		};
