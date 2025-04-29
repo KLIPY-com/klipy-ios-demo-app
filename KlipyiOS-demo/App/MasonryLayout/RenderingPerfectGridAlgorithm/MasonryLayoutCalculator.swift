@@ -93,7 +93,7 @@ class MasonryLayoutCalculator {
       return (CGFloat(file.width), CGFloat(file.height), file.url)
 
     case .gifs, .stickers:
-      guard let file = item.xs?.gif else {
+      guard let file = item.sm?.gif else {
         return (0, 0, "")
       }
       return (CGFloat(file.width), CGFloat(file.height), file.url)
