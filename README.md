@@ -1,4 +1,4 @@
-# Klipy iOS Demo Application
+# Klipy GIF API iOS Demo Application
 
 <img src="https://github.com/user-attachments/assets/9b687d60-f96e-4702-908c-eb797e794697" alt="Klipy iOS Demo Screenshot" width="350" height="350">
 
