@@ -1,6 +1,8 @@
 # Klipy GIF API iOS Demo Application
 
-<img src="https://github.com/user-attachments/assets/9b687d60-f96e-4702-908c-eb797e794697" alt="Klipy iOS Demo Screenshot" width="350" height="350">
+<p align="center">
+   <img src="https://github.com/user-attachments/assets/db5e9322-f06f-4508-9ff8-9445fa2a975b" alt="Klipy iOS Demo Screenshot" width="100%">
+</p>
 
 iOS Demo application showcasing Klipy's media display capabilities, featuring a perfect masonry grid layout for GIFs, stickers, and video clips.
 
