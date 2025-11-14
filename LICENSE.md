@@ -1,7 +1,9 @@
-# Klipy Integration License (Permissive)
-## Version 1.0 — 2025
+Klipy Integration License (Permissive)
+-
+Version 1.0 — 2025
 
-### ⓒ 2025 Klipy.
+Copyright KIKLIKO, Inc. (Klipy) ([info@klipy.com](mailto:info@klipy.com))
+
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the “Software”), to use,
