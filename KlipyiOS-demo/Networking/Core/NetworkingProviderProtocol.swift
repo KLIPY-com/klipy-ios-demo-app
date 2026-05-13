@@ -16,6 +16,9 @@ public protocol NetworkingProviderProtocol {
   func request<ResponseType: Decodable>(_ target: Target, progress: @escaping ProgressBlock) async throws -> ResponseType
 }
 
+private let adIframeQueryName = "ad-iframe"
+private let adIframeQueryValue = "1"
+
 public class NetworkingProvider<Target>: NetworkingProviderProtocol where Target: Moya.TargetType {
   private let provider: MoyaProvider<Target>
 
@@ -26,9 +29,24 @@ public class NetworkingProvider<Target>: NetworkingProviderProtocol where Target
     callbackQueue: DispatchQueue? = nil,
     trackInflights: Bool = false
   ) {
+    let requestClosureWithAdIframe: MoyaProvider<Target>.RequestClosure = { endpoint, done in
+      requestClosure(endpoint) { result in
+        switch result {
+        case .success(var request):
+          request.appendQueryItemIfNeeded(
+            name: adIframeQueryName,
+            value: adIframeQueryValue
+          )
+          done(.success(request))
+        case .failure(let error):
+          done(.failure(error))
+        }
+      }
+    }
+
     self.provider = MoyaProvider(
       endpointClosure: endpointClosure,
-      requestClosure: requestClosure,
+      requestClosure: requestClosureWithAdIframe,
       stubClosure: stubClosure,
       callbackQueue: callbackQueue,
       plugins: [
@@ -169,5 +187,23 @@ public class NetworkingProvider<Target>: NetworkingProviderProtocol where Target
     completion: @escaping Completion
   ) -> any Cancellable {
     return provider.request(target, callbackQueue: callbackQueue, progress: progress, completion: completion)
+  }
+}
+
+private extension URLRequest {
+  mutating func appendQueryItemIfNeeded(name: String, value: String) {
+    guard let currentURL = url,
+          var components = URLComponents(url: currentURL, resolvingAgainstBaseURL: false) else {
+      return
+    }
+
+    var queryItems = components.queryItems ?? []
+    guard !queryItems.contains(where: { $0.name == name }) else {
+      return
+    }
+
+    queryItems.append(URLQueryItem(name: name, value: value))
+    components.queryItems = queryItems
+    url = components.url
   }
 }
