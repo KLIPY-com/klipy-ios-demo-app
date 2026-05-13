@@ -24,7 +24,7 @@ public extension KlipyTargetType {
 
 public extension KlipyTargetType {
   var baseURL: URL {
-    return URL(string: "https://api.klipy.co/api/v1/sandbox-mJokm7E2jH")!
+    return URL(string: "https://api.klipy.com/api/v1/sandbox-mJokm7E2jH")!
   }
 
   var validationType: ValidationType {

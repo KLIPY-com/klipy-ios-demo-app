@@ -6,5 +6,5 @@
 //
 
 var CATEGORY_FATCH_URL: String {
-  return "https://api.klipy.co/assets/images/category/"
+  return "https://api.klipy.com/assets/images/category/"
 }
