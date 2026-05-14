@@ -179,7 +179,7 @@ public struct NetworkLayerError: Error {
 ```swift
 // Create an instance of RestApi
 let restApi: RestApiProtocol = RestApi(
-  baseURL: URL(string: "https://api.klipy.co/api/v1/sandbox-mJokm7E2jH")!,
+  baseURL: URL(string: "https://api.klipy.com/api/v1/sandbox-mJokm7E2jH")!,
   provider: NetworkingProvider()
 )
 

@@ -9,6 +9,9 @@ import UIKit
 @preconcurrency import WebKit
 import SwiftUI
 
+private let adIframeQueryName = "ad-iframe"
+private let adIframeQueryValue = "1"
+
 public class KlipyWebView: UIView {
   private var webView: WKWebView!
   
@@ -38,6 +41,11 @@ public class KlipyWebView: UIView {
   }
   
   public func loadHTMLString(htmlString: String) {
+    if let url = normalizedAdURL(from: htmlString) {
+      loadURL(url: url)
+      return
+    }
+
     webView.loadHTMLString(htmlString, baseURL: nil)
   }
   
@@ -48,6 +56,25 @@ public class KlipyWebView: UIView {
       webView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
       webView.trailingAnchor.constraint(equalTo: self.trailingAnchor)
     ])
+  }
+}
+
+private extension KlipyWebView {
+  func normalizedAdURL(from value: String) -> URL? {
+    guard let url = URL(string: value),
+          let scheme = url.scheme?.lowercased(),
+          scheme == "http" || scheme == "https",
+          var components = URLComponents(url: url, resolvingAgainstBaseURL: false) else {
+      return nil
+    }
+
+    var queryItems = components.queryItems ?? []
+    if queryItems.contains(where: { $0.name == adIframeQueryName }) == false {
+      queryItems.append(URLQueryItem(name: adIframeQueryName, value: adIframeQueryValue))
+      components.queryItems = queryItems
+    }
+
+    return components.url
   }
 }
 
