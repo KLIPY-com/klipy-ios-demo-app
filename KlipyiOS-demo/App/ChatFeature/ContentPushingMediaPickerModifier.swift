@@ -104,7 +104,7 @@ struct ContentPushingMediaPickerModifier: ViewModifier {
             sheetHeight: $heightState,
             heightVersion: heightVersion
           )
-          .gesture(dragGesture)
+          .simultaneousGesture(dragGesture)
           .frame(height: currentHeight)
           .shadow(color: Color.black.opacity(0.1), radius: 5, x: 0, y: -2)
           .offset(y: isPresented ? 0 : UIScreen.main.bounds.height + 100)

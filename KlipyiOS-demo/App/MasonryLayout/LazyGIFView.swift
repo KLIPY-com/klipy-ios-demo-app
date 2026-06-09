@@ -26,14 +26,6 @@ struct LazyGIFView: View {
   /// Used for providing visual feedback (scale effect) during the press gesture.
   @State private var isPressed: Bool = false
 
-  /// A timer used for detecting long presses.
-  /// This timer triggers when a user holds the item for a longer period (e.g., 0.5 seconds), and initiates the related actions.
-  @State private var timer: Timer?
-
-  /// A gesture state variable that tracks whether the user is pressing on the media item.
-  /// This is used to dynamically adjust the visual scale of the item when the user is pressing.
-  @GestureState private var isPressing: Bool = false
-
   /// A state variable to control the animation status of the GIF.
   /// Used to determine whether the GIF should be continuously animated or paused.
   @State var isAnimating: Bool = true
@@ -42,9 +34,6 @@ struct LazyGIFView: View {
   /// Provides feedback on user actions like pressing or clicking.
   @State var impactFeedback = UIImpactFeedbackGenerator(style: .medium)
   @State var clickFeedback = UIImpactFeedbackGenerator(style: .heavy)
-
-  /// A flag indicating whether a long press is in progress.
-  @State var longPressInProgress: Bool = false
 
   /// The frame of the item, used for positioning and animation purposes.
   @State private var itemFrame: CGRect = .zero
@@ -90,8 +79,8 @@ struct LazyGIFView: View {
         .transition(.fade)  // Apply fade transition for smooth loading and display.
         .playbackRate(1.0)  // Set the playback rate of the GIF.
         .playbackMode(.bounce)  // Apply a bounce effect when the GIF is played.
-        .scaleEffect(isPressing ? 0.8 : 1.0)  // Scale effect for press interaction.
-        .animation(.spring(response: 0.9, dampingFraction: 0.9), value: isPressing)  // Spring animation on press.
+        .scaleEffect(isPressed ? 0.8 : 1.0)  // Scale effect for press interaction.
+        .animation(.spring(response: 0.9, dampingFraction: 0.9), value: isPressed)  // Spring animation on press.
         .overlay {
           GeometryReader { geo in
             Color.clear
@@ -145,43 +134,24 @@ struct LazyGIFView: View {
             onClick()  // Trigger the custom click action.
           }
         }
-        .simultaneousGesture(
-          DragGesture(minimumDistance: 0)  // Detect drag gestures to allow for long press detection.
-            .updating($isPressing) { _, state, _ in
-              isFocused = false
-              state = true
-              UIApplication.shared.sendAction(
-                #selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-            }
-            .onChanged { _ in
-              UIApplication.shared.sendAction(
-                #selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-              if isFocused {
-                return
-              }
+        .onLongPressGesture(minimumDuration: 0.5, maximumDistance: 20) {
+          impactFeedback.impactOccurred()  // Trigger long press feedback.
+          previewItem = .init(item: item, frame: itemFrame)  // Set preview item on long press.
+          withAnimation {
+            isPressed = false
+          }
+        } onPressingChanged: { pressing in
+          isFocused = false
+          UIApplication.shared.sendAction(
+            #selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
 
-              isFocused = false
-
-              if !isPressed {
-                isPressed = true
-                timer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false) { _ in
-                  impactFeedback.impactOccurred()  // Trigger long press feedback.
-                  previewItem = .init(item: item, frame: itemFrame)  // Set preview item on long press.
-                  withAnimation {
-                    isPressed = false
-                  }
-                }
-              }
-            }
-            .onEnded { _ in
-              isFocused = false
-              timer?.invalidate()  // Stop the timer when the drag ends.
-              timer = nil
-              withAnimation {
-                isPressed = false
-              }
-            }
-        )
+          withAnimation {
+            isPressed = pressing
+          }
+        }
+        .onDisappear {
+          isPressed = false
+        }
         .clipped()
         .frame(width: item.width, height: item.height)  // Ensure the GIF or media fits in the given frame.
         .padding(1)

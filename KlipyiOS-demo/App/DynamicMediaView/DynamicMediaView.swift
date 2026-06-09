@@ -37,6 +37,10 @@ struct DynamicMediaView: View {
           sheetHeight: $sheetHeight
         )
         .onChange(of: viewModel.activeCategory) { _, newCategory in
+          if viewModel.consumePendingCategorySelection() {
+            return
+          }
+
           guard let category = newCategory else {
             return
           }
