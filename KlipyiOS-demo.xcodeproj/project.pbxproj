@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E62A0D712E47100100B1A001 /* KlipyAds in Frameworks */ = {isa = PBXBuildFile; productRef = E62A0D702E47100100B1A001 /* KlipyAds */; };
 		E63603D12D9406EB00750D26 /* FirebaseCrashlytics in Frameworks */ = {isa = PBXBuildFile; productRef = E63603D02D9406EB00750D26 /* FirebaseCrashlytics */; };
 		E6517A9B2D4834D900C2B5FB /* AlertToast in Frameworks */ = {isa = PBXBuildFile; productRef = E6517A9A2D4834D900C2B5FB /* AlertToast */; };
 		E669D20E2D3AB1C800FCA1BD /* SDWebImageSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = E669D20D2D3AB1C800FCA1BD /* SDWebImageSwiftUI */; };
@@ -48,6 +49,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E62A0D712E47100100B1A001 /* KlipyAds in Frameworks */,
 				E669D20E2D3AB1C800FCA1BD /* SDWebImageSwiftUI in Frameworks */,
 				E63603D12D9406EB00750D26 /* FirebaseCrashlytics in Frameworks */,
 				E6517A9B2D4834D900C2B5FB /* AlertToast in Frameworks */,
@@ -95,6 +97,7 @@
 			);
 			name = "KlipyiOS-demo";
 			packageProductDependencies = (
+				E62A0D702E47100100B1A001 /* KlipyAds */,
 				E6F6AFD82D343C65008CB511 /* Moya */,
 				E669D20D2D3AB1C800FCA1BD /* SDWebImageSwiftUI */,
 				E6517A9A2D4834D900C2B5FB /* AlertToast */,
@@ -129,6 +132,7 @@
 			mainGroup = E6D992682D31681A003CAF83;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
+				E62A0D6F2E47100100B1A001 /* XCRemoteSwiftPackageReference "ads-ios" */,
 				E6F6AFD72D343C65008CB511 /* XCRemoteSwiftPackageReference "Moya" */,
 				E669D20C2D3AB1C800FCA1BD /* XCRemoteSwiftPackageReference "SDWebImageSwiftUI" */,
 				E6517A992D4834D900C2B5FB /* XCRemoteSwiftPackageReference "AlertToast" */,
@@ -405,6 +409,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		E62A0D6F2E47100100B1A001 /* XCRemoteSwiftPackageReference "ads-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://gitlab.com/kikliko/ads-ios.git";
+			requirement = {
+				branch = "tap-fixes";
+				kind = branch;
+			};
+		};
 		E63603CF2D9406EB00750D26 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/firebase/firebase-ios-sdk.git";
@@ -440,6 +452,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		E62A0D702E47100100B1A001 /* KlipyAds */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = E62A0D6F2E47100100B1A001 /* XCRemoteSwiftPackageReference "ads-ios" */;
+			productName = KlipyAds;
+		};
 		E63603D02D9406EB00750D26 /* FirebaseCrashlytics */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = E63603CF2D9406EB00750D26 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;

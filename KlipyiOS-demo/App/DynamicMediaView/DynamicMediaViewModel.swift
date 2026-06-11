@@ -52,6 +52,9 @@ class DynamicMediaViewModel {
   
   @ObservationIgnored
   var gridMeta: GridMeta
+
+  @ObservationIgnored
+  private var shouldIgnoreNextCategoryChange = false
   
   init(initialType: MediaType = .gifs) {
     self.currentType = initialType
@@ -124,22 +127,25 @@ class DynamicMediaViewModel {
   @MainActor
   func initialLoad() async {
     resetState()
+    isLoading = true
     do {
-      activeCategory = categories.first { $0.type == .trending }
+      if let trendingCategory = categories.first(where: { $0.type == .trending }) {
+        selectCategoryWithoutReload(trendingCategory)
+      }
       
       let trendingResults = try await service.fetchTrending(page: 1, perPage: perPage)
       gridMeta = trendingResults.gridMeta
       items = trendingResults.items
       hasMorePages = trendingResults.hasNext
-      
-      let recentsResult = try await service.fetchRecents(page: 1, perPage: perPage)
-      
+
       currentPage = 2
       isLoading = false
+      hasCompletedInitialLoad = true
     } catch {
       hasError = true
       errorMessage = error.localizedDescription
       isLoading = false
+      hasCompletedInitialLoad = true
     }
   }
   
@@ -350,6 +356,17 @@ class DynamicMediaViewModel {
   
   func reportItem(item: MediaDomainModel, reason: String) async throws -> FireAndForgetResponse {
     return try await service.report(slug: item.slug, reason: reason)
+  }
+
+  func consumePendingCategorySelection() -> Bool {
+    let shouldIgnore = shouldIgnoreNextCategoryChange
+    shouldIgnoreNextCategoryChange = false
+    return shouldIgnore
+  }
+
+  private func selectCategoryWithoutReload(_ category: MediaCategory) {
+    shouldIgnoreNextCategoryChange = true
+    activeCategory = category
   }
 }
 

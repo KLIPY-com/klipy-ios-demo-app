@@ -1,5 +1,5 @@
 {
-  "originHash" : "1d5857ed5fb45a60b51d6296af2e73ddf5dbf1727ad166f5078c3f43b18d07c4",
+  "originHash" : "a8916ee40293d08888b7b252e7ac247c22c4a0267231d84602d680c71bc57741",
   "pins" : [
     {
       "identity" : "abseil-cpp-binary",
@@ -8,6 +8,15 @@
       "state" : {
         "revision" : "bbe8b69694d7873315fd3a4ad41efe043e1c07c5",
         "version" : "1.2024072200.0"
+      }
+    },
+    {
+      "identity" : "ads-ios",
+      "kind" : "remoteSourceControl",
+      "location" : "https://gitlab.com/kikliko/ads-ios.git",
+      "state" : {
+        "branch" : "tap-fixes",
+        "revision" : "07aa0d7b61f24b632dd26da5e7052296e756e468"
       }
     },
     {

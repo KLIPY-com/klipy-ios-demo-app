@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import KlipyAds
 
 struct KlipyWebViewRepresentable: UIViewRepresentable {
   let url: URL?
@@ -16,11 +17,11 @@ struct KlipyWebViewRepresentable: UIViewRepresentable {
     self.htmlString = htmlString
   }
   
-  func makeUIView(context: Context) -> KlipyWebView {
-    KlipyWebView()
+  func makeUIView(context: Context) -> KlipyAds.KlipyWebView {
+    KlipyAds.KlipyWebView()
   }
   
-  func updateUIView(_ webView: KlipyWebView, context: Context) {
+  func updateUIView(_ webView: KlipyAds.KlipyWebView, context: Context) {
     if let url = url {
       webView.loadURL(url: url)
     } else if let htmlString = htmlString {
